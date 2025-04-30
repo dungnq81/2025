@@ -1,0 +1,3 @@
+path: /var/www/html/src
+server:
+    docroot: /var/www/html

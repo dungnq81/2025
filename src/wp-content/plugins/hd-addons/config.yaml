@@ -1,0 +1,63 @@
+global_setting:
+    title: 'Global Setting'
+    description: 'Manage the activation and deactivation of various features from this dashboard.'
+
+aspect_ratio:
+    title: 'Aspect Ratio'
+    description: 'Define the aspect ratio for images.'
+
+editor:
+    title: 'Editor'
+    description: 'Enable or disable the Classic Editor and customize various editing options for content management.'
+
+optimizer:
+    title: 'Optimizer'
+    description: 'Configure optimization settings to improve site performance.'
+
+security:
+    title: 'Security'
+    description: 'Configure security settings to protect your site from unauthorized access and potential threats.'
+
+login_security:
+    title: 'Login Security'
+    description: 'Configure login-related security settings to protect user accounts.'
+
+social_link:
+    title: 'Social Link'
+    description: 'Configure social media links to connect your site with various platforms.'
+
+contact_link:
+    title: 'Contact Link'
+    description: 'Customize the contact links with content, images, popup, and other options.'
+
+file:
+    title: 'File'
+    description: 'Configure file upload settings, including file size limits, allowed file types, and security options.'
+
+base_slug:
+    title: 'Remove Base Slug'
+    description: 'Remove the default base slug from URLs for categories, tags, or custom taxonomies.'
+
+custom_email_to:
+    title: 'Custom Email To'
+    description: 'Set a custom email address for receiving notifications, form submissions, or other email-related functionalities on your site.'
+
+custom_sorting:
+    title: 'Custom Sorting'
+    description: 'Enable drag-and-drop functionality for sorting custom post types, taxonomies.'
+
+recaptcha:
+    title: 'reCAPTCHA'
+    description: 'Enter your Google reCAPTCHA site key and secret key to protect your site from spam and abuse.'
+
+woocommerce:
+    title: 'WooCommerce'
+    description: 'Customize various WooCommerce settings to enhance the shopping experience on your site.'
+
+custom_script:
+    title: 'Custom Script'
+    description: 'Insert custom JavaScript code, meta tags, or tracking scripts (such as Google Ads, Google Analytics, etc.) into your site.'
+
+custom_css:
+    title: 'Custom CSS'
+    description: 'Add custom CSS styles to your website to modify the appearance and layout.'

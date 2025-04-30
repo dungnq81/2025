@@ -1,0 +1,35 @@
+{
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gaudev",
+            "email": "dungnq81@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "vlucas/phpdotenv": "^v5.6.1",
+        "oscarotero/env": "^v2.1.1",
+        "roots/wp-config": "^1.0.0"
+    },
+    "require-dev": {
+        "wp-cli/wp-cli-bundle": "^v2.11.0",
+        "symfony/var-dumper": "^v7.2.3",
+        "roave/security-advisories": "dev-latest"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "composer dump-autoload -o"
+        ],
+        "post-update-cmd": [
+            "composer dump-autoload -o"
+        ]
+    }
+}

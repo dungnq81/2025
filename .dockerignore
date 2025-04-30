@@ -1,0 +1,24 @@
+# node_modules
+node_modules
+
+# IDEs and Environments
+.idea
+.vscode
+.vagrant
+.docker
+
+# Git
+.git
+.gitignore
+
+# log và temp
+npm-debug.log
+yarn-error.log
+*.log
+/tmp
+
+composer.lock
+pnpm-lock.yaml
+
+# other
+database

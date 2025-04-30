@@ -1,0 +1,37 @@
+{
+    "name": "plugins/hd-addons",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gaudev",
+            "email": "dungnq81@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Addons\\": "src"
+        }
+    },
+    "require": {
+        "php": ">=8.2",
+        "enshrined/svg-sanitize": "^0.21",
+        "symfony/yaml": "^v7.2.5",
+        "matthiasmullie/minify": "^1.3.73"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "composer dump-autoload -o"
+        ],
+        "post-update-cmd": [
+            "composer dump-autoload -o"
+        ]
+    }
+}
