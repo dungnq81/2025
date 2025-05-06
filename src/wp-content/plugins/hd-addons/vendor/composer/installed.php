@@ -3,7 +3,7 @@
         'name' => 'plugins/hd-addons',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '96a8ad4a1134dcd693466b5f43c469427ebe7dca',
+        'reference' => '99a13d91e6d1bd70844572f1ae2cc1f740a3c2ee',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'plugins/hd-addons' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '96a8ad4a1134dcd693466b5f43c469427ebe7dca',
+            'reference' => '99a13d91e6d1bd70844572f1ae2cc1f740a3c2ee',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'c96e48da0eb4ba3f14ca6ab39a6fd5025a5d0838',
+            'reference' => '45b01f4e60c350f72a8697056674e449e053935a',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -67,8 +67,8 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(
-            'pretty_version' => 'v1.31.0',
-            'version' => '1.31.0.0',
+            'pretty_version' => 'v1.32.0',
+            'version' => '1.32.0.0',
             'reference' => 'a3cc8b044a6ea513310cbd48ef7333b384945638',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
@@ -76,9 +76,9 @@
             'dev_requirement' => false,
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.2.5',
-            'version' => '7.2.5.0',
-            'reference' => '4c4b6f4cfcd7e52053f0c8bfad0f7f30fb924912',
+            'pretty_version' => 'v7.2.6',
+            'version' => '7.2.6.0',
+            'reference' => '0feafffb843860624ddfd13478f481f4c3cd8b23',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),
