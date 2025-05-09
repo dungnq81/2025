@@ -19,15 +19,8 @@ final class Hook {
 	private function init(): void {
 
 		// -----------------------------------------------
-		// wp_enqueue_scripts
-		// -----------------------------------------------
-
-		add_action( 'wp_enqueue_scripts', 'custom_css_action', 99 );
-
-		// -----------------------------------------------
 		// wp_head
 		// -----------------------------------------------
-
 		add_action( 'wp_head', [ $this, 'wp_head_action' ], 1 );
 		add_action( 'wp_head', [ $this, 'other_head_action' ], 10 );
 		add_action( 'wp_head', [ $this, 'external_fonts_action' ], 11 );
@@ -35,14 +28,12 @@ final class Hook {
 		// -----------------------------------------------
 		// hd_header_before_action
 		// -----------------------------------------------
-
 		add_action( 'hd_header_before_action', [ $this, 'skip_to_content_link_action' ], 2 );
 		add_action( 'hd_header_before_action', [ $this, 'off_canvas_menu_action' ], 11 );
 
 		// -----------------------------------------------
 		// hd_header_action
 		// -----------------------------------------------
-
 		add_action( 'hd_header_action', [ $this, 'construct_header_action' ], 10 );
 		add_action( 'masthead', [ $this, '_masthead_home_seo_header' ], 10 );
 		add_action( 'masthead', [ $this, '_masthead_top_header' ], 12 );
@@ -61,7 +52,6 @@ final class Hook {
 		// -----------------------------------------------
 		// wp_footer
 		// -----------------------------------------------
-
 		add_action( 'wp_footer', [ $this, 'wp_footer_action' ], 32 );
 		add_action( 'wp_footer', [ $this, 'wp_footer_custom_js_action' ], 99 );
 
@@ -72,7 +62,6 @@ final class Hook {
 		// -----------------------------------------------
 		// hd_footer_action
 		// -----------------------------------------------
-
 		add_action( 'hd_footer_action', [ $this, 'construct_footer_action' ], 10 );
 		add_action( 'construct_footer', [ $this, '_construct_footer_columns' ], 11 );
 		add_action( 'construct_footer', [ $this, '_construct_footer_credit' ], 12 );
@@ -85,6 +74,28 @@ final class Hook {
 		// -----------------------------------------------
 		// hd_site_content_after_action
 		// -----------------------------------------------
+
+		// -----------------------------------------------
+		// wp_enqueue_scripts
+		// -----------------------------------------------
+		add_action( 'wp_enqueue_scripts', [ $this, 'custom_css_action' ], 99 );
+
+		// --------------------------------------------------
+		// enqueue_assets_extra
+		// --------------------------------------------------
+		add_action( 'enqueue_assets_extra', static function () {
+			//...
+		} );
+
+		// --------------------------------------------------
+		// `template-page-home.php` file
+		// --------------------------------------------------
+		add_action( 'enqueue_assets_template_page_home', static function () {
+			$version = \HD_Helper::version();
+
+			\HD_Asset::enqueueStyle( 'home-css', ASSETS_URL . 'css/home-css.css', [], $version );
+			\HD_Asset::enqueueScript( 'home-js', ASSETS_URL . 'js/home.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
+		} );
 	}
 
 	// -----------------------------------------------
@@ -252,34 +263,35 @@ final class Hook {
 		//-------------------------------------------------
 
 		if ( is_single() && $ID = get_the_ID() ) :
-        ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', async () => {
-                let postID = <?= $ID ?>;
-                const dateEl = document.querySelector('section.singular .meta > .date');
-                const viewsEl = document.querySelector('section.singular .meta > .views');
+			?>
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    let postID = <?= $ID ?>;
+                    const dateEl = document.querySelector('section.singular .meta > .date');
+                    const viewsEl = document.querySelector('section.singular .meta > .views');
 
-                if (typeof window.hdConfig !== 'undefined') {
-                    const endpointURL = window.hdConfig._restApiUrl + 'single/track_views';
-                    try {
-                        const resp = await fetch(endpointURL, {
-                            method: 'POST',
-                            credentials: 'same-origin',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-WP-Nonce': window.hdConfig._restToken,
-                            },
-                            body: JSON.stringify({id: postID})
-                        });
-                        const json = await resp.json();
-                        if (json.success) {
-                            if (dateEl) dateEl.textContent = json.date;
-                            if (viewsEl) viewsEl.textContent = json.views;
+                    if (typeof window.hdConfig !== 'undefined') {
+                        const endpointURL = window.hdConfig._restApiUrl + 'single/track_views';
+                        try {
+                            const resp = await fetch(endpointURL, {
+                                method: 'POST',
+                                credentials: 'same-origin',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-WP-Nonce': window.hdConfig._restToken,
+                                },
+                                body: JSON.stringify({id: postID})
+                            });
+                            const json = await resp.json();
+                            if (json.success) {
+                                if (dateEl) dateEl.textContent = json.date;
+                                if (viewsEl) viewsEl.textContent = json.views;
+                            }
+                        } catch (err) {
                         }
-                    } catch (err) {}
-                }
-            });
-        </script>
+                    }
+                });
+            </script>
 		<?php endif;
 
 		$content = ob_get_clean();
@@ -290,47 +302,47 @@ final class Hook {
 
 	// -----------------------------------------------
 
-    public function custom_css_action(): void {
-	    $css = new \HD_CSS();
+	public function custom_css_action(): void {
+		$css = new \HD_CSS();
 
-	    //-------------------------------------------------
-	    // Breadcrumb
-	    //-------------------------------------------------
+		//-------------------------------------------------
+		// Breadcrumb
+		//-------------------------------------------------
 
-	    $object = get_queried_object();
+		$object = get_queried_object();
 
-	    $breadcrumb_max     = \HD_Helper::getThemeMod( 'breadcrumb_max_height_setting', 0 );
-	    $breadcrumb_min     = \HD_Helper::getThemeMod( 'breadcrumb_min_height_setting', 0 );
-	    $breadcrumb_bgcolor = \HD_Helper::getThemeMod( 'breadcrumb_bgcolor_setting' );
+		$breadcrumb_max     = \HD_Helper::getThemeMod( 'breadcrumb_max_height_setting', 0 );
+		$breadcrumb_min     = \HD_Helper::getThemeMod( 'breadcrumb_min_height_setting', 0 );
+		$breadcrumb_bgcolor = \HD_Helper::getThemeMod( 'breadcrumb_bgcolor_setting' );
 
-	    if ( $breadcrumb_max > 0 || $breadcrumb_min > 0 || $breadcrumb_bgcolor ) {
-		    $css->set_selector( '.section.section-breadcrumb' );
-	    }
+		if ( $breadcrumb_max > 0 || $breadcrumb_min > 0 || $breadcrumb_bgcolor ) {
+			$css->set_selector( '.section.section-breadcrumb' );
+		}
 
-	    $breadcrumb_min && $css->add_property( 'min-height', $breadcrumb_min . 'px !important' );
-	    $breadcrumb_max && $css->add_property( 'max-height', $breadcrumb_max . 'px !important' );
-	    $breadcrumb_bgcolor && $css->add_property( 'background-color', $breadcrumb_bgcolor . ' !important' );
+		$breadcrumb_min && $css->add_property( 'min-height', $breadcrumb_min . 'px !important' );
+		$breadcrumb_max && $css->add_property( 'max-height', $breadcrumb_max . 'px !important' );
+		$breadcrumb_bgcolor && $css->add_property( 'background-color', $breadcrumb_bgcolor . ' !important' );
 
-	    $breadcrumb_title_color = \HD_Helper::getField( 'breadcrumb_title_color', $object ) ?: \HD_Helper::getThemeMod( 'breadcrumb_color_setting' );
+		$breadcrumb_title_color = \HD_Helper::getField( 'breadcrumb_title_color', $object ) ?: \HD_Helper::getThemeMod( 'breadcrumb_color_setting' );
 
-	    if ( $breadcrumb_title_color ) {
-		    $css->set_selector( '.section.section-breadcrumb .breadcrumb-title' )
-		        ->add_property( 'color', $breadcrumb_title_color . ' !important' );
-	    }
+		if ( $breadcrumb_title_color ) {
+			$css->set_selector( '.section.section-breadcrumb .breadcrumb-title' )
+			    ->add_property( 'color', $breadcrumb_title_color . ' !important' );
+		}
 
-	    $css_output = $css->css_output();
-	    if ( $css_output ) {
-		    \HD_Asset::inlineStyle( 'index-css', $css_output );
-	    }
+		$css_output = $css->css_output();
+		if ( $css_output ) {
+			\HD_Asset::inlineStyle( 'index-css', $css_output );
+		}
 
-	    //ob_start();
-	    //...
-	    //$inline_css = ob_get_clean();
-	    //if ( $inline_css ) {
-	    //$inline_css = \HD_Helper::CSSMinify( $inline_css, true );
-	    //\HD_Asset::inlineStyle( 'index-css', $inline_css );
-	    //}
-    }
+		//ob_start();
+		//...
+		//$inline_css = ob_get_clean();
+		//if ( $inline_css ) {
+		//$inline_css = \HD_Helper::CSSMinify( $inline_css, true );
+		//\HD_Asset::inlineStyle( 'index-css', $inline_css );
+		//}
+	}
 
 	// -----------------------------------------------
 }

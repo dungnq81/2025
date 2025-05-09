@@ -14,6 +14,7 @@ return array(
     'HD\\API\\Endpoints\\SingleEndpoints' => $baseDir . '/inc/API/Endpoints/SingleEndpoints.php',
     'HD\\Core\\Admin\\Admin' => $baseDir . '/inc/Core/Admin/Admin.php',
     'HD\\Core\\Customizer' => $baseDir . '/inc/Core/Customizer.php',
+    'HD\\Core\\Frontend\\Ajax' => $baseDir . '/inc/Core/Frontend/Ajax.php',
     'HD\\Core\\Frontend\\Hook' => $baseDir . '/inc/Core/Frontend/Hook.php',
     'HD\\Core\\Frontend\\Shortcode' => $baseDir . '/inc/Core/Frontend/Shortcode.php',
     'HD\\Core\\Optimizer' => $baseDir . '/inc/Core/Optimizer.php',

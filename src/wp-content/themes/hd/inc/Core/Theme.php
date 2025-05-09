@@ -135,11 +135,11 @@ final class Theme {
 
 		/** CSS */
 		\HD_Asset::enqueueStyle( 'vendor-css', ASSETS_URL . 'css/_vendor.css', [], $version );
-		\HD_Asset::enqueueStyle( 'index-css', ASSETS_URL . 'css/index-css.css', [ 'vendor-css' ], $version );
+		\HD_Asset::enqueueStyle( 'index-css', ASSETS_URL . 'css/index.css', [ 'vendor-css' ], $version );
 
 		/** JS */
-		\HD_Asset::enqueueScript( 'preload-js', ASSETS_URL . 'js/preload-polyfill.js', [], $version, false, [ 'module', 'async' ] );
-		\HD_Asset::enqueueScript( 'index-js', ASSETS_URL . 'js/index.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
+		\HD_Asset::enqueueScript( 'preload', ASSETS_URL . 'js/preload-polyfill.js', [], $version, false, [ 'module', 'async' ] );
+		\HD_Asset::enqueueScript( 'index', ASSETS_URL . 'js/index.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
 
 		/** Comments */
 		if ( is_singular() && comments_open() && \HD_Helper::getOption( 'thread_comments' ) ) {
@@ -202,7 +202,7 @@ final class Theme {
 	 * @return void
 	 */
 	public function register_widgets(): void {
-		$widgets_dir = INC_PATH . 'classes/Utilities/Widgets';
+		$widgets_dir = INC_PATH . 'Utilities/Widgets';
 		$FQN         = '\\HD\\Utilities\\Widgets\\';
 
 		\HD_Helper::createDirectory( $widgets_dir );

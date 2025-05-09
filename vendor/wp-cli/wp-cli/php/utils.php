@@ -418,6 +418,7 @@ function format_items( $format, $items, $fields ) {
  */
 function write_csv( $fd, $rows, $headers = [] ) {
 	if ( ! empty( $headers ) ) {
+		$headers = array_map( __NAMESPACE__ . '\escape_csv_value', $headers );
 		fputcsv( $fd, $headers, ',', '"', '\\' );
 	}
 
@@ -426,6 +427,7 @@ function write_csv( $fd, $rows, $headers = [] ) {
 			$row = pick_fields( $row, $headers );
 		}
 
+		$row = array_map( __NAMESPACE__ . '\escape_csv_value', $row );
 		fputcsv( $fd, array_values( $row ), ',', '"', '\\' );
 	}
 }
@@ -1674,6 +1676,15 @@ function _proc_open_compat_win_env( $cmd, &$env ) {
  *                or real_escape next.
  */
 function esc_like( $text ) {
+	global $wpdb;
+
+	// Check if the esc_like() method exists on the global $wpdb object.
+	// We need to do this because to ensure compatibilty layers like the
+	// SQLite integration plugin still work.
+	if ( null !== $wpdb && method_exists( $wpdb, 'esc_like' ) ) {
+		return $wpdb->esc_like( $text );
+	}
+
 	return addcslashes( $text, '_%\\' );
 }
 
@@ -2022,4 +2033,34 @@ function get_hook_description( $hook ) {
 		return $events[ $hook ];
 	}
 	return null;
+}
+
+/**
+ * Escape a value for CSV output.
+ *
+ * Values that start with the following characters are escaping with a single
+ * quote: =, +, -, @, TAB (0x09) and CR (0x0D).
+ *
+ * @param string $value Value to escape.
+ * @return string Escaped value.
+ */
+function escape_csv_value( $value ) {
+	if ( null === $value ) {
+		return '';
+	}
+
+	// Convert to string if not already
+	$value = (string) $value;
+
+	if (
+		in_array(
+			substr( $value, 0, 1 ),
+			[ '=', '+', '-', '@', "\t", "\r" ],
+			true
+		)
+	) {
+		return "'{$value}";
+	}
+
+	return $value;
 }

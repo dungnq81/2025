@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite'
 import autoprefixer from 'autoprefixer';
 import viteImagemin from '@vheemstra/vite-plugin-imagemin';
 
@@ -11,6 +12,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 export const sharedConfig = {
     base: './',
     plugins: [
+        tailwindcss(),
         viteImagemin({
             plugins: {
                 jpg: imageminMozjpeg({ quality: 80 }),

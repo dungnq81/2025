@@ -3,11 +3,19 @@
     "private": true,
     "version": "1.0.5",
     "type": "module",
-    "scripts": {},
+    "scripts": {
+        "watch:plugin": "cross-env NODE_ENV=development vite build --watch --config src/wp-content/plugins/hd-addons/vite.config.js",
+        "build:plugin": "cross-env NODE_ENV=production vite build --config src/wp-content/plugins/hd-addons/vite.config.js",
+        "watch:theme": "cross-env NODE_ENV=development vite build --watch --config src/wp-content/themes/hd/vite.config.js",
+        "build:theme": "cross-env NODE_ENV=production vite build --config src/wp-content/themes/hd/vite.config.js",
+        "watch": "concurrently \"pnpm watch:plugin\" \"pnpm watch:theme\"",
+        "build": "concurrently \"pnpm build:plugin\" \"pnpm build:theme\""
+    },
     "browserslist": [
         "extends @wordpress/browserslist-config"
     ],
     "devDependencies": {
+        "@tailwindcss/vite": "^4.1.5",
         "@vheemstra/vite-plugin-imagemin": "^2.0.0",
         "@wordpress/browserslist-config": "^6.22.0",
         "autoprefixer": "^10.4.21",
@@ -20,7 +28,7 @@
         "postcss": "^8.5.3",
         "sass": "^1.87.0",
         "terser": "^5.39.0",
-        "vite": "^6.3.4",
+        "vite": "^6.3.5",
         "vite-plugin-static-copy": "^2.3.1"
     },
     "dependencies": {
@@ -31,6 +39,7 @@
         "gsap": "^3.13.0",
         "jquery": "^3.7.1",
         "nanoid": "^5.1.5",
+        "select2": "4.1.0-rc.0",
         "simplebar": "^6.3.0",
         "sweetalert2": "^11.21.0",
         "swiper": "^11.2.6",

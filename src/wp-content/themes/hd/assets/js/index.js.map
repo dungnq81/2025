@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["../../resources/scripts/index.js"],"sourcesContent":["import $ from 'jquery';\r\n\r\n// Styles\r\nimport '../styles/3rd/_tailwind.css';\r\n//import '../styles/3rd/_index.scss';\r\n\r\n// DOMContentLoaded\r\ndocument.addEventListener('DOMContentLoaded', () => {});\r\n"],"names":[],"mappings":";AAOA,SAAS,iBAAiB,oBAAoB,MAAM;CAAE;"}

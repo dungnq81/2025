@@ -1,0 +1,43 @@
+{
+  "__vendor.css": {
+    "file": "css/_vendor.css",
+    "src": "__vendor.css"
+  },
+  "__vendor.js": {
+    "file": "js/_vendor.js",
+    "name": "_vendor",
+    "css": [
+      "css/_vendor.css"
+    ]
+  },
+  "src/wp-content/themes/hd/resources/scripts/admin.js": {
+    "file": "js/admin.js",
+    "name": "admin",
+    "src": "src/wp-content/themes/hd/resources/scripts/admin.js",
+    "isEntry": true
+  },
+  "src/wp-content/themes/hd/resources/scripts/index.js": {
+    "file": "js/index.js",
+    "name": "index",
+    "src": "src/wp-content/themes/hd/resources/scripts/index.js",
+    "isEntry": true,
+    "imports": [
+      "__vendor.js"
+    ]
+  },
+  "src/wp-content/themes/hd/resources/styles/admin.scss": {
+    "file": "css/admin.css",
+    "src": "src/wp-content/themes/hd/resources/styles/admin.scss",
+    "isEntry": true
+  },
+  "src/wp-content/themes/hd/resources/styles/editor-style.scss": {
+    "file": "css/editor-style.css",
+    "src": "src/wp-content/themes/hd/resources/styles/editor-style.scss",
+    "isEntry": true
+  },
+  "src/wp-content/themes/hd/resources/styles/index.scss": {
+    "file": "css/index.css",
+    "src": "src/wp-content/themes/hd/resources/styles/index.scss",
+    "isEntry": true
+  }
+}

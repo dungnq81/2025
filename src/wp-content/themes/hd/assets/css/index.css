@@ -1,0 +1,9 @@
+/** $string - svg */
+/** add unique id image url */
+/** https://webdesign.tutsplus.com/tutorials/an-introduction-to-error-handling-in-sass--cms-19996 */
+/** get breakpoint */
+/** font size */
+.test {
+  font-size: clamp(0.9375rem, 0.2548543689rem + 2.9126213592vw, 3.75rem);
+  line-height: inherit;
+}

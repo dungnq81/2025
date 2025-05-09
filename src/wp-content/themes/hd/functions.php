@@ -26,7 +26,7 @@ function _static_error( $error_message ): void {
 	} );
 
 	if ( ! is_admin() ) {
-		get_template_part( 'template-blocks/php-error', null, [ 'error_message' => $error_message ] );
+		get_template_part( 'parts/blocks/php-error', null, [ 'error_message' => $error_message ] );
 		die();
 	}
 }

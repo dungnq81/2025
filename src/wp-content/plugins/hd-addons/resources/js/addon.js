@@ -1,13 +1,15 @@
+import select2 from 'select2';
 import 'select2/dist/css/select2.min.css';
 //import '../sass/3rd/_awesome-font.scss';
 
-jQuery(function($) {
+select2();
+
+jQuery(function ($) {
     $('.addon-color-field').wpColorPicker();
 
     //---------------------------------------------------------------
     // codemirror
     //---------------------------------------------------------------
-
     if (typeof codemirror_settings !== 'undefined') {
         const codemirror_css = document.querySelectorAll('.codemirror_css');
         const codemirror_html = document.querySelectorAll('.codemirror_html');
@@ -15,7 +17,7 @@ jQuery(function($) {
         function initializeCodeMirror(elements, settings, type) {
             elements.forEach(el => {
                 if (!el.CodeMirror) {
-                    let editorSettings = settings ? { ...settings } : {};
+                    let editorSettings = settings ? {...settings} : {};
                     editorSettings.codemirror = {
                         ...editorSettings.codemirror,
                         indentUnit: 3,
@@ -34,17 +36,16 @@ jQuery(function($) {
     //---------------------------------------------------------------
     // Other
     //---------------------------------------------------------------
-
-    $.fn.fadeOutAndRemove = function(speed) {
-        return this.fadeOut(speed, function() {
+    $.fn.fadeOutAndRemove = function (speed) {
+        return this.fadeOut(speed, function () {
             $(this).remove();
         });
     };
 
-    $.fn.serializeObject = function() {
+    $.fn.serializeObject = function () {
         let obj = {};
         let array = this.serializeArray();
-        $.each(array, function() {
+        $.each(array, function () {
             let name = this.name;
             let value = this.value || '';
             if (name.indexOf('[]') > -1) {
@@ -56,7 +57,7 @@ jQuery(function($) {
             } else {
                 if (obj[name] !== undefined) {
                     if (!Array.isArray(obj[name])) {
-                        obj[name] = [ obj[name] ];
+                        obj[name] = [obj[name]];
                     }
                     obj[name].push(value);
                 } else {
@@ -71,8 +72,7 @@ jQuery(function($) {
     //---------------------------------------------------------------
     // ajax submit settings
     //---------------------------------------------------------------
-
-    $(document).on('submit', '#_settings_form', function(e) {
+    $(document).on('submit', '#_settings_form', function (e) {
         e.preventDefault();
         let $this = $(this);
         let $data = $this.serializeObject();
@@ -92,36 +92,35 @@ jQuery(function($) {
                 _wp_http_referer: $this.find('input[name="_wp_http_referer"]').val(),
             },
         })
-        .done(function(data) {
-            $this.find('#_content').prepend(data);
+            .done(function (data) {
+                $this.find('#_content').prepend(data);
 
-            // auto reload tabs
-            if (!window.location.hash ||
-                window.location.hash === '#global_setting_settings' ||
-                window.location.hash === '#custom_css_settings' ||
-                window.location.hash === '#custom_script_settings' ||
-                (window.location.hash === '#custom_sorting_settings' && $data['order_reset'] !== undefined) ||
-                (window.location.hash === '#base_slug_settings' && $data['base_slug_reset'] !== undefined)
-            ) {
-                window.location.reload();
-            }
+                // auto reload tabs
+                if (!window.location.hash ||
+                    window.location.hash === '#global_setting_settings' ||
+                    window.location.hash === '#custom_css_settings' ||
+                    window.location.hash === '#custom_script_settings' ||
+                    (window.location.hash === '#custom_sorting_settings' && $data['order_reset'] !== undefined) ||
+                    (window.location.hash === '#base_slug_settings' && $data['base_slug_reset'] !== undefined)
+                ) {
+                    window.location.reload();
+                }
 
-            // dismissible auto hide
-            setTimeout(() => {
-                $this.find('#_content')?.find('.dismissible-auto')?.fadeOutAndRemove(400);
-            }, 4000);
-        })
-        .always(function() {
-            btn_submit.prop('disabled', false).html(button_text);
-        });
+                // dismissible auto-hide
+                setTimeout(() => {
+                    $this.find('#_content')?.find('.dismissible-auto')?.fadeOutAndRemove(400);
+                }, 4000);
+            })
+            .always(function () {
+                btn_submit.prop('disabled', false).html(button_text);
+            });
     });
 
     //---------------------------------------------------------------
     // filter tabs
     //---------------------------------------------------------------
-
     const $filterTabs = $('.filter-tabs');
-    $filterTabs.each(function() {
+    $filterTabs.each(function () {
         const $el = $(this),
             $nav = $el.find('.tabs-nav'),
             $content = $el.find('.tabs-content'),
@@ -145,15 +144,15 @@ jQuery(function($) {
 
         activateTab(initialHash || $tabs.first().attr('href'));
 
-        $nav.on('click', 'a', function(e) {
+        $nav.on('click', 'a', function (e) {
             e.preventDefault();
             const hash = $(this).attr('href');
             window.location.hash = hash;
             activateTab(hash);
-            $('html, body').animate({ scrollTop: $el.offset().top - $('header').outerHeight() }, 300);
+            $('html, body').animate({scrollTop: $el.offset().top - $('header').outerHeight()}, 300);
         });
 
-        $(window).on('hashchange', function() {
+        $(window).on('hashchange', function () {
             activateTab(window.location.hash || $tabs.first().attr('href'));
         });
     });
@@ -161,10 +160,9 @@ jQuery(function($) {
     //---------------------------------------------------------------
     // select2
     //---------------------------------------------------------------
-
     // select2 multiple
     const select2_multiple = $('.select2-multiple');
-    $.each(select2_multiple, function(i, el) {
+    $.each(select2_multiple, function (i, el) {
         $(el).select2({
             multiple: true,
             allowClear: true,
@@ -176,7 +174,7 @@ jQuery(function($) {
 
     // select2 tags
     const select2_tags = $('.select2-tags');
-    $.each(select2_tags, function(i, el) {
+    $.each(select2_tags, function (i, el) {
         $(el).select2({
             multiple: true,
             tags: true,
@@ -189,7 +187,7 @@ jQuery(function($) {
 
     // select2 IPs
     const select2_ips = $('.select2-ips');
-    $.each(select2_ips, function(i, el) {
+    $.each(select2_ips, function (i, el) {
         $(el).select2({
             multiple: true,
             tags: true,
@@ -197,7 +195,7 @@ jQuery(function($) {
             width: 'resolve',
             dropdownAutoWidth: true,
             placeholder: $(el).attr('placeholder'),
-            createTag: function(params) {
+            createTag: function (params) {
                 let term = $.trim(params.term);
 
                 // Validate the term as an IP address or range
@@ -215,7 +213,7 @@ jQuery(function($) {
 
     // select2 emails
     const select2_emails = $('.select2-emails');
-    $.each(select2_emails, function(i, el) {
+    $.each(select2_emails, function (i, el) {
         $(el).select2({
             multiple: true,
             tags: true,
@@ -223,7 +221,7 @@ jQuery(function($) {
             width: 'resolve',
             dropdownAutoWidth: true,
             placeholder: $(el).attr('placeholder'),
-            createTag: function(params) {
+            createTag: function (params) {
                 let term = $.trim(params.term);
                 if (isValidEmail(term)) {
                     return {
@@ -265,7 +263,7 @@ function isValidIPRange(range) {
     }
 
     if (rangePattern.test(range)) {
-        const [ startIP, endRange ] = range.split('-');
+        const [startIP, endRange] = range.split('-');
         const endIP = startIP.split('.').slice(0, 3).join('.') + '.' + endRange;
         return compareIPs(startIP, endIP) < 0;
     }

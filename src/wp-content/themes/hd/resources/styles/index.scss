@@ -1,0 +1,5 @@
+@use 'mixins' as mixin;
+
+.test {
+    @include mixin.clamp-font(15px, 60px, 375px, 1920px, 0)
+}

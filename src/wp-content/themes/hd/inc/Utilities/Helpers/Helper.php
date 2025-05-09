@@ -212,7 +212,16 @@ final class Helper {
 	 * @return bool
 	 */
 	public static function lightHouse(): bool {
-		return isset( $_SERVER['HTTP_USER_AGENT'] ) && str_contains( strtolower( $_SERVER['HTTP_USER_AGENT'] ), 'lighthouse' );
+		$ua       = $_SERVER['HTTP_USER_AGENT'] ?? '';
+		$patterns = [ 'Lighthouse', 'HeadlessChrome', 'Chrome-Lighthouse' ];
+
+		foreach ( $patterns as $pattern ) {
+			if ( stripos( $ua, $pattern ) !== false ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	// --------------------------------------------------

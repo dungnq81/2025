@@ -22,7 +22,7 @@ class GlobalEndpoints extends AbstractAPI {
 			self::REST_NAMESPACE,
 			'/global/lighthouse',
 			[
-				'methods'             => \WP_REST_Server::CREATABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'lightHouseCallback' ],
 				'permission_callback' => '__return_true',
 			]

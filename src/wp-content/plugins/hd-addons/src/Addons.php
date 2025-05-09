@@ -134,11 +134,7 @@ final class Addons {
 		wp_enqueue_style( '_vendor-css', ADDONS_URL . 'assets/css/_vendor.css', [], $version );
 		wp_enqueue_style( 'addon-css', ADDONS_URL . 'assets/css/addon-css.css', [ '_vendor-css' ], $version );
 
-		wp_register_script( 'select2-js', ADDONS_URL . 'assets/js/select2.full.min.js', [ 'jquery' ], $version, true );
-		wp_enqueue_script( 'addon-js', ADDONS_URL . 'assets/js/addon.js', [
-			'select2-js',
-			'wp-color-picker'
-		], $version, true );
+		wp_enqueue_script( 'addon-js', ADDONS_URL . 'assets/js/addon.js', [ 'wp-color-picker' ], $version, true );
 		wp_script_add_data( 'addon-js', 'addon', [ 'module', 'defer' ] );
 
 		wp_enqueue_style( 'wp-codemirror' );
@@ -171,7 +167,7 @@ final class Addons {
 		$bg_img   = esc_url_raw( Helper::getThemeMod( 'login_page_bgimage_setting' ) ?: $default_bg );
 		$bg_color = sanitize_hex_color( Helper::getThemeMod( 'login_page_bgcolor_setting' ) );
 
-		$css = new \Addons\CSS();
+		$css = new CSS();
 
 		if ( $bg_img ) {
 			$css->set_selector( 'body.login' )

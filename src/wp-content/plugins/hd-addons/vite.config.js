@@ -1,17 +1,14 @@
 import * as path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-//import postcssPurgecss from '@fullhuman/postcss-purgecss';
 import { sharedConfig } from '../../../../vite.config.shared';
 
 const dir = path.resolve(__dirname).replace(/\\/g, '/');
 const resources = `${dir}/resources`;
 const assets = `${dir}/assets`;
-const node_modules = './node_modules';
 
 // COPY
 const directoriesToCopy = [
-    { src: `${resources}/img`, dest: '' },
-    { src: `${node_modules}/select2/dist/js/select2.full.min.js`, dest: 'js' },
+    { src: `${resources}/img`, dest: '' }
 ];
 
 // SASS
@@ -37,27 +34,6 @@ export default {
             targets: directoriesToCopy,
         }),
     ],
-    css: {
-        ...sharedConfig.css,
-        postcss: {
-            ...sharedConfig.css.postcss,
-            plugins: [
-                ...sharedConfig.css.postcss.plugins,
-                // postcssPurgecss({
-                //     content: [
-                //         './**/*.php',
-                //         './**/*.html',
-                //         './assets/js/**/*.js',
-                //     ],
-                //     safelist: {
-                //         standard: [ /wp-/, /is-/, /has-/, /align/, /screen-reader/ ],
-                //         deep: [ /is-/, /has-/ ],
-                //         greedy: [ /^menu-/, /^nav-/, /^wp-/ ],
-                //     }
-                // }),
-            ],
-        },
-    },
     build: {
         ...sharedConfig.build,
         outDir: `${assets}`,

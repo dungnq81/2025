@@ -1,1 +1,61 @@
-body.login{background-repeat:no-repeat;background-size:cover;position:relative;min-height:100%;height:auto}body.login:after,body.login:before{content:"";position:absolute;left:0;top:0;width:100%;height:100%}body.login .language-switcher{position:relative;z-index:99}body.login form.shake+#nav{animation:shake .2s cubic-bezier(.19,.49,.38,.79) both;animation-iteration-count:3;transform:translate(0)}#login{position:relative;z-index:99}#login h1 a{width:auto;max-width:100%;background-position:center center;height:70px;background-size:contain;margin-bottom:20px}#login h1 a:focus{box-shadow:none}#login .privacy-policy-link{color:#ec1f27;text-decoration:none}#login #nav{margin:0;text-align:right;right:0;position:relative;top:-59px}#login :where(#nav,.privacy-policy-link,#backtoblog){display:none}
+body.login {
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  min-height: 100%;
+  height: auto;
+}
+body.login::after, body.login::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+body.login::before {
+  /*opacity: 0.1;
+  background: #000;*/
+}
+body.login .language-switcher {
+  position: relative;
+  z-index: 99;
+}
+body.login form {
+  /*padding: 25px;*/
+}
+body.login form.shake + #nav {
+  animation: shake 0.2s cubic-bezier(0.19, 0.49, 0.38, 0.79) both;
+  animation-iteration-count: 3;
+  transform: translateX(0);
+}
+
+#login {
+  position: relative;
+  z-index: 99;
+}
+#login h1 a {
+  width: auto;
+  max-width: 100%;
+  background-position: center center;
+  height: 70px;
+  background-size: contain;
+  margin-bottom: 20px;
+}
+#login h1 a:focus {
+  box-shadow: none;
+}
+#login .privacy-policy-link {
+  color: #ec1f27;
+  text-decoration: none;
+}
+#login #nav {
+  margin: 0;
+  text-align: right;
+  right: 0;
+  position: relative;
+  top: -59px;
+}
+#login :where(#nav, .privacy-policy-link, #backtoblog) {
+  display: none;
+}

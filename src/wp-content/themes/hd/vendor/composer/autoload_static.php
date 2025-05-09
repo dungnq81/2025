@@ -42,6 +42,7 @@ class ComposerStaticInit9b89879d0ffdac5f0eb892fc5d415441
         'HD\\API\\Endpoints\\SingleEndpoints' => __DIR__ . '/../..' . '/inc/API/Endpoints/SingleEndpoints.php',
         'HD\\Core\\Admin\\Admin' => __DIR__ . '/../..' . '/inc/Core/Admin/Admin.php',
         'HD\\Core\\Customizer' => __DIR__ . '/../..' . '/inc/Core/Customizer.php',
+        'HD\\Core\\Frontend\\Ajax' => __DIR__ . '/../..' . '/inc/Core/Frontend/Ajax.php',
         'HD\\Core\\Frontend\\Hook' => __DIR__ . '/../..' . '/inc/Core/Frontend/Hook.php',
         'HD\\Core\\Frontend\\Shortcode' => __DIR__ . '/../..' . '/inc/Core/Frontend/Shortcode.php',
         'HD\\Core\\Optimizer' => __DIR__ . '/../..' . '/inc/Core/Optimizer.php',
