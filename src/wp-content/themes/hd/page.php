@@ -33,7 +33,7 @@ do_action( 'hd_page_before_action' );
 $alternative_title = \HD_Helper::getField( 'alternative_title', $post->ID );
 
 ?>
-<h1 class="test">
+<h1 class="test tw:flex">
     <strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</strong>
 </h1>
 <section class="section section-page singular">

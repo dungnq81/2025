@@ -1,6 +1,6 @@
 import * as path from 'path';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { sharedConfig } from '../../../../vite.config.shared';
+import {viteStaticCopy} from 'vite-plugin-static-copy';
+import {sharedConfig} from '../../../../vite.config.shared';
 
 const dir = path.resolve(__dirname).replace(/\\/g, '/');
 const resources = `${dir}/resources`;
@@ -8,13 +8,13 @@ const assets = `${dir}/assets`;
 
 // COPY
 const directoriesToCopy = [
-    { src: `${resources}/img`, dest: '' }
+    {src: `${resources}/img`, dest: ''}
 ];
 
 // SASS
 const sassFiles = [
-    'login-css',
-    'addon-css',
+    'login',
+    'addon',
 ];
 
 // JS
@@ -39,20 +39,22 @@ export default {
         outDir: `${assets}`,
         assetsDir: '',
         rollupOptions: {
-            input: [
-                ...sassFiles.map((file) => `${resources}/sass/${file}.scss`),
-                ...jsFiles.map((file) => `${resources}/js/${file}.js`),
-            ],
+            input: Object.fromEntries([
+                ...sassFiles.map((file) => [`css/${file}`, `${resources}/sass/${file}.scss`]),
+                ...jsFiles.map((file) => [`${file}`, `${resources}/js/${file}.js`]),
+            ]),
             output: {
                 entryFileNames: `js/[name].js`,
                 chunkFileNames: `js/[name].js`,
                 assetFileNames: (assetInfo) => {
                     if (assetInfo.name.endsWith('.css')) {
-                        return `css/[name].[ext]`;
+                        return assetInfo.name.includes('_vendor') ? 'css/_vendor.css' : `[name].css`;
                     }
+
                     if (assetInfo.name && /\.(woff2?|ttf|otf|eot)$/i.test(assetInfo.name)) {
-                        return 'fonts/[name].[ext]';
+                        return `fonts/[name].[ext]`;
                     }
+
                     return `img/[name].[ext]`;
                 },
                 manualChunks(id) {

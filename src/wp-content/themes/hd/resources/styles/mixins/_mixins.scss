@@ -1,22 +1,20 @@
-@use 'sass:list';
-@use 'sass:math';
 @use 'sass:meta';
-@use 'sass:map';
-@use 'sass:color';
 @use 'sass:string';
+@use 'sass:math';
 
 @use '../functions' as func;
+@use '../variables' as vars;
 
-@mixin mq-max-width($width: 767px) {
+@mixin mq-max($width: 767px) {
     $width_value: func.fs($width);
-    @media only screen and (max-width: #{$width_value}) {
+    @media screen and (max-width: #{$width_value}) {
         @content;
     }
 }
 
-@mixin mq-min-width($width: 768px) {
+@mixin mq-min($width: 768px) {
     $width_value: func.fs($width);
-    @media only screen and (min-width: #{$width_value}) {
+    @media screen and (min-width: #{$width_value}) {
         @content;
     }
 }
@@ -35,7 +33,6 @@
     }
 }
 
-
 @mixin hidden-text {
     border: 0;
     clip: rect(0, 0, 0, 0);
@@ -48,17 +45,6 @@
     width: 1px;
     word-wrap: normal !important;
     white-space: nowrap;
-}
-
-/// @link http://www.sitepoint.com/centering-with-sass/
-@mixin centering-self($width: 300, $height: $width) {
-    & {
-        position: absolute;
-        top: func.subtract(50%, func.fs(func.divide($height, 2)));
-        left: func.subtract(50%, func.fs(func.divide($width, 2)));
-        width: $width;
-        height: $height;
-    }
 }
 
 @mixin arrow($direction: down, $size: 5px, $color: #000000) {
@@ -110,7 +96,10 @@
     @if $min-val == $max-val {
         & {
             font-size: $min-rem;
-            line-height: $min-rem * $base;
+
+            @if meta.type-of($base) == 'number' {
+                line-height: $min-rem * $base;
+            }
         }
     }
 
@@ -127,20 +116,18 @@
                 #{$max-rem}
         );
 
-        $lh-intercept: $min-val * $base - $slope * $base * $min-width-val;
-        $line-height-clamp: clamp(
-                #{$min-rem * $base},
-                #{$lh-intercept}rem + #{$slope * $base * 100}vw,
-                #{$max-rem * $base}
-        );
-
-        @if $base == 0 {
-            $line-height-clamp: inherit;
-        }
-
         & {
             font-size: $font-clamp;
-            line-height: $line-height-clamp;
+
+            @if meta.type-of($base) == 'number' {
+                $lh-intercept: $min-val * $base - $slope * $base * $min-width-val;
+                $line-height-clamp: clamp(
+                        #{$min-rem * $base},
+                        #{$lh-intercept}rem + #{$slope * $base * 100}vw,
+                        #{$max-rem * $base}
+                );
+                line-height: $line-height-clamp;
+            }
         }
     }
 }
@@ -175,7 +162,7 @@
         }
     }
 
-    @media only screen and (max-width: 782px) {
+    @include mq-max(782px) {
         @if $admin_bar {
             #{$css_property}: calc(var(--vh, 1vh) * #{$multiplier} - 46px);
 
@@ -183,18 +170,6 @@
                 #{$css_property}: calc(#{$multiplier}dvh - 46px);
             }
         }
-    }
-}
-
-@mixin keyframes($name) {
-    @-webkit-keyframes #{$name} {
-        @content;
-    }
-    @-moz-keyframes #{$name} {
-        @content;
-    }
-    @keyframes #{$name} {
-        @content;
     }
 }
 
@@ -229,4 +204,46 @@
 @mixin flex-basis($n: 1, $gap: 0, $important: false) {
     $grid-columns: 12;
     @include flex-self($grid-columns, $n, $gap, $important);
+}
+
+/// @link http://www.sitepoint.com/centering-with-sass/
+@mixin centering-self($width: 300, $height: $width) {
+    & {
+        position: absolute;
+        top: func.subtract(50%, func.fs(func.divide($height, 2)));
+        left: func.subtract(50%, func.fs(func.divide($width, 2)));
+        width: $width;
+        height: $height;
+    }
+}
+
+@mixin animation-loading($size: 30px, $color1: #000, $color2: #fff, $border_width: 2px, $bg: rgb(0 0 0 / 5%)) {
+    & {
+        position: relative;
+
+        &::before {
+            z-index: 99998;
+            content: '';
+            background-color: $bg;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        &::after {
+            content: '';
+            z-index: 99999;
+            border: $border_width solid;
+            border-color: $color1 $color2 $color1 $color2; // top right bottom left
+            border-radius: 50%;
+            animation: spin 2.5s linear infinite;
+            position: absolute;
+            top: calc(50% - ($size + $border_width * 2) / 2);
+            left: calc(50% - ($size + $border_width * 2) / 2);
+            width: $size;
+            height: $size;
+        }
+    }
 }

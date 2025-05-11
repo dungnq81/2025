@@ -46,14 +46,14 @@
     "src": "src/wp-content/plugins/hd-addons/resources/js/sorting.js",
     "isEntry": true
   },
-  "src/wp-content/plugins/hd-addons/resources/sass/addon-css.scss": {
-    "file": "css/addon-css.css",
-    "src": "src/wp-content/plugins/hd-addons/resources/sass/addon-css.scss",
+  "src/wp-content/plugins/hd-addons/resources/sass/addon.scss": {
+    "file": "css/addon.css",
+    "src": "src/wp-content/plugins/hd-addons/resources/sass/addon.scss",
     "isEntry": true
   },
-  "src/wp-content/plugins/hd-addons/resources/sass/login-css.scss": {
-    "file": "css/login-css.css",
-    "src": "src/wp-content/plugins/hd-addons/resources/sass/login-css.scss",
+  "src/wp-content/plugins/hd-addons/resources/sass/login.scss": {
+    "file": "css/login.css",
+    "src": "src/wp-content/plugins/hd-addons/resources/sass/login.scss",
     "isEntry": true
   }
 }

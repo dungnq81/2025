@@ -132,7 +132,7 @@ final class Addons {
 		wp_enqueue_script( 'wp-color-picker' );
 
 		wp_enqueue_style( '_vendor-css', ADDONS_URL . 'assets/css/_vendor.css', [], $version );
-		wp_enqueue_style( 'addon-css', ADDONS_URL . 'assets/css/addon-css.css', [ '_vendor-css' ], $version );
+		wp_enqueue_style( 'addon-css', ADDONS_URL . 'assets/css/addon.css', [ '_vendor-css' ], $version );
 
 		wp_enqueue_script( 'addon-js', ADDONS_URL . 'assets/js/addon.js', [ 'wp-color-picker' ], $version, true );
 		wp_script_add_data( 'addon-js', 'addon', [ 'module', 'defer' ] );
@@ -152,7 +152,7 @@ final class Addons {
 	public function login_enqueue_script(): void {
 		$version = Helper::version();
 
-		wp_enqueue_style( 'login-css', ADDONS_URL . 'assets/css/login-css.css', [], $version );
+		wp_enqueue_style( 'login-css', ADDONS_URL . 'assets/css/login.css', [], $version );
 		wp_enqueue_script( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true );
 		wp_script_add_data( 'login-js', 'addon', [ 'module', 'async' ] );
 

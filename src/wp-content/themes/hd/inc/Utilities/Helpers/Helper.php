@@ -6,6 +6,7 @@ namespace HD\Utilities\Helpers;
 
 use HD\Utilities\Traits\Wp;
 use MatthiasMullie\Minify;
+use Random\RandomException;
 
 \defined( 'ABSPATH' ) || die;
 
@@ -38,6 +39,41 @@ final class Helper {
 		         ( defined( 'WP_DEBUG' ) && \WP_DEBUG === true ) ||
 		         ( defined( 'FORCE_VERSION' ) && \FORCE_VERSION === true )
 		) ? (string) $timestamp : false;
+	}
+
+	// -------------------------------------------------------------
+
+	/**
+	 * Generate a unique slug with desired length.
+	 *
+	 * @param int $length Total desired slug length
+	 * @param string $prefix
+	 *
+	 * @return string
+	 * @throws RandomException
+	 */
+	public static function makeUnique( int $length = 32, string $prefix = '' ): string {
+		// microtime
+		$time        = microtime( true );
+		$timeEncoded = base_convert( (string) ( $time * 1000000 ), 10, 36 );
+
+		// Process ID
+		$pidEncoded = base_convert( (string) getmypid(), 10, 36 );
+
+		// uniqid
+		$uniq        = uniqid( '', true );
+		$uniqEncoded = base_convert( str_replace( '.', '', $uniq ), 10, 36 );
+
+		// Random supplement
+		$base   = $timeEncoded . $pidEncoded . $uniqEncoded;
+		$need   = max( 0, $length - strlen( $base ) );
+		$random = '';
+		if ( $need > 0 ) {
+			$bytes  = random_bytes( (int) ceil( $need * 0.75 ) );
+			$random = substr( base_convert( bin2hex( $bytes ), 16, 36 ), 0, $need );
+		}
+
+		return $prefix . substr( $base . $random, 0, $length );
 	}
 
 	// -------------------------------------------------------------
@@ -82,7 +118,7 @@ final class Helper {
 			}
 		}
 
-		// Reconstruct content with valid <script> tags
+		// Re-construct content with valid <script> tags
 		return preg_replace_callback( $script_pattern, static function () use ( &$valid_scripts ) {
 			return array_shift( $valid_scripts ) ?? '';
 		}, $content );

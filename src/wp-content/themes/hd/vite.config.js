@@ -15,6 +15,9 @@ const directoriesToCopy = [
 // SASS
 const sassFiles = [
     // (components)
+    'components/home',
+    'components/swiper',
+    'components/woocommerce',
 
     // (entries)
     'editor-style',
@@ -25,6 +28,12 @@ const sassFiles = [
 // JS
 const jsFiles = [
     // (components)
+    'components/home',
+    'components/preload-polyfill',
+    'components/social-share',
+    'components/swiper',
+    'components/tabs',
+    'components/woocommerce',
 
     // (entries)
     'admin',
@@ -52,13 +61,11 @@ export default {
                 entryFileNames: `js/[name].js`,
                 chunkFileNames: `js/[name].js`,
                 assetFileNames: (assetInfo) => {
-                    const name = assetInfo.name || '';
-
-                    if (name.endsWith('.css')) {
-                        return name.includes('_vendor') ? 'css/_vendor.css' : `[name].css`;
+                    if (assetInfo.name.endsWith('.css')) {
+                        return assetInfo.name.includes('_vendor') ? 'css/_vendor.css' : `[name].css`;
                     }
 
-                    if (/\.(woff2?|ttf|otf|eot)$/i.test(name)) {
+                    if (assetInfo.name && /\.(woff2?|ttf|otf|eot)$/i.test(assetInfo.name)) {
                         return `fonts/[name].[ext]`;
                     }
 

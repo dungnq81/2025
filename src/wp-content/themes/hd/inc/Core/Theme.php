@@ -138,8 +138,8 @@ final class Theme {
 		\HD_Asset::enqueueStyle( 'index-css', ASSETS_URL . 'css/index.css', [ 'vendor-css' ], $version );
 
 		/** JS */
-		\HD_Asset::enqueueScript( 'preload', ASSETS_URL . 'js/preload-polyfill.js', [], $version, false, [ 'module', 'async' ] );
-		\HD_Asset::enqueueScript( 'index', ASSETS_URL . 'js/index.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
+		\HD_Asset::enqueueScript( 'preload-js', ASSETS_URL . 'js/components/preload-polyfill.js', [], $version, false, [ 'module', 'async' ] );
+		\HD_Asset::enqueueScript( 'index-js', ASSETS_URL . 'js/index.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
 
 		/** Comments */
 		if ( is_singular() && comments_open() && \HD_Helper::getOption( 'thread_comments' ) ) {

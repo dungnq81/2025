@@ -1,14 +1,1 @@
-jQuery(function($) {
-  const create_user = $("#createuser");
-  create_user.find("#send_user_notification").removeAttr("checked").attr("disabled", true);
-  $(document).on("click", ".notice-dismiss", function(e) {
-    var _a;
-    (_a = $(this).closest(".notice.is-dismissible")) == null ? void 0 : _a.fadeOutAndRemove(500);
-  });
-  $.fn.fadeOutAndRemove = function(speed) {
-    return this.fadeOut(speed, function() {
-      $(this).remove();
-    });
-  };
-});
-//# sourceMappingURL=admin.js.map
+jQuery((function(e){e("#createuser").find("#send_user_notification").removeAttr("checked").attr("disabled",!0),e(document).on("click",".notice-dismiss",(function(t){var i;null==(i=e(this).closest(".notice.is-dismissible"))||i.fadeOutAndRemove(500)})),e.fn.fadeOutAndRemove=function(t){return this.fadeOut(t,(function(){e(this).remove()}))}}));
