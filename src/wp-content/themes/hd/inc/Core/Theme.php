@@ -32,6 +32,7 @@ final class Theme {
 		add_action( 'after_setup_theme', [ $this, 'setup_theme' ], 10 );
 		add_action( 'after_setup_theme', [ $this, 'setup' ], 11 );
 
+		add_action( 'after_switch_theme', [ $this, 'switch_theme' ], 10 );
 		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 10 );
 
 		/** Widgets */
@@ -88,9 +89,6 @@ final class Theme {
 
 	// --------------------------------------------------
 
-	/**
-	 * @return void
-	 */
 	public function setup(): void {
 		if ( \HD_Helper::isAdmin() ) {
 			( Admin::get_instance() );
@@ -105,6 +103,52 @@ final class Theme {
 		// Integration
 		\HD_Helper::isAcfActive() && ACF::get_instance();
 		\HD_Helper::isWoocommerceActive() && WooCommerce::get_instance();
+	}
+
+	// --------------------------------------------------
+
+	public function switch_theme(): void {
+		// -------------------------------------------------------------
+		// permalink structure
+		// -------------------------------------------------------------
+
+		if ( ! \HD_Helper::getOption( '_permalink_structure_updated' ) ) {
+			\HD_Helper::updateOption( '_permalink_structure_updated', true );
+			global $wp_rewrite;
+
+			$wp_rewrite->set_permalink_structure( '/%postname%/' );
+			$wp_rewrite->flush_rules();
+		}
+
+		// -------------------------------------------------------------
+		// images sizes
+		// -------------------------------------------------------------
+
+		/**
+		 * thumbnail (540x0)
+		 * medium (768x0)
+		 * large (1024x0)
+		 *
+		 * small-thumbnail (150x150)
+		 * widescreen (1920x9999)
+		 * post-thumbnail (1280x9999)
+		 */
+		if ( ! \HD_Helper::getOption( '_image_sizes_updated' ) ) {
+			\HD_Helper::updateOption( '_image_sizes_updated', true );
+
+			/** Default thumb */
+			\HD_Helper::updateOption( 'thumbnail_size_w', 540 );
+			\HD_Helper::updateOption( 'thumbnail_size_h', 0 );
+			\HD_Helper::updateOption( 'thumbnail_crop', 0 );
+
+			/** Medium thumb */
+			\HD_Helper::updateOption( 'medium_size_w', 768 );
+			\HD_Helper::updateOption( 'medium_size_h', 0 );
+
+			/** Large thumb */
+			\HD_Helper::updateOption( 'large_size_w', 1024 );
+			\HD_Helper::updateOption( 'large_size_h', 0 );
+		}
 	}
 
 	// --------------------------------------------------

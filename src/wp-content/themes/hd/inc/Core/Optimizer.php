@@ -32,38 +32,6 @@ final class Optimizer {
 	 * @return void
 	 */
 	private function _custom_hooks(): void {
-
-		// -------------------------------------------------------------
-		// images sizes
-		// -------------------------------------------------------------
-
-		/**
-		 * thumbnail (540x0)
-		 * medium (768x0)
-		 * large (1024x0)
-		 *
-		 * small-thumbnail (150x150)
-		 * widescreen (1920x9999)
-		 * post-thumbnail (1280x9999)
-		 */
-
-		if ( ! \HD_Helper::getOption( '_theme_image_sizes_updated' ) ) {
-			\HD_Helper::updateOption( '_theme_image_sizes_updated', true );
-
-			/** Default thumb */
-			update_option( 'thumbnail_size_w', 540 );
-			update_option( 'thumbnail_size_h', 0 );
-			update_option( 'thumbnail_crop', 0 );
-
-			/** Medium thumb */
-			update_option( 'medium_size_w', 768 );
-			update_option( 'medium_size_h', 0 );
-
-			/** Large thumb */
-			update_option( 'large_size_w', 1024 );
-			update_option( 'large_size_h', 0 );
-		}
-
 		/** Custom thumb */
 		add_image_size( 'small-thumbnail', 150, 150, true );
 		add_image_size( 'widescreen', 1920, 9999, false );
@@ -137,7 +105,8 @@ final class Optimizer {
 			if ( isset( $_GET['clear_cache'] ) ) {
 				\HD_Helper::clearAllCache();
 				set_transient( '_clear_cache_message', __( 'Cache has been successfully cleared.', TEXT_DOMAIN ), 30 );
-				?>
+
+				echo <<<HTML
                 <script>
                     const currentUrl = window.location.href;
                     if (currentUrl.includes('clear_cache=1')) {
@@ -147,7 +116,7 @@ final class Optimizer {
                             : window.history.replaceState({}, document.title, newUrl);
                     }
                 </script>
-				<?php
+            HTML;
 			}
 		} );
 
