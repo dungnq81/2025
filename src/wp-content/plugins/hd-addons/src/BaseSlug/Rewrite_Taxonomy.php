@@ -58,11 +58,11 @@ class Rewrite_Taxonomy {
 
 				// woocommerce
 				if ( $custom_tax->name === 'product_cat' && \Addons\Helper::checkPluginActive( 'woocommerce/woocommerce.php' ) ) {
-					$permalink_structure = wc_get_permalink_structure();
+					$permalink_structure = \wc_get_permalink_structure();
 					$category_base       = trim( $permalink_structure['category_rewrite_slug'], '/' );
 				}
 
-				// Remove initial slash.
+				// Remove the initial slash.
 				if ( str_starts_with( $category_base, '/' ) ) {
 					$category_base = substr( $category_base, 1 );
 				}

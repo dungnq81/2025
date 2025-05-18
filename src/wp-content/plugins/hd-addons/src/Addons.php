@@ -22,9 +22,9 @@ final class Addons {
 
 		// Admin / login assets
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ], 39, 1 );
+		add_action( 'login_enqueue_scripts', [ $this, 'login_enqueue_script' ], 31 );
 		add_filter( 'login_headertext', [ $this, 'login_headertext' ] );
 		add_filter( 'login_headerurl', [ $this, 'login_headerurl' ] );
-		add_action( 'login_enqueue_scripts', [ $this, 'login_enqueue_script' ], 31 );
 
 		// Script attribute helper
 		add_action( 'script_loader_tag', [ $this, 'script_loader_tag' ], 11, 3 );
@@ -43,7 +43,7 @@ final class Addons {
 			remove_action( 'admin_init', [ \Classic_Editor::class, 'register_settings' ] );
 		}
 
-		// Load modules from YAML (cache to avoid I/O)
+		// Load modules from YAML config
 		$modules = wp_cache_get( 'addons_modules' );
 		if ( false === $modules ) {
 			$modules = Helper::loadYaml( ADDONS_PATH . 'config.yaml' ) ?: [];
@@ -131,17 +131,17 @@ final class Addons {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 
-		wp_enqueue_style( '_vendor-css', ADDONS_URL . 'assets/css/_vendor.css', [], $version );
-		wp_enqueue_style( 'addon-css', ADDONS_URL . 'assets/css/addon.css', [ '_vendor-css' ], $version );
-
-		wp_enqueue_script( 'addon-js', ADDONS_URL . 'assets/js/addon.js', [ 'wp-color-picker' ], $version, true );
-		wp_script_add_data( 'addon-js', 'addon', [ 'module', 'defer' ] );
+		Asset::enqueueStyle( '_vendor-css', ADDONS_URL . 'assets/css/_vendor.css', [], $version );
+		Asset::enqueueStyle( 'addon-css', ADDONS_URL . 'assets/css/addon.css', [ '_vendor-css' ], $version );
+		Asset::enqueueScript( 'addon-js', ADDONS_URL . 'assets/js/addon.js', [ 'wp-color-picker' ], $version, true, [ 'module', 'defer' ] );
 
 		wp_enqueue_style( 'wp-codemirror' );
-		wp_localize_script( 'addon-js', 'codemirror_settings', [
+
+		$l10n = [
 			'codemirror_css'  => wp_enqueue_code_editor( [ 'type' => 'text/css' ] ),
 			'codemirror_html' => wp_enqueue_code_editor( [ 'type' => 'text/html' ] ),
-		] );
+		];
+		Asset::localize( 'addon-js', 'codemirror_settings', $l10n );
 	}
 
 	// -------------------------------------------------------------
@@ -152,12 +152,11 @@ final class Addons {
 	public function login_enqueue_script(): void {
 		$version = Helper::version();
 
-		wp_enqueue_style( 'login-css', ADDONS_URL . 'assets/css/login.css', [], $version );
-		wp_enqueue_script( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true );
-		wp_script_add_data( 'login-js', 'addon', [ 'module', 'async' ] );
+		Asset::enqueueStyle( 'login-css', ADDONS_URL . 'assets/css/login.css', [], $version );
+		Asset::enqueueScript( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true, [ 'module', 'async' ] );
 
-		$default_logo    = '';
-		$default_bg = '';
+		$default_logo = '';
+		$default_bg   = '';
 
 		//$default_logo = ADDONS_URL . 'assets/img/logo.png';
 		//$default_bg   = ADDONS_URL . 'assets/img/login-bg.jpg';
@@ -188,7 +187,7 @@ final class Addons {
 		}
 
 		if ( $inline = $css->css_output() ) {
-			wp_add_inline_style( 'login-css', $inline );
+			Asset::inlineStyle( 'login-css', $inline );
 		}
 	}
 

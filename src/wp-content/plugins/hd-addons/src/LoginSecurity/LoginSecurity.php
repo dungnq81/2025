@@ -5,7 +5,6 @@ namespace Addons\LoginSecurity;
 \defined( 'ABSPATH' ) || exit;
 
 final class LoginSecurity {
-
 	public mixed $login_security_options = [];
 
 	// ------------------------------------------------------
@@ -14,7 +13,7 @@ final class LoginSecurity {
 		$this->login_security_options = \Addons\Helper::getOption( 'login_security__options' );
 
 		$this->_login_restricted();
-		$this->_illegal_users();
+		$this->_login_illegal_users();
 		$this->_login_attempts();
 	}
 
@@ -27,9 +26,9 @@ final class LoginSecurity {
 
 	// ------------------------------------------------------
 
-	private function _illegal_users(): void {
+	private function _login_illegal_users(): void {
 		if ( $this->login_security_options['illegal_users'] ?? '' ) {
-			$common_user = new IllegalUsers();
+			$common_user = new LoginIllegalUsers();
 			add_action( 'illegal_user_logins', [ $common_user, 'get_illegal_usernames' ] );
 		}
 	}

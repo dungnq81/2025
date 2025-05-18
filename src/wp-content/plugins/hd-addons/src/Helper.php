@@ -40,10 +40,10 @@ final class Helper {
 	// --------------------------------------------------
 
 	/**
-	 * Lightweight error logger with 1‑minute throttle per unique message.
+	 * Throttled error logging with a 1‑minute throttle per unique message.
 	 *
-	 * @param string $message
-	 * @param int $type
+	 * @param string      $message
+	 * @param int         $type
 	 * @param string|null $dest
 	 * @param string|null $headers
 	 *
@@ -53,8 +53,23 @@ final class Helper {
 		$key = 'hd_err_' . md5( $message );
 		if ( false === get_transient( $key ) ) {
 			set_transient( $key, 1, MINUTE_IN_SECONDS );
+			// Intentionally calling error_log for throttled logging.
 			error_log( $message, $type, $dest, $headers );
 		}
+	}
+
+	// --------------------------------------------------
+
+	/**
+	 * @param string|\WP_Error $message
+	 * @param string|int $title
+	 * @param string|array|int $args
+	 *
+	 * @return void
+	 */
+	public static function wpDie( string|\WP_Error $message = '', string|int $title = '', string|array|int $args = [] ) {
+		// Intentionally calling wp_die as a final error handler.
+		wp_die( $message, $title, $args );
 	}
 
 	// --------------------------------------------------

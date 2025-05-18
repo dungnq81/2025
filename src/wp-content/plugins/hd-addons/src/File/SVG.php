@@ -247,7 +247,7 @@ final class SVG {
 	 * @return object
 	 */
 	public function svg_dimensions( $svg ): object {
-		$svg    = simplexml_load_string( file_get_contents( $svg ) );
+		$svg    = \simplexml_load_string( file_get_contents( $svg ) );
 		$width  = 0;
 		$height = 0;
 		if ( $svg ) {
@@ -301,7 +301,7 @@ final class SVG {
 	public function sanitize( $file ): bool {
 		$svg_code = file_get_contents( $file );
 		if ( $is_zipped = $this->is_gzipped( $svg_code ) ) {
-			$svg_code = gzdecode( $svg_code );
+			$svg_code = \gzdecode( $svg_code );
 
 			if ( ! $svg_code ) {
 				return false;
@@ -318,7 +318,7 @@ final class SVG {
 		}
 
 		if ( $is_zipped ) {
-			$clean_svg_code = gzencode( $clean_svg_code );
+			$clean_svg_code = \gzencode( $clean_svg_code );
 		}
 
 		file_put_contents( $file, $clean_svg_code );

@@ -3,7 +3,7 @@
         'name' => 'plugins/hd-addons',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'e1047ef1848bbf39a058a23cb09fb87a5b1fc0ad',
+        'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'plugins/hd-addons' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e1047ef1848bbf39a058a23cb09fb87a5b1fc0ad',
+            'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '59be420c5cdc0c3c9cdae31804d32fefb515a918',
+            'reference' => '0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(

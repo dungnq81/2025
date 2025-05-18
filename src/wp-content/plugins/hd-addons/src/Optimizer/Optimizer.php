@@ -139,7 +139,7 @@ final class Optimizer {
 			return $html;
 		}
 
-		// Insert before closing </head> (case‑insensitive, first occurrence)
+		// Insert before closing </head>
 		$newHtml = preg_replace( '/<\/head>/i', $links . '</head>', $html, 1 );
 
 		return $newHtml ?: $html;

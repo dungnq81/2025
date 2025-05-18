@@ -1,4 +1,5 @@
 <?php
+// options-menu.php
 
 \defined( 'ABSPATH' ) || exit;
 
@@ -10,11 +11,9 @@
             <span>Version: <?php echo ADDONS_VERSION; ?></span>
         </h3>
     </div>
-
     <div class="save-bar">
         <button type="submit" name="_submit_settings" class="button button-primary"><?php _e( 'Save Changes', ADDONS_TEXTDOMAIN ); ?></button>
     </div>
-
     <ul class="ul-menu-list">
 		<?php
 

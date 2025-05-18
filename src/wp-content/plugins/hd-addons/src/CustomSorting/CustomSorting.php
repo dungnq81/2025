@@ -81,12 +81,14 @@ final class CustomSorting {
 	 */
 	public function admin_enqueue_scripts( $hook_suffix ): void {
 		if ( $this->_check_custom_sorting_script() ) {
-			wp_enqueue_script( 'sorting-js', ADDONS_URL . 'assets/js/sorting.js', [
-				'jquery-core',
-				'jquery-ui-sortable'
-			], \Addons\Helper::version(), true );
-
-			wp_script_add_data( 'sorting-js', 'addon', [ 'module', 'defer' ] );
+			\Addons\Asset::enqueueScript(
+				'sorting-js',
+				ADDONS_URL . 'assets/js/sorting.js',
+				[ 'jquery-core', 'jquery-ui-sortable' ],
+				\Addons\Helper::version(),
+				true,
+				[ 'module', 'defer' ]
+			);
 		}
 	}
 

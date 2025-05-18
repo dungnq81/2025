@@ -2,8 +2,6 @@
 
 namespace Addons\Optimizer\LazyLoad;
 
-use Detection\Exception\MobileDetectException;
-
 \defined( 'ABSPATH' ) || exit;
 
 final class LazyLoad {
@@ -44,13 +42,10 @@ final class LazyLoad {
 
 	// -------------------------------------------------------------
 
-	/**
-	 * @throws MobileDetectException
-	 */
 	public function __construct() {
 		$optimizer_options = \Addons\Helper::getOption( 'optimizer__options' );
-		$lazyload         = $optimizer_options['lazyload'] ?? 0;
-		$lazyload_mobile  = $optimizer_options['lazyload_mobile'] ?? 0;
+		$lazyload          = $optimizer_options['lazyload'] ?? 0;
+		$lazyload_mobile   = $optimizer_options['lazyload_mobile'] ?? 0;
 
 		if ( empty( $lazyload ) ) {
 			return;
@@ -95,7 +90,13 @@ final class LazyLoad {
 	 * @return void
 	 */
 	public function load_scripts(): void {
-		wp_enqueue_script( 'lazyload-js', ADDONS_URL . 'assets/js/lazyload.js', [], \Addons\Helper::version(), true );
-		wp_script_add_data( 'lazyload-js', 'addon', [ 'module', 'async' ] );
+		\Addons\Asset::enqueueScript(
+			'lazyload-js',
+			ADDONS_URL . 'assets/js/lazyload.js',
+			[],
+			\Addons\Helper::version(),
+			true,
+			[ 'module', 'async' ]
+		);
 	}
 }

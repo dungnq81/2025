@@ -18,7 +18,7 @@ final class CustomCss {
 		$css = \Addons\Helper::getCustomPostContent( 'addon_css', false );
 		if ( $css ) {
 			$css = \Addons\Helper::CSSMinify( $css, true );
-			wp_add_inline_style( 'index-css', $css );
+			\Addons\Asset::inlineStyle( 'index-css', $css );
 		}
 	}
 }

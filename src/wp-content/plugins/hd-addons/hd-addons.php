@@ -22,7 +22,7 @@ define( 'ADDONS_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/' );
 
 add_action( 'plugins_loaded', '_addons_init', 10 );
 function _addons_init(): void {
-	load_plugin_textdomain( ADDONS_TEXTDOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // i18n
+	load_plugin_textdomain( ADDONS_TEXTDOMAIN, false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 	// PHP version guard (8.2 or newer)
 	if ( PHP_VERSION_ID < 80200 ) {
@@ -64,7 +64,7 @@ function _addons_init(): void {
 function _addons_bootstrap(): void {
 	// print notice
 	if ( ! \Addons\Helper::isAcfActive() ) {
-		acf_requirement_notice();
+		_acf_requirement_notice();
 
 		return;
 	}
@@ -85,8 +85,8 @@ function _addons_bootstrap(): void {
 }
 
 // ACF requirement notice
-if ( ! function_exists( 'acf_requirement_notice' ) ) {
-	function acf_requirement_notice(): void {
+if ( ! function_exists( '_acf_requirement_notice' ) ) {
+	function _acf_requirement_notice(): void {
 		if ( ! is_admin() ) {
 			return;
 		}

@@ -435,9 +435,6 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		// Login security
 		//
 		'login_security'                      => [
-			// Allows customization of the Login URL in the admin options.
-			'enable_custom_login_url'    => false,
-
 			// Allowlist IPs Login Access
 			'allowlist_ips_login_access' => [],
 

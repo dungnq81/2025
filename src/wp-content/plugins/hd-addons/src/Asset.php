@@ -1,10 +1,8 @@
 <?php
 
-declare( strict_types=1 );
+namespace Addons;
 
-namespace HD\Utilities\Helpers;
-
-\defined( 'ABSPATH' ) || die;
+\defined( 'ABSPATH' ) || exit;
 
 /**
  * Collect & enqueue CSS/JS.
@@ -72,7 +70,7 @@ final class Asset {
 		wp_enqueue_script( $handle );
 
 		if ( ! empty( $args['extra'] ) ) {
-			wp_script_add_data( $handle, 'extra', $args['extra'] );
+			wp_script_add_data( $handle, 'addon', $args['extra'] );
 		}
 	}
 

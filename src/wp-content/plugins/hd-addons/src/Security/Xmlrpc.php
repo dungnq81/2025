@@ -20,7 +20,7 @@ final class Xmlrpc {
 		add_filter( 'pre_update_option_enable_xmlrpc', '__return_false' );
 		add_filter( 'pre_option_enable_xmlrpc', '__return_zero' );
 
-		// Unset XMLRPC headers
+		// Unset XML-RPC headers
 		add_filter( 'wp_headers', static function ( $headers ) {
 			if ( isset( $headers['X-Pingback'] ) ) {
 				unset( $headers['X-Pingback'] );

@@ -50,7 +50,7 @@ trait Base {
 	 *
 	 * @return void
 	 */
-	public static function wpDie( string|\WP_Error $message = '', string|int $title = '', string|array|int $args = [] ): void {
+	public static function wpDie( string|\WP_Error $message = '', string|int $title = '', string|array|int $args = [] ) {
 		// Intentionally calling wp_die as a final error handler.
 		wp_die( $message, $title, $args );
 	}

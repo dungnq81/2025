@@ -1,15 +1,15 @@
+import $ from 'jquery';
 import select2 from 'select2';
 import 'select2/dist/css/select2.min.css';
 //import '../sass/3rd/_awesome-font.scss';
 
 select2();
 
-jQuery(function ($) {
-    $('.addon-color-field').wpColorPicker();
-
+document.addEventListener('DOMContentLoaded', () => {
     //---------------------------------------------------------------
     // codemirror
     //---------------------------------------------------------------
+
     if (typeof codemirror_settings !== 'undefined') {
         const codemirror_css = document.querySelectorAll('.codemirror_css');
         const codemirror_html = document.querySelectorAll('.codemirror_html');
@@ -32,6 +32,89 @@ jQuery(function ($) {
         initializeCodeMirror(codemirror_css, codemirror_settings.codemirror_css, 'CSS');
         initializeCodeMirror(codemirror_html, codemirror_settings.codemirror_html, 'HTML');
     }
+
+    //---------------------------------------------------------------
+    // select2
+    //---------------------------------------------------------------
+
+    // select2 multiple
+    const select2_multiple = $('.select2-multiple');
+    $.each(select2_multiple, function (i, el) {
+        $(el).select2({
+            multiple: true,
+            allowClear: true,
+            width: 'resolve',
+            dropdownAutoWidth: true,
+            placeholder: $(el).attr('placeholder'),
+        });
+    });
+
+    // select2 tags
+    const select2_tags = $('.select2-tags');
+    $.each(select2_tags, function (i, el) {
+        $(el).select2({
+            multiple: true,
+            tags: true,
+            allowClear: true,
+            width: 'resolve',
+            dropdownAutoWidth: true,
+            placeholder: $(el).attr('placeholder'),
+        });
+    });
+
+    // select2 IPs
+    const select2_ips = $('.select2-ips');
+    $.each(select2_ips, function (i, el) {
+        $(el).select2({
+            multiple: true,
+            tags: true,
+            allowClear: true,
+            width: 'resolve',
+            dropdownAutoWidth: true,
+            placeholder: $(el).attr('placeholder'),
+            createTag: function (params) {
+                let term = $.trim(params.term);
+
+                // Validate the term as an IP address or range
+                if (isValidIPRange(term)) {
+                    return {
+                        id: term,
+                        text: term,
+                    };
+                } else {
+                    return null;
+                }
+            },
+        });
+    });
+
+    // select2 emails
+    const select2_emails = $('.select2-emails');
+    $.each(select2_emails, function (i, el) {
+        $(el).select2({
+            multiple: true,
+            tags: true,
+            allowClear: true,
+            width: 'resolve',
+            dropdownAutoWidth: true,
+            placeholder: $(el).attr('placeholder'),
+            createTag: function (params) {
+                let term = $.trim(params.term);
+                if (isValidEmail(term)) {
+                    return {
+                        id: term,
+                        text: term,
+                    };
+                } else {
+                    return null;
+                }
+            },
+        });
+    });
+});
+
+jQuery(function ($) {
+    $('.addon-color-field').wpColorPicker();
 
     //---------------------------------------------------------------
     // Other
@@ -154,84 +237,6 @@ jQuery(function ($) {
 
         $(window).on('hashchange', function () {
             activateTab(window.location.hash || $tabs.first().attr('href'));
-        });
-    });
-
-    //---------------------------------------------------------------
-    // select2
-    //---------------------------------------------------------------
-    // select2 multiple
-    const select2_multiple = $('.select2-multiple');
-    $.each(select2_multiple, function (i, el) {
-        $(el).select2({
-            multiple: true,
-            allowClear: true,
-            width: 'resolve',
-            dropdownAutoWidth: true,
-            placeholder: $(el).attr('placeholder'),
-        });
-    });
-
-    // select2 tags
-    const select2_tags = $('.select2-tags');
-    $.each(select2_tags, function (i, el) {
-        $(el).select2({
-            multiple: true,
-            tags: true,
-            allowClear: true,
-            width: 'resolve',
-            dropdownAutoWidth: true,
-            placeholder: $(el).attr('placeholder'),
-        });
-    });
-
-    // select2 IPs
-    const select2_ips = $('.select2-ips');
-    $.each(select2_ips, function (i, el) {
-        $(el).select2({
-            multiple: true,
-            tags: true,
-            allowClear: true,
-            width: 'resolve',
-            dropdownAutoWidth: true,
-            placeholder: $(el).attr('placeholder'),
-            createTag: function (params) {
-                let term = $.trim(params.term);
-
-                // Validate the term as an IP address or range
-                if (isValidIPRange(term)) {
-                    return {
-                        id: term,
-                        text: term,
-                    };
-                } else {
-                    return null;
-                }
-            },
-        });
-    });
-
-    // select2 emails
-    const select2_emails = $('.select2-emails');
-    $.each(select2_emails, function (i, el) {
-        $(el).select2({
-            multiple: true,
-            tags: true,
-            allowClear: true,
-            width: 'resolve',
-            dropdownAutoWidth: true,
-            placeholder: $(el).attr('placeholder'),
-            createTag: function (params) {
-                let term = $.trim(params.term);
-                if (isValidEmail(term)) {
-                    return {
-                        id: term,
-                        text: term,
-                    };
-                } else {
-                    return null;
-                }
-            },
         });
     });
 });

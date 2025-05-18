@@ -8,7 +8,7 @@ final class AspectRatio {
 	// --------------------------------------------------
 
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', [ $this, 'aspect_ratio_enqueue_scripts' ], 99 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'aspect_ratio_enqueue_scripts' ], 39 );
 	}
 
 	// --------------------------------------------------
@@ -35,7 +35,7 @@ final class AspectRatio {
 		}
 
 		if ( $styles ) {
-			wp_add_inline_style( 'index-css', $styles );
+			\Addons\Asset::inlineStyle( 'index-css', $styles );
 		}
 	}
 
@@ -92,7 +92,7 @@ final class AspectRatio {
 	 *
 	 * @return array|string
 	 */
-	private function _aspect_ratio_option( string $post_type, string $option ): array|string {
+	private function _aspect_ratio_option( string $post_type, string $option = '' ): array|string {
 		$post_type = $post_type ?: 'post';
 		$option    = $option ?: 'aspect_ratio__options';
 

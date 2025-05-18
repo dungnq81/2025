@@ -69,7 +69,7 @@ final class Comment {
 	// --------------------------------------------------
 
 	public function block_comments_submission(): void {
-		wp_die( 'Comments are closed.' );
+		\Addons\Helper::wpDie( 'Comments are closed.' );
 	}
 
 	// --------------------------------------------------

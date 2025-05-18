@@ -4,10 +4,7 @@ namespace Addons\LoginSecurity;
 
 \defined( 'ABSPATH' ) || exit;
 
-final class IllegalUsers {
-	/**
-	 * @var array|string[]
-	 */
+final class LoginIllegalUsers {
 	public array $common_usernames = [
 		'administrator',
 		'user',

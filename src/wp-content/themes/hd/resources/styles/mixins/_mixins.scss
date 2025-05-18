@@ -194,7 +194,7 @@
 
 @mixin flex-self($total: 12, $n: 1, $gap: 0, $important: false) {
     $width: calculate-flex-width($total, $n, $gap);
-    @if $width > 0 {
+    @if $width != 0 {
         & {
             width: #{$width}#{if($important, ' !important', '')};
         }

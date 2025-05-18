@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '97c3a5a2e8cedfe8df65ee3a010802825bd29588',
+        'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '97c3a5a2e8cedfe8df65ee3a010802825bd29588',
+            'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => true,
         ),
         'composer/composer' => array(
-            'pretty_version' => '2.8.8',
-            'version' => '2.8.8.0',
-            'reference' => '85ff84d6c5260ba21740a7c5c9a111890805d6e7',
+            'pretty_version' => '2.8.9',
+            'version' => '2.8.9.0',
+            'reference' => 'b4e6bff2db7ce756ddb77ecee958a0f41f42bd9d',
             'type' => 'library',
             'install_path' => __DIR__ . '/./composer',
             'aliases' => array(),
@@ -74,9 +74,9 @@
             'dev_requirement' => true,
         ),
         'composer/spdx-licenses' => array(
-            'pretty_version' => '1.5.8',
-            'version' => '1.5.8.0',
-            'reference' => '560bdcf8deb88ae5d611c80a2de8ea9d0358cc0a',
+            'pretty_version' => '1.5.9',
+            'version' => '1.5.9.0',
+            'reference' => 'edf364cefe8c43501e21e88110aac10b284c3c9f',
             'type' => 'library',
             'install_path' => __DIR__ . '/./spdx-licenses',
             'aliases' => array(),
@@ -223,7 +223,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '59be420c5cdc0c3c9cdae31804d32fefb515a918',
+            'reference' => '0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(

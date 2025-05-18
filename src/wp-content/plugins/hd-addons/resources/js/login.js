@@ -1,8 +1,7 @@
-jQuery(function($) {
-    const login = $('#login');
-
-    // login.find('.forgetmenot').remove();
-    login.find('#backtoblog').remove();
-    login.find('#nav').remove();
-    login.find('.privacy-policy-page-link').remove();
+document.addEventListener('DOMContentLoaded', function () {
+    const login = document.getElementById('login');
+    if (login) {
+        const link = login.querySelector('.privacy-policy-page-link');
+        if (link) link.remove();
+    }
 });

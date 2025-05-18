@@ -2,6 +2,8 @@
 
 namespace Addons\LoginSecurity;
 
+use Addons\Helper;
+
 \defined( 'ABSPATH' ) || exit;
 
 final class LoginAttempts {
@@ -29,7 +31,7 @@ final class LoginAttempts {
 	// --------------------------------------------------
 
 	public function __construct() {
-		$security_options           = \Addons\Helper::getOption( 'login_security__options' );
+		$security_options           = Helper::getOption( 'login_security__options' );
 		$this->limit_login_attempts = $security_options['limit_login_attempts'] ?? 0;
 	}
 
@@ -37,10 +39,10 @@ final class LoginAttempts {
 
 	public function maybe_block_login_access(): void {
 		// Get the user ip.
-		$user_ip = \Addons\Helper::ipAddress();
+		$user_ip = Helper::ipAddress();
 
 		// Get login attempts data.
-		$login_attempts = get_option( '_security_unsuccessful_login', [] );
+		$login_attempts = Helper::getOption( '_security_unsuccessful_login', [] );
 
 		// Bail if the user doesn't have attempts.
 		if ( empty( $login_attempts[ $user_ip ]['timestamp'] ) ) {
@@ -49,11 +51,9 @@ final class LoginAttempts {
 
 		// Bail if ip has reached the login attempts limit.
 		if ( $login_attempts[ $user_ip ]['timestamp'] > time() ) {
-			// Update the total blocked logins counter.
-			update_option( '_security_total_blocked_logins', get_option( '_security_total_blocked_logins', 0 ) + 1 );
-
-			error_log( 'Too many incorrect login attempts. - ' . \ip_address() );
-			wp_die(
+			Helper::updateOption( '_security_total_blocked_logins', Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
+			Helper::errorLog( 'Too many incorrect login attempts. - ' . $user_ip );
+			Helper::wpDie(
 				esc_html__( 'Access to login page is currently restricted because of too many incorrect login attempts.', ADDONS_TEXTDOMAIN ),
 				esc_html__( 'Restricted access', ADDONS_TEXTDOMAIN ),
 				[
@@ -70,7 +70,7 @@ final class LoginAttempts {
 			$login_attempts[ $user_ip ]['timestamp'] < time()
 		) {
 			unset( $login_attempts[ $user_ip ] );
-			update_option( '_security_unsuccessful_login', $login_attempts );
+			Helper::updateOption( '_security_unsuccessful_login', $login_attempts );
 		}
 	}
 
@@ -86,7 +86,7 @@ final class LoginAttempts {
 	public function log_login_attempt( string $error ): string {
 		global $errors;
 
-		// Check for errors global since custom login urls plugin is not always returning it.
+		// Check for errors global since the custom login urls plugin is not always returning it.
 		if ( empty( $errors ) ) {
 			return $error;
 		}
@@ -101,10 +101,10 @@ final class LoginAttempts {
 		}
 
 		// Get the current user ip.
-		$user_ip = \Addons\Helper::ipAddress();
+		$user_ip = Helper::ipAddress();
 
 		// Get the login attempts data.
-		$login_attempts = get_option( '_security_unsuccessful_login', [] );
+		$login_attempts = Helper::getOption( '_security_unsuccessful_login', [] );
 
 		// Add the ip to the list if it does not exist.
 		if ( ! array_key_exists( $user_ip, $login_attempts ) ) {
@@ -138,7 +138,7 @@ final class LoginAttempts {
 				break;
 
 			case $attempts === (int) $this->limit_login_attempts * 2:
-				$login_attempts[ $user_ip ]['timestamp'] = time() + 86400; // Set 24-hour limit.
+				$login_attempts[ $user_ip ]['timestamp'] = time() + 86400; // Set a 24-hour limit.
 
 				break;
 
@@ -155,7 +155,7 @@ final class LoginAttempts {
 		}
 
 		// Update the login attempts data.
-		update_option( '_security_unsuccessful_login', $login_attempts );
+		Helper::updateOption( '_security_unsuccessful_login', $login_attempts );
 
 		return $error;
 	}
@@ -163,8 +163,8 @@ final class LoginAttempts {
 	// --------------------------------------------------
 
 	public function reset_login_attempts(): void {
-		$user_ip        = \Addons\Helper::ipAddress();
-		$login_attempts = get_option( '_security_unsuccessful_login', [] );
+		$user_ip        = Helper::ipAddress();
+		$login_attempts = Helper::getOption( '_security_unsuccessful_login', [] );
 
 		// Bail if the IP doesn't exist in the unsuccessful logins.
 		if ( ! array_key_exists( $user_ip, $login_attempts ) ) {
@@ -172,6 +172,6 @@ final class LoginAttempts {
 		}
 
 		unset( $login_attempts[ $user_ip ] );
-		update_option( '_security_unsuccessful_login', $login_attempts );
+		Helper::updateOption( '_security_unsuccessful_login', $login_attempts );
 	}
 }

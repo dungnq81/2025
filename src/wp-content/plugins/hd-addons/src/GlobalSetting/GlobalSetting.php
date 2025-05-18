@@ -179,9 +179,9 @@ final class GlobalSetting {
 		if ( isset( $data['optimizer-hidden'] ) ) {
 
 			$optimizer_options = [];
-			$dns_prefetch      = ! empty( $data['dns_prefetch'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL, ], $data['dns_prefetch'] ) : [];
-			$font_preload      = ! empty( $data['font_preload'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL, ], $data['font_preload'] ) : [];
-			$lazyload_exclude  = ! empty( $data['lazyload_exclude'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL, ], $data['lazyload_exclude'] ) : [];
+			$dns_prefetch      = ! empty( $data['dns_prefetch'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['dns_prefetch'] ) : [];
+			$font_preload      = ! empty( $data['font_preload'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['font_preload'] ) : [];
+			$lazyload_exclude  = ! empty( $data['lazyload_exclude'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['lazyload_exclude'] ) : [];
 
 			$dns_prefetch     = array_map( 'sanitize_url', $dns_prefetch );
 			$font_preload     = array_map( 'sanitize_url', $font_preload );
@@ -252,7 +252,8 @@ final class GlobalSetting {
 				'login_ips_access',
 				'disable_ips_access',
 				'limit_login_attempts',
-				'illegal_users'
+				'illegal_users',
+                'login_otp_verification',
 			];
 
 			foreach ( $arrs as $value ) {
@@ -513,14 +514,10 @@ final class GlobalSetting {
 		?>
         <div class="wrap" id="_container">
             <form role="form" id="_settings_form" method="post" accept-charset="UTF-8" enctype="multipart/form-data">
-
 				<?php wp_nonce_field( '_wpnonce_settings_form_' . get_current_user_id() ); ?>
-
                 <div id="main" class="filter-tabs clearfix">
-
-					<?php include __DIR__ . '/options_menu.php'; ?>
-					<?php include __DIR__ . '/options_content.php'; ?>
-
+					<?php include __DIR__ . '/options-menu.php'; ?>
+					<?php include __DIR__ . '/options-content.php'; ?>
                 </div>
             </form>
         </div>

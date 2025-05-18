@@ -94,7 +94,7 @@ abstract class Abstract_LazyLoad {
 				$img_tag       = '<img' . $picture_match[3] . '/>';
 				$picture_close = '</picture>';
 
-				// Add "lazy" class to the <img> inside <picture>
+				// Add a "lazy" class to the <img> inside <picture>
 				if ( preg_match( '/class="([^"]*)"/i', $img_tag, $class_match ) ) {
 					$existing_classes = $class_match[1];
 

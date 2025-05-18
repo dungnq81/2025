@@ -36,19 +36,21 @@ final class LoginRestricted {
 			return true;
 		}
 
+		$user_ip = Helper::ipAddress();
+
 		// Check if the current IP is in the allowed list, block all other IPs not in the list.
 		if ( ! empty( $this->allowlist_ips ) ) {
 			foreach ( $this->allowlist_ips as $allowed_ip ) {
-				if ( $this->_ipInRange( Helper::ipAddress(), $allowed_ip ) ) {
+				if ( $this->_ipInRange( $user_ip, $allowed_ip ) ) {
 					return true;
 				}
 			}
 
 			// Update the total blocked logins counter.
-			update_option( '_security_total_blocked_logins', get_option( '_security_total_blocked_logins', 0 ) + 1 );
+			Helper::updateOption( '_security_total_blocked_logins', Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
 
-			error_log( 'Restricted login page: access currently not permitted - ' . Helper::ipAddress() );
-			wp_die(
+			Helper::errorLog( 'Restricted login page: access currently not permitted - ' . $user_ip );
+			Helper::wpDie(
 				esc_html__( 'You don’t have access to this page. Please contact the administrator of this website for further assistance.', ADDONS_TEXTDOMAIN ),
 				esc_html__( 'Restricted access', ADDONS_TEXTDOMAIN ),
 				[
@@ -62,12 +64,12 @@ final class LoginRestricted {
 		// Block all IPs in the list.
 		if ( ! empty( $this->blocked_ips ) ) {
 			foreach ( $this->blocked_ips as $blocked_ip ) {
-				if ( $this->_ipInRange( Helper::ipAddress(), $blocked_ip ) ) {
+				if ( $this->_ipInRange( $user_ip, $blocked_ip ) ) {
 					// Update the total blocked logins counter.
-					update_option( '_security_total_blocked_logins', get_option( '_security_total_blocked_logins', 0 ) + 1 );
+					Helper::updateOption( '_security_total_blocked_logins', Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
 
-					error_log( 'Restricted login page: access currently not permitted - ' . Helper::ipAddress() );
-					wp_die(
+					Helper::errorLog( 'Restricted login page: access currently not permitted - ' . $user_ip );
+					Helper::wpDie(
 						esc_html__( 'You don’t have access to this page. Please contact the administrator of this website for further assistance.', ADDONS_TEXTDOMAIN ),
 						esc_html__( 'Restricted access', ADDONS_TEXTDOMAIN ),
 						[

@@ -18,8 +18,6 @@
     margin: 0 auto;
     padding: 25px 20px 15px 22px;
 
-    & > h2, & > .desc {}
-
     .server-info-inner {
         background: #ffffff;
         padding: 1em 1.5em;
@@ -182,8 +180,6 @@
 
         /** */
         .section {
-            /*margin-bottom: 10px;*/
-
             .controls {
                 &.control-img {
                     display: flex;
@@ -240,7 +236,7 @@
                 }
             }
 
-            &.section-checkbox, &.section-select, &.section-text, &.section-textarea, &.section-multicheck {
+            &:where(.section-checkbox, .section-select, .section-text, .section-textarea, .section-multicheck) {
                 .desc {
                     color: #888888;
                     font-size: 13px;
@@ -280,13 +276,10 @@
 
             .heading {
                 font-size: 14px;
-                /*text-transform: uppercase;*/
-                /*margin: 20px 0 0 0;*/
                 padding: 0 0 15px 0;
-                //border-top: 1px solid #dddddd;
                 display: block;
-                width: 700px;
-                max-width: 100%;
+                width: 100%;
+                max-width: 700px;
                 font-weight: 700;
 
                 &.inline-heading {
@@ -313,9 +306,8 @@
 
             .controls {
                 position: relative;
-                /*margin: 0 10px 10px 0;*/
-                width: 700px;
-                max-width: 100%;
+                width: 100%;
+                max-width: 700px;
 
                 & > label {
                     display: block;
@@ -553,9 +545,4 @@ input.input-icon {
         font-size: 14px !important;
         max-height: 43px;
     }
-}
-
-/** */
-.acf-admin-page .notice.notice-warning {
-    width: 100%;
 }

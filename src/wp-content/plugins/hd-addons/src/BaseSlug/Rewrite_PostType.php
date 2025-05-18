@@ -194,7 +194,7 @@ class Rewrite_PostType {
 	// ------------------------------------------------------
 
 	/**
-	 * Get product base.
+	 * Get a product base.
 	 */
 	private function _get_product_base(): string {
 		$permalink_structure = wc_get_permalink_structure();

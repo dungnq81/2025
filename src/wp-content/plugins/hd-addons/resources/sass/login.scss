@@ -60,15 +60,7 @@ body.login {
         text-decoration: none;
     }
 
-    #nav {
-        margin: 0;
-        text-align: right;
-        right: 0;
-        position: relative;
-        top: -59px;
-    }
-
-    :where(#nav, .privacy-policy-link, #backtoblog) {
+    :where(.privacy-policy-link) {
         display: none;
     }
 }

@@ -50,9 +50,7 @@ jQuery(function($) {
                 .after('<img alt="processing" src="images/wpspin_light.gif" class="waiting" style="margin-left: 6px;" />');
 
             // sorting via ajax
-            $.post(
-                ajaxurl,
-                {
+            $.post(ajaxurl, {
                     action: 'update-menu-order',
                     order: $('#the-list').sortable('serialize'),
                 },
