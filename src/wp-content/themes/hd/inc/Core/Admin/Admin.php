@@ -19,12 +19,12 @@ final class Admin {
 	// --------------------------------------------------
 
 	private function init(): void {
-		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_assets' ] );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'blockEditorAssets' ] );
 
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-		add_action( 'admin_init', [ $this, 'admin_init' ], 11 );
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ], 30 );
-		add_action( 'admin_footer', [ $this, 'admin_footer_script' ] );
+		add_action( 'admin_menu', [ $this, 'adminMenu' ] );
+		add_action( 'admin_init', [ $this, 'adminInit' ], 11 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'adminEnqueueScripts' ], 30 );
+		add_action( 'admin_footer', [ $this, 'adminFooterScript' ] );
 
 		/** Show a clear cache message */
 		add_action( 'admin_notices', static function () {
@@ -43,7 +43,7 @@ final class Admin {
 	/**
 	 * @return void
 	 */
-	public function admin_footer_script(): void { ?>
+	public function adminFooterScript(): void { ?>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let postTitleInput = document.querySelector('input[name="post_title"]');
@@ -77,7 +77,7 @@ final class Admin {
 	 *
 	 * @return void
 	 */
-	public function enqueue_block_editor_assets(): void {
+	public function blockEditorAssets(): void {
         \HD_Asset::enqueueStyle( 'editor-style-css', ASSETS_URL . 'css/editor-style.css' );
 	}
 
@@ -86,7 +86,7 @@ final class Admin {
 	/**
 	 * @return void
 	 */
-	public function admin_enqueue_scripts(): void {
+	public function adminEnqueueScripts(): void {
 		$version = \HD_Helper::version();
 
         \HD_Asset::enqueueStyle( 'admin-css', ASSETS_URL . 'css/admin.css', [], $version );
@@ -98,7 +98,7 @@ final class Admin {
 	/**
 	 * @return void
 	 */
-	public function admin_menu(): void {
+	public function adminMenu(): void {
 		//global $menu, $submenu;
 		// dump($menu);
 		// dump($submenu);
@@ -152,7 +152,7 @@ final class Admin {
 	/**
 	 * @return void
 	 */
-	public function admin_init(): void {
+	public function adminInit(): void {
 		// editor-style for Classic Editor
 		add_editor_style( ASSETS_URL . 'css/editor-style-css.css' );
 

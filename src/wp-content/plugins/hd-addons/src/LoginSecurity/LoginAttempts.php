@@ -6,18 +6,18 @@ use Addons\Helper;
 
 \defined( 'ABSPATH' ) || exit;
 
-final class LoginAttempts {
+class LoginAttempts {
 	/**
 	 * The maximum allowed login attempts.
 	 *
-	 * @var int|mixed
+	 * @var int
 	 */
 	public int $limit_login_attempts = 0;
 
 	/**
 	 * Login attempts data
 	 *
-	 * @var array|string[]
+	 * @var array
 	 */
 	public static array $login_attempts_data = [
 		0  => 'OFF',
@@ -31,13 +31,24 @@ final class LoginAttempts {
 	// --------------------------------------------------
 
 	public function __construct() {
-		$security_options           = Helper::getOption( 'login_security__options' );
-		$this->limit_login_attempts = $security_options['limit_login_attempts'] ?? 0;
+		$_options                   = Helper::getOption( 'login_security__options' );
+		$this->limit_login_attempts = $_options['limit_login_attempts'] ?? 0;
+
+		// Bail if optimization is disabled.
+		if ( (int) $this->limit_login_attempts === 0 ) {
+			$this->resetLoginAttempts();
+
+			return;
+		}
+
+		add_action( 'login_head', [ $this, 'maybeBlockLoginAccess' ], PHP_INT_MAX ); // Check the login attempts for an ip and block the access to the login page.
+		add_filter( 'login_errors', [ $this, 'logLoginAttempt' ] );                  // Add login attempts for ip.
+		add_filter( 'wp_login', [ $this, 'resetLoginAttempts' ] );                   // Reset login attempts for an ip on successful login.
 	}
 
 	// --------------------------------------------------
 
-	public function maybe_block_login_access(): void {
+	public function maybeBlockLoginAccess(): void {
 		// Get the user ip.
 		$user_ip = Helper::ipAddress();
 
@@ -64,7 +75,7 @@ final class LoginAttempts {
 			);
 		}
 
-		// Reset the login attempts if the restriction time has ended and the user was banned for maximum amount of time.
+		// Reset the login attempts if the restriction time has ended and the user was banned for the maximum amount of time.
 		if (
 			$login_attempts[ $user_ip ]['attempts'] >= $this->limit_login_attempts * 3 &&
 			$login_attempts[ $user_ip ]['timestamp'] < time()
@@ -83,7 +94,7 @@ final class LoginAttempts {
 	 *
 	 * @return string
 	 */
-	public function log_login_attempt( string $error ): string {
+	public function logLoginAttempt( string $error ): string {
 		global $errors;
 
 		// Check for errors global since the custom login urls plugin is not always returning it.
@@ -162,7 +173,7 @@ final class LoginAttempts {
 
 	// --------------------------------------------------
 
-	public function reset_login_attempts(): void {
+	public function resetLoginAttempts(): void {
 		$user_ip        = Helper::ipAddress();
 		$login_attempts = Helper::getOption( '_security_unsuccessful_login', [] );
 

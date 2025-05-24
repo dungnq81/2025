@@ -131,6 +131,11 @@ Config::define( 'DISABLE_WP_CRON', env( 'DISABLE_WP_CRON' ) ?? false );
 Config::define( 'FORCE_SSL_ADMIN', env( 'FORCE_SSL_ADMIN' ) ?? false );
 
 /** FluentSMTP */
+if ( env( 'FLUENTMAIL_GMAIL_CLIENT_ID' ) && env( 'FLUENTMAIL_GMAIL_CLIENT_SECRET' ) ) {
+	Config::define( 'FLUENTMAIL_GMAIL_CLIENT_ID', env( 'FLUENTMAIL_GMAIL_CLIENT_ID' ) );
+	Config::define( 'FLUENTMAIL_GMAIL_CLIENT_SECRET', env( 'FLUENTMAIL_GMAIL_CLIENT_SECRET' ) );
+}
+
 if ( env( 'FLUENTMAIL_SMTP_USERNAME' ) && env( 'FLUENTMAIL_SMTP_PASSWORD' ) ) {
 	Config::define( 'FLUENTMAIL_SMTP_USERNAME', env( 'FLUENTMAIL_SMTP_USERNAME' ) );
 	Config::define( 'FLUENTMAIL_SMTP_PASSWORD', env( 'FLUENTMAIL_SMTP_PASSWORD' ) );

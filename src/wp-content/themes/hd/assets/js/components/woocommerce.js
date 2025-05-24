@@ -1,1 +1,3 @@
-jQuery((function(n){}));
+jQuery(function($) {
+});
+//# sourceMappingURL=woocommerce.js.map

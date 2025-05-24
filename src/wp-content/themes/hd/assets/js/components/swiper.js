@@ -1,1 +1,190 @@
-import{n as e,S as s}from"../_vendor.js";document.addEventListener("DOMContentLoaded",(()=>{document.querySelectorAll(".w-swiper").forEach((t=>{var a,i,r,l,n;if(t.classList.contains("swiper-initialized"))return;const o=(()=>{const s=e(10);return{rand:s,swiperClass:`swiper-${s}`,nextClass:`next-${s}`,prevClass:`prev-${s}`,paginationClass:`pagination-${s}`,scrollbarClass:`scrollbar-${s}`}})();t.classList.add(o.swiperClass);const d=t.closest(".swiper-container");let p=null==d?void 0:d.querySelector(".swiper-controls");p||(p=document.createElement("div"),p.classList.add("swiper-controls"),t.after(p));let c=(e=>{try{return JSON.parse(e.dataset.options)||{}}catch(s){return{}}})(t),u={grabCursor:!0,allowTouchMove:!0,threshold:5,autoHeight:!1,loop:!1,hashNavigation:!1,direction:"horizontal",freeMode:!1,cssMode:!1,centeredSlides:!1,slidesPerView:"auto"};if(["autoHeight","loop","freeMode","cssMode","mousewheel","parallax","hashNavigation"].forEach((e=>c[e]&&(u[e]=!0))),u.wrapperClass=String(c.wrapperClass||"swiper-wrapper"),u.slideClass=String(c.slideClass||"swiper-slide"),u.slideActiveClass=String(c.slideActiveClass||"swiper-slide-active"),u.direction=String(c.direction||"horizontal"),u.slidesPerView=c.slidesPerView||"auto",u.spaceBetween=parseInt(c.spaceBetween,10)||0,u.speed=parseInt(c.speed,10)||300,c.grid&&(u.grid={rows:Math.max(parseInt(null==(a=c.grid)?void 0:a.rows)||1,1),fill:(null==(i=c.grid)?void 0:i.fill)||"row"},c.loop&&(u.loopAddBlankSlides=!0)),c.autoplay&&(u.autoplay={delay:parseInt(null==(r=c.autoplay)?void 0:r.delay)||3e3,disableOnInteraction:(null==(l=c.autoplay)?void 0:l.disableOnInteraction)||!0,reverseDirection:(null==(n=c.autoplay)?void 0:n.reverseDirection)||!1}),c.navigation){let e=null==d?void 0:d.querySelector(".swiper-button-prev"),s=null==d?void 0:d.querySelector(".swiper-button-next");e||(e=document.createElement("div"),e.classList.add("swiper-button","swiper-button-prev"),e.setAttribute("data-fa",""),p.append(e)),s||(s=document.createElement("div"),s.classList.add("swiper-button","swiper-button-next"),s.setAttribute("data-fa",""),p.append(s)),e.classList.add(o.prevClass),s.classList.add(o.nextClass),u.navigation={nextEl:`.${o.nextClass}`,prevEl:`.${o.prevClass}`}}if(c.pagination){let e=null==d?void 0:d.querySelector(".swiper-pagination");e||(e=document.createElement("div"),e.classList.add("swiper-pagination"),p.appendChild(e)),e.classList.add(o.paginationClass);const s=String(c.pagination);u.pagination={el:`.${o.paginationClass}`,clickable:!0,..."bullets"===s&&{dynamicBullets:!0,type:"bullets"},..."fraction"===s&&{type:"fraction"},..."progressbar"===s&&{type:"progressbar"},..."custom"===s&&{renderBullet:(e,s)=>`<span class="${s}">${e+1}</span>`}}}if(c.scrollbar){let e=null==d?void 0:d.querySelector(".swiper-scrollbar");e||(e=document.createElement("div"),e.classList.add("swiper-scrollbar"),p.appendChild(e)),e.classList.add(o.scrollbarClass),u.scrollbar={el:`.${o.scrollbarClass}`,hide:!0,draggable:!0}}c._observer&&(u.observer=!0,u.observeParents=!0,u.observeSlideChildren=!0),c._centered&&(u.centeredSlides=!0,u.centeredSlidesBounds=!0),c._marquee&&(u.centeredSlides=!1,u.autoplay={delay:1,disableOnInteraction:!0},u.loop=!0,u.speed=6e3,u.allowTouchMove=!0),c._gap&&(u.spaceBetween=20,u.breakpoints={768:{spaceBetween:28}}),c._breakpoints&&(u.breakpoints={0:(null==c?void 0:c._mobile)||{},768:(null==c?void 0:c._tablet)||{},1024:(null==c?void 0:c._desktop)||{}}),((e,t,a)=>{if(!(e instanceof Element))return;if(e.classList.contains("swiper-initialized")||e.dataset.swiperInitialized)return;e.dataset.swiperInitialized="true";const i=new s(t,a);e.addEventListener("mouseover",(()=>{var e;return null==(e=i.autoplay)?void 0:e.stop()})),e.addEventListener("mouseout",(()=>{var e;return a.autoplay&&(null==(e=i.autoplay)?void 0:e.start())}))})(t,`.${o.swiperClass}`,u)}))}));
+import { n as nanoid, S as Swiper } from "../_vendor.js";
+const initializeSwiper = (el, swiperClass, options) => {
+  if (!(el instanceof Element)) {
+    console.error("Error: The provided element is not a valid DOM element.");
+    return;
+  }
+  if (el.classList.contains("swiper-initialized") || el.dataset.swiperInitialized) return;
+  el.dataset.swiperInitialized = "true";
+  const swiper = new Swiper(swiperClass, options);
+  el.addEventListener("mouseover", () => {
+    var _a;
+    return (_a = swiper.autoplay) == null ? void 0 : _a.stop();
+  });
+  el.addEventListener("mouseout", () => {
+    var _a;
+    return options.autoplay && ((_a = swiper.autoplay) == null ? void 0 : _a.start());
+  });
+  return swiper;
+};
+const generateClasses = () => {
+  const rand = nanoid(10);
+  return {
+    rand,
+    swiperClass: `swiper-${rand}`,
+    nextClass: `next-${rand}`,
+    prevClass: `prev-${rand}`,
+    paginationClass: `pagination-${rand}`,
+    scrollbarClass: `scrollbar-${rand}`
+  };
+};
+const getDefaultOptions = () => ({
+  grabCursor: true,
+  allowTouchMove: true,
+  threshold: 5,
+  autoHeight: false,
+  loop: false,
+  hashNavigation: false,
+  direction: "horizontal",
+  freeMode: false,
+  cssMode: false,
+  centeredSlides: false,
+  slidesPerView: "auto"
+});
+const parseOptions = (el) => {
+  try {
+    return JSON.parse(el.dataset.options) || {};
+  } catch (e) {
+    console.error("Invalid JSON in data-options", e);
+    return {};
+  }
+};
+const initializeSwipers = () => {
+  const swiperElements = document.querySelectorAll(".w-swiper");
+  swiperElements.forEach((el) => {
+    var _a, _b, _c, _d, _e;
+    if (el.classList.contains("swiper-initialized")) return;
+    const classes = generateClasses();
+    el.classList.add(classes.swiperClass);
+    const container = el.closest(".swiper-container");
+    let controls = container == null ? void 0 : container.querySelector(".swiper-controls");
+    if (!controls) {
+      controls = document.createElement("div");
+      controls.classList.add("swiper-controls");
+      el.after(controls);
+    }
+    let options = parseOptions(el);
+    let swiperOptions = { ...getDefaultOptions() };
+    [
+      "autoHeight",
+      "loop",
+      "freeMode",
+      "cssMode",
+      "mousewheel",
+      "parallax",
+      "hashNavigation"
+    ].forEach((key) => options[key] && (swiperOptions[key] = true));
+    swiperOptions.wrapperClass = String(options.wrapperClass || "swiper-wrapper");
+    swiperOptions.slideClass = String(options.slideClass || "swiper-slide");
+    swiperOptions.slideActiveClass = String(options.slideActiveClass || "swiper-slide-active");
+    swiperOptions.direction = String(options.direction || "horizontal");
+    swiperOptions.slidesPerView = options.slidesPerView || "auto";
+    swiperOptions.spaceBetween = parseInt(options.spaceBetween, 10) || 0;
+    swiperOptions.speed = parseInt(options.speed, 10) || 300;
+    if (options.grid) {
+      swiperOptions.grid = {
+        rows: Math.max(parseInt((_a = options.grid) == null ? void 0 : _a.rows) || 1, 1),
+        fill: ((_b = options.grid) == null ? void 0 : _b.fill) || "row"
+      };
+      if (options.loop) swiperOptions.loopAddBlankSlides = true;
+    }
+    if (options.autoplay) {
+      swiperOptions.autoplay = {
+        delay: parseInt((_c = options.autoplay) == null ? void 0 : _c.delay) || 3e3,
+        disableOnInteraction: ((_d = options.autoplay) == null ? void 0 : _d.disableOnInteraction) || true,
+        reverseDirection: ((_e = options.autoplay) == null ? void 0 : _e.reverseDirection) || false
+      };
+    }
+    if (options.navigation) {
+      let btnPrev = container == null ? void 0 : container.querySelector(".swiper-button-prev");
+      let btnNext = container == null ? void 0 : container.querySelector(".swiper-button-next");
+      if (!btnPrev) {
+        btnPrev = document.createElement("div");
+        btnPrev.classList.add("swiper-button", "swiper-button-prev");
+        btnPrev.setAttribute("data-fa", "");
+        controls.append(btnPrev);
+      }
+      if (!btnNext) {
+        btnNext = document.createElement("div");
+        btnNext.classList.add("swiper-button", "swiper-button-next");
+        btnNext.setAttribute("data-fa", "");
+        controls.append(btnNext);
+      }
+      btnPrev.classList.add(classes.prevClass);
+      btnNext.classList.add(classes.nextClass);
+      swiperOptions.navigation = {
+        nextEl: `.${classes.nextClass}`,
+        prevEl: `.${classes.prevClass}`
+      };
+    }
+    if (options.pagination) {
+      let pagination = container == null ? void 0 : container.querySelector(".swiper-pagination");
+      if (!pagination) {
+        pagination = document.createElement("div");
+        pagination.classList.add("swiper-pagination");
+        controls.appendChild(pagination);
+      }
+      pagination.classList.add(classes.paginationClass);
+      const paginationType = String(options.pagination);
+      swiperOptions.pagination = {
+        el: `.${classes.paginationClass}`,
+        clickable: true,
+        ...paginationType === "bullets" && { dynamicBullets: true, type: "bullets" },
+        ...paginationType === "fraction" && { type: "fraction" },
+        ...paginationType === "progressbar" && { type: "progressbar" },
+        ...paginationType === "custom" && {
+          renderBullet: (index, className) => `<span class="${className}">${index + 1}</span>`
+        }
+      };
+    }
+    if (options.scrollbar) {
+      let scrollbar = container == null ? void 0 : container.querySelector(".swiper-scrollbar");
+      if (!scrollbar) {
+        scrollbar = document.createElement("div");
+        scrollbar.classList.add("swiper-scrollbar");
+        controls.appendChild(scrollbar);
+      }
+      scrollbar.classList.add(classes.scrollbarClass);
+      swiperOptions.scrollbar = {
+        el: `.${classes.scrollbarClass}`,
+        hide: true,
+        draggable: true
+      };
+    }
+    if (options._observer) {
+      swiperOptions.observer = true;
+      swiperOptions.observeParents = true;
+      swiperOptions.observeSlideChildren = true;
+    }
+    if (options._centered) {
+      swiperOptions.centeredSlides = true;
+      swiperOptions.centeredSlidesBounds = true;
+    }
+    if (options._marquee) {
+      swiperOptions.centeredSlides = false;
+      swiperOptions.autoplay = {
+        delay: 1,
+        disableOnInteraction: true
+      };
+      swiperOptions.loop = true;
+      swiperOptions.speed = 6e3;
+      swiperOptions.allowTouchMove = true;
+    }
+    if (options._gap) {
+      swiperOptions.spaceBetween = 20;
+      swiperOptions.breakpoints = {
+        768: { spaceBetween: 28 }
+      };
+    }
+    if (options._breakpoints) {
+      swiperOptions.breakpoints = {
+        0: (options == null ? void 0 : options._mobile) || {},
+        768: (options == null ? void 0 : options._tablet) || {},
+        1024: (options == null ? void 0 : options._desktop) || {}
+      };
+    }
+    initializeSwiper(el, `.${classes.swiperClass}`, swiperOptions);
+  });
+};
+document.addEventListener("DOMContentLoaded", initializeSwipers);
+//# sourceMappingURL=swiper.js.map

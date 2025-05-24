@@ -23,7 +23,7 @@ final class Customizer {
 	 */
 	private function init(): void {
 		// Theme Customizer settings and controls.
-		add_action( 'customize_register', [ $this, 'customize_register' ], 30 );
+		add_action( 'customize_register', [ $this, 'customizeRegister' ], 30 );
 	}
 
 	// --------------------------------------------------
@@ -33,8 +33,8 @@ final class Customizer {
 	 *
 	 * @param \WP_Customize_Manager $wp_customize Theme Customizer object.
 	 */
-	public function customize_register( \WP_Customize_Manager $wp_customize ): void {
-		$this->_logo_and_title( $wp_customize );
+	public function customizeRegister( \WP_Customize_Manager $wp_customize ): void {
+		$this->_logoAndTitle( $wp_customize );
 
 		// -------------------------------------------------------------
 
@@ -374,7 +374,7 @@ final class Customizer {
 	 *
 	 * @return void
 	 */
-	private function _logo_and_title( \WP_Customize_Manager $wp_customize ): void {
+	private function _logoAndTitle( \WP_Customize_Manager $wp_customize ): void {
 
 		// -------------------------------------------------------------
 		// Alternative Logo

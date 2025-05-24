@@ -5,54 +5,92 @@ namespace Addons\LoginSecurity;
 \defined( 'ABSPATH' ) || exit;
 
 final class LoginSecurity {
-	public mixed $login_security_options = [];
-
 	// ------------------------------------------------------
 
 	public function __construct() {
-		$this->login_security_options = \Addons\Helper::getOption( 'login_security__options' );
+		( new LoginRestricted() );
+		( new LoginIllegalUsers() );
+		( new LoginAttempts() );
+		( new LoginOtpVerification() );
 
-		$this->_login_restricted();
-		$this->_login_illegal_users();
-		$this->_login_attempts();
+		// csrf login-form
+		add_action( 'login_form', [ $this, 'addCsrfLoginForm' ] );
+		add_filter( 'authenticate', [ $this, 'verifyCsrfLogin' ], 30, 3 );
+		add_filter( 'login_message', [ $this, 'showCsrfErrorMessage' ] );
+
+		// csrf lost-password
+		add_action( 'lostpassword_form', [ $this, 'addCsrfLostpasswordForm' ] );
+		add_action( 'lostpassword_post', [ $this, 'verifyCsrfLostpasswordPost' ] );
 	}
 
 	// ------------------------------------------------------
 
-	private function _login_restricted(): void {
-		$login_restricted = new LoginRestricted();
-		add_action( 'login_init', [ $login_restricted, 'restrict_login_to_ips' ], PHP_INT_MIN );
+	/**
+	 * @return void
+	 */
+	public function addCsrfLoginForm(): void {
+		$csrf_token = wp_create_nonce( 'login_csrf_token' );
+		echo '<input type="hidden" name="login_csrf_token" value="' . esc_attr( $csrf_token ) . '">';
 	}
 
 	// ------------------------------------------------------
 
-	private function _login_illegal_users(): void {
-		if ( $this->login_security_options['illegal_users'] ?? '' ) {
-			$common_user = new LoginIllegalUsers();
-			add_action( 'illegal_user_logins', [ $common_user, 'get_illegal_usernames' ] );
+	/**
+	 * @param $user
+	 * @param $username
+	 * @param $password
+	 *
+	 * @return mixed|\WP_Error
+	 */
+	public function verifyCsrfLogin( $user, $username, $password ): mixed {
+		if ( ! empty( $_POST['login_csrf_token'] ) && ! wp_verify_nonce( $_POST['login_csrf_token'], 'login_csrf_token' ) ) {
+			return new \WP_Error( 'csrf_error', __( 'Invalid CSRF token. Please try again.' ) );
 		}
+
+		return $user;
 	}
 
 	// ------------------------------------------------------
 
-	private function _login_attempts(): void {
-		$limit_login_attempts = $this->login_security_options['limit_login_attempts'] ?? 0;
-		$security_login       = new LoginAttempts();
-
-		// Bail if optimization is disabled.
-		if ( (int) $limit_login_attempts === 0 ) {
-			$security_login->reset_login_attempts();
-
-			return;
+	/**
+	 * @param $message
+	 *
+	 * @return mixed|string
+	 */
+	public function showCsrfErrorMessage( $message ): mixed {
+		if ( isset( $_GET['login'] ) && $_GET['login'] === 'csrf_error' ) {
+			$message .= '<div id="login_error">' . __( 'Invalid CSRF token. Please try again.' ) . '</div>';
 		}
 
-		// Check the login attempts for an ip and block the access to the login page.
-		add_action( 'login_head', [ $security_login, 'maybe_block_login_access' ], PHP_INT_MAX );
+		return $message;
+	}
 
-		// Add login attempts for ip.
-		add_filter( 'login_errors', [ $security_login, 'log_login_attempt' ] );
+	// ------------------------------------------------------
 
-		// Reset login attempts for an ip on successful login.
-		add_filter( 'wp_login', [ $security_login, 'reset_login_attempts' ] );
+	/**
+	 * @return void
+	 */
+	public function addCsrfLostpasswordForm(): void {
+		$nonce = wp_create_nonce( 'lostpassword_csrf_token' );
+		echo '<input type="hidden" name="lostpassword_csrf_token" value="' . esc_attr( $nonce ) . '">';
+	}
+
+	// ------------------------------------------------------
+
+	/**
+	 * @return void
+	 */
+	public function verifyCsrfLostpasswordPost(): void {
+		if ( isset( $_POST['lostpassword_csrf_token'] ) ) {
+			$nonce = $_POST['lostpassword_csrf_token'];
+
+			if ( ! wp_verify_nonce( $nonce, 'lostpassword_csrf_token' ) ) {
+				\HD_Helper::wpDie(
+					__( 'Invalid CSRF token, please try again.', TEXT_DOMAIN ),
+					__( 'Error', TEXT_DOMAIN ),
+					[ 'response' => 403 ]
+				);
+			}
+		}
 	}
 }

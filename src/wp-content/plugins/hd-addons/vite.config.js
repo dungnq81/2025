@@ -20,6 +20,7 @@ const sassFiles = [
 // JS
 const jsFiles = [
     'login',
+    'login-otp',
     'lazyload',
     'recaptcha',
     'sorting',

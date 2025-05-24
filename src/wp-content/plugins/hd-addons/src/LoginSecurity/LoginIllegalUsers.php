@@ -4,8 +4,8 @@ namespace Addons\LoginSecurity;
 
 \defined( 'ABSPATH' ) || exit;
 
-final class LoginIllegalUsers {
-	public array $common_usernames = [
+class LoginIllegalUsers {
+	public array $commonUsernames = [
 		'administrator',
 		'user',
 		'user1',
@@ -15,19 +15,28 @@ final class LoginIllegalUsers {
 
 	// --------------------------------------------------
 
+	public function __construct() {
+		$_options = \Addons\Helper::getOption( 'login_security__options' );
+		if ( $_options['illegal_users'] ?? '' ) {
+			add_action( 'illegal_user_logins', [ $this, 'getIllegalUsernames' ] );
+		}
+	}
+
+	// --------------------------------------------------
+
 	/**
 	 * @param array $usernames
 	 *
 	 * @return array
 	 */
-	public function get_illegal_usernames( array $usernames = [] ): array {
+	public function getIllegalUsernames( array $usernames = [] ): array {
 		$illegal_usernames = apply_filters( '_illegal_users', $usernames );
 
 		return array_map(
 			'strtolower',
 			array_merge(
 				$illegal_usernames,
-				$this->common_usernames
+				$this->commonUsernames
 			)
 		);
 	}
@@ -39,7 +48,7 @@ final class LoginIllegalUsers {
 	 *
 	 * @return false|int
 	 */
-	public function change_common_username( array $new_username ): false|int {
+	public function changeCommonUsername( array $new_username ): false|int {
 		global $wpdb;
 
 		return $wpdb->update(
@@ -54,7 +63,7 @@ final class LoginIllegalUsers {
 	/**
 	 * @return array
 	 */
-	public function check_for_common_usernames(): array {
+	public function checkCommonUsernames(): array {
 		// Get all users for validating usernames.
 		$all_users = get_users(
 			[
@@ -83,7 +92,7 @@ final class LoginIllegalUsers {
 		// Check for illegal usernames.
 		foreach ( $admins as $key => $admin ) {
 			// Remove the user if its username is not in the illegal list.
-			if ( ! in_array( strtolower( $admin->user_login ), $this->get_illegal_usernames(), false ) ) {
+			if ( ! in_array( strtolower( $admin->user_login ), $this->getIllegalUsernames(), false ) ) {
 				unset( $admins[ $key ] );
 			}
 		}
@@ -102,7 +111,7 @@ final class LoginIllegalUsers {
 	 *
 	 * @return array
 	 */
-	public function update_common_usernames( array $usernames ): array {
+	public function updateCommonUsernames( array $usernames ): array {
 		// Bail if the 'usernames' array is empty.
 		if ( empty( $usernames ) ) {
 			return [];
@@ -111,7 +120,7 @@ final class LoginIllegalUsers {
 		// Loop the specified usernames.
 		foreach ( $usernames as $key => $username ) {
 			// Remove the successful changes and return the failed only if any.
-			if ( $this->change_common_username( $username ) === 1 ) {
+			if ( $this->changeCommonUsername( $username ) === 1 ) {
 				unset( $usernames[ $key ] );
 			}
 		}

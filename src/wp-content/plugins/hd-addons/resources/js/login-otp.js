@@ -1,14 +1,19 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const countdownEl = document.getElementById('countdown');
-    const resendBtn = document.getElementById('resendBtn');
-    let seconds = 300;
+    const loginform = document.getElementById('loginform');
+    if (loginform) {
+        loginform.classList.add('otp-loginform');
 
-    const interval = setInterval(() => {
-        seconds--;
-        countdownEl.textContent = seconds;
-        if (seconds <= 0) {
-            resendBtn.disabled = false;
-            clearInterval(interval);
+        const el = document.querySelector("input[name='pwd']");
+        if (el) {
+            el.setAttribute("autocomplete", "off");
+            el.setAttribute("readonly", true);
+            setTimeout(() => el.removeAttribute("readonly"), 500);
         }
-    }, 1000);
+
+        const rememberBox = document.getElementById("rememberme");
+        if (rememberBox) {
+            rememberBox.checked = false;
+            rememberBox.closest("p").remove();
+        }
+    }
 });

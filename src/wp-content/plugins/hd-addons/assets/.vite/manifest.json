@@ -28,6 +28,12 @@
       "__vendor.js"
     ]
   },
+  "src/wp-content/plugins/hd-addons/resources/js/login-otp.js": {
+    "file": "js/login-otp.js",
+    "name": "login-otp",
+    "src": "src/wp-content/plugins/hd-addons/resources/js/login-otp.js",
+    "isEntry": true
+  },
   "src/wp-content/plugins/hd-addons/resources/js/login.js": {
     "file": "js/login.js",
     "name": "login",

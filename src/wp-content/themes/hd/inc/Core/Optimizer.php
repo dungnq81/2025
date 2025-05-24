@@ -23,7 +23,7 @@ final class Optimizer {
 		$this->_optimizer();
 
 		/** custom hooks */
-		$this->_custom_hooks();
+		$this->_customHooks();
 	}
 
 	// ------------------------------------------------------
@@ -31,13 +31,56 @@ final class Optimizer {
 	/**
 	 * @return void
 	 */
-	private function _custom_hooks(): void {
-		/** Custom thumb */
+	private function _customHooks(): void {
+
+		// -------------------------------------------------------------
+		// permalink structure
+		// -------------------------------------------------------------
+
+		if ( ! \HD_Helper::getOption( '_permalink_structure_updated' ) ) {
+			\HD_Helper::updateOption( '_permalink_structure_updated', true );
+			global $wp_rewrite;
+
+			$wp_rewrite->set_permalink_structure( '/%postname%/' );
+			$wp_rewrite->flush_rules();
+		}
+
+		// -------------------------------------------------------------
+		// images sizes
+		// -------------------------------------------------------------
+
+		/**
+		 * thumbnail (540x0)
+		 * medium (768x0)
+		 * large (1024x0)
+		 *
+		 * small-thumbnail (150x150)
+		 * widescreen (1920x9999)
+		 * post-thumbnail (1280x9999)
+		 */
+		if ( ! \HD_Helper::getOption( '_image_sizes_updated' ) ) {
+			\HD_Helper::updateOption( '_image_sizes_updated', true );
+
+			/** Default thumb */
+			\HD_Helper::updateOption( 'thumbnail_size_w', 540 );
+			\HD_Helper::updateOption( 'thumbnail_size_h', 0 );
+			\HD_Helper::updateOption( 'thumbnail_crop', 0 );
+
+			/** Medium thumb */
+			\HD_Helper::updateOption( 'medium_size_w', 768 );
+			\HD_Helper::updateOption( 'medium_size_h', 0 );
+
+			/** Large thumb */
+			\HD_Helper::updateOption( 'large_size_w', 1024 );
+			\HD_Helper::updateOption( 'large_size_h', 0 );
+		}
+
+		/** Custom images sizes */
 		add_image_size( 'small-thumbnail', 150, 150, true );
 		add_image_size( 'widescreen', 1920, 9999, false );
 		add_image_size( 'post-thumbnail', 1200, 9999, false );
 
-		/** Disable unwanted image sizes */
+		/** Disable unwanted images sizes */
 		add_filter( 'intermediate_image_sizes_advanced', static function ( $sizes ) {
 			unset( $sizes['medium_large'], $sizes['1536x1536'], $sizes['2048x2048'] );
 
@@ -138,34 +181,25 @@ final class Optimizer {
 	 */
 	private function _optimizer(): void {
 		// Filters the script, style tag
-		add_filter( 'script_loader_tag', [ $this, 'script_loader_tag' ], 12, 3 );
-		add_filter( 'style_loader_tag', [ $this, 'style_loader_tag' ], 12, 2 );
+		add_filter( 'script_loader_tag', [ $this, 'scriptLoaderTag' ], 12, 3 );
+		add_filter( 'style_loader_tag', [ $this, 'styleLoaderTag' ], 12, 2 );
 
 		// Adding Shortcode in WordPress Using Custom HTML Widget
 		add_filter( 'widget_text', 'do_shortcode' );
 		add_filter( 'widget_text', 'shortcode_unautop' );
 
 		// Search by title
-		add_filter( 'posts_search', [ $this, 'post_search_by_title' ], 500, 2 );
+		add_filter( 'posts_search', [ $this, 'searchByTitle' ], 500, 2 );
 
 		// Front-end only, excluding the login page
 		if ( ! is_admin() && ! \HD_Helper::isLogin() ) {
-			add_action( 'wp_print_footer_scripts', [ $this, 'print_footer_scripts' ], 999 );
+			add_action( 'wp_print_footer_scripts', [ $this, 'printFooterScripts' ], 999 );
 		}
 
 		// Restrict mode
-		add_filter( 'user_has_cap', [ $this, 'restrict_admin_plugin_install' ], 10, 3 );
-		add_filter( 'user_has_cap', [ $this, 'prevent_deletion_admin_accounts' ], 10, 3 );
-		add_action( 'delete_user', [ $this, 'prevent_deletion_user' ], 10 );
-
-		// lost password
-		add_action( 'lostpassword_form', [ $this, 'add_csrf_token_to_lostpassword_form' ] );
-		add_action( 'lostpassword_post', [ $this, 'verify_csrf_token_on_lostpassword_post' ] );
-
-		// login form
-		add_action( 'login_form', [ $this, 'add_csrf_token_to_login_form' ] );
-		add_filter( 'authenticate', [ $this, 'verify_csrf_token_on_login' ], 30, 3 );
-		add_filter( 'login_message', [ $this, 'show_csrf_error_message' ] );
+		add_filter( 'user_has_cap', [ $this, 'restrictAdminPluginInstall' ], 10, 3 );
+		add_filter( 'user_has_cap', [ $this, 'preventDeletionAdminAccounts' ], 10, 3 );
+		add_action( 'delete_user', [ $this, 'preventDeletionUser' ], 10 );
 	}
 
 	// ------------------------------------------------------
@@ -195,88 +229,13 @@ final class Optimizer {
 		remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
 		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 
-		/**
-		 * Remove the wp-json header from WordPress
-		 * Note that the REST API functionality will still be working as it used to;
-		 * this only removes the header code that is being inserted.
-		 */
+		// Remove the wp-json header from WordPress.
 		remove_action( 'wp_head', 'rest_output_link_wp_head' );
 		remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
 		remove_action( 'template_redirect', 'rest_output_link_header', 11 );
 
 		// Remove id li navigation
 		add_filter( 'nav_menu_item_id', '__return_null', 10, 3 );
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * @return void
-	 */
-	public function add_csrf_token_to_lostpassword_form(): void {
-		$nonce = wp_create_nonce( 'lostpassword_csrf_token' );
-		echo '<input type="hidden" name="lostpassword_csrf_token" value="' . esc_attr( $nonce ) . '">';
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * @return void
-	 */
-	public function verify_csrf_token_on_lostpassword_post(): void {
-		if ( isset( $_POST['lostpassword_csrf_token'] ) ) {
-			$nonce = $_POST['lostpassword_csrf_token'];
-
-			if ( ! wp_verify_nonce( $nonce, 'lostpassword_csrf_token' ) ) {
-				\HD_Helper::wpDie(
-					__( 'Invalid CSRF token, please try again.', TEXT_DOMAIN ),
-					__( 'Error', TEXT_DOMAIN ),
-					[ 'response' => 403 ]
-				);
-			}
-		}
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * @return void
-	 */
-	public function add_csrf_token_to_login_form(): void {
-		$csrf_token = wp_create_nonce( 'login_csrf_token' );
-		echo '<input type="hidden" name="login_csrf_token" value="' . esc_attr( $csrf_token ) . '">';
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * @param $user
-	 * @param $username
-	 * @param $password
-	 *
-	 * @return mixed|\WP_Error
-	 */
-	public function verify_csrf_token_on_login( $user, $username, $password ): mixed {
-		if ( empty( $_POST['login_csrf_token'] ) || ! wp_verify_nonce( $_POST['login_csrf_token'], 'login_csrf_token' ) ) {
-			return new \WP_Error( 'csrf_error', __( 'Invalid CSRF token. Please try again.' ) );
-		}
-
-		return $user;
-	}
-
-	// ------------------------------------------------------
-
-	/**
-	 * @param $message
-	 *
-	 * @return mixed|string
-	 */
-	public function show_csrf_error_message( $message ): mixed {
-		if ( isset( $_GET['login'] ) && $_GET['login'] === 'csrf_error' ) {
-			$message .= '<div id="login_error">' . __( 'Invalid CSRF token. Please try again.' ) . '</div>';
-		}
-
-		return $message;
 	}
 
 	// --------------------------------------------------
@@ -288,7 +247,7 @@ final class Optimizer {
 	 *
 	 * @return mixed
 	 */
-	public function restrict_admin_plugin_install( $allcaps, $caps, $args ): mixed {
+	public function restrictAdminPluginInstall( $allcaps, $caps, $args ): mixed {
 		$allowed_users_ids_install_plugins = \HD_Helper::filterSettingOptions( 'allowed_users_ids_install_plugins', [] );
 
 		if ( ! is_array( $allowed_users_ids_install_plugins ) ) {
@@ -321,7 +280,7 @@ final class Optimizer {
 	 *
 	 * @return mixed
 	 */
-	public function prevent_deletion_admin_accounts( $allcaps, $cap, $args ): mixed {
+	public function preventDeletionAdminAccounts( $allcaps, $cap, $args ): mixed {
 		$disallowed_users_ids_delete_account = \HD_Helper::filterSettingOptions( 'disallowed_users_ids_delete_account', [] );
 
 		if ( ! is_array( $disallowed_users_ids_delete_account ) ) {
@@ -346,7 +305,7 @@ final class Optimizer {
 	 *
 	 * @return void
 	 */
-	public function prevent_deletion_user( $user_id ): void {
+	public function preventDeletionUser( $user_id ): void {
 		$disallowed_users_ids_delete_account = \HD_Helper::filterSettingOptions( 'disallowed_users_ids_delete_account', [] );
 
 		if ( ! is_array( $disallowed_users_ids_delete_account ) ) {
@@ -371,7 +330,7 @@ final class Optimizer {
 	 *
 	 * @return string
 	 */
-	public function script_loader_tag( string $tag, string $handle, string $src ): string {
+	public function scriptLoaderTag( string $tag, string $handle, string $src ): string {
 		$attributes = wp_scripts()->registered[ $handle ]->extra ?? [];
 
 		if ( ! isset( wp_scripts()->registered[ $handle ] ) ) {
@@ -437,7 +396,7 @@ final class Optimizer {
 	 *
 	 * @return string
 	 */
-	public function style_loader_tag( string $html, string $handle ): string {
+	public function styleLoaderTag( string $html, string $handle ): string {
 		$styles = \HD_Helper::filterSettingOptions( 'defer_style', [] );
 
 		return \HD_Helper::lazyStyleTag( $styles, $html, $handle );
@@ -453,7 +412,7 @@ final class Optimizer {
 	 *
 	 * @return mixed|string
 	 */
-	public function post_search_by_title( $search, $wp_query ): mixed {
+	public function searchByTitle( $search, $wp_query ): mixed {
 		global $wpdb;
 
 		if ( empty( $search ) ) {
@@ -492,7 +451,7 @@ final class Optimizer {
 	/**
 	 * @return void
 	 */
-	public function print_footer_scripts(): void {
+	public function printFooterScripts(): void {
 		echo '<script>document.documentElement.classList.remove(\'no-js\');</script>';
 	}
 }

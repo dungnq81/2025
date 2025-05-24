@@ -6,33 +6,24 @@ use Addons\Helper;
 
 \defined( 'ABSPATH' ) || exit;
 
-final class LoginRestricted {
-
+class LoginRestricted {
 	public ?array $allowlist_ips = [];
 	public ?array $blocked_ips = [];
 
 	// --------------------------------------------------
 
-	public function restricted(): bool {
-		$_login_security_options = Helper::getOption( 'login_security__options' );
-		$custom_allowlist_ips    = $_login_security_options['login_ips_access'] ?? [];
-		$custom_blocked_ips      = $_login_security_options['disable_ips_access'] ?? [];
-
-		$_login_security_default    = Helper::filterSettingOptions( 'login_security', false );
-		$allowlist_ips_login_access = $_login_security_default['allowlist_ips_login_access'] ?? [];
-		$blocked_ips_login_access   = $_login_security_default['blocked_ips_login_access'] ?? [];
-
-		$this->allowlist_ips = ! empty( $allowlist_ips_login_access ) ? array_filter( array_merge( (array) $allowlist_ips_login_access, (array) $custom_allowlist_ips ) ) : array_filter( (array) $custom_allowlist_ips );
-		$this->blocked_ips   = ! empty( $blocked_ips_login_access ) ? array_filter( array_merge( (array) $blocked_ips_login_access, (array) $custom_blocked_ips ) ) : array_filter( (array) $custom_blocked_ips );
-
-		return ! empty( $this->allowlist_ips ) || ! empty( $this->blocked_ips );
+	public function __construct() {
+		add_action( 'login_init', [ $this, 'restrictLoginToIps' ], PHP_INT_MIN );
 	}
 
 	// --------------------------------------------------
 
-	public function restrict_login_to_ips(): bool {
+	/**
+	 * @return bool
+	 */
+	public function restrictLoginToIps(): bool {
 		// Bail if the allowed ip list is empty.
-		if ( ! $this->restricted() ) {
+		if ( ! $this->_restricted() ) {
 			return true;
 		}
 
@@ -87,6 +78,32 @@ final class LoginRestricted {
 
 	// --------------------------------------------------
 
+	/**
+	 * @return bool
+	 */
+	private function _restricted(): bool {
+		$_options             = Helper::getOption( 'login_security__options' );
+		$custom_allowlist_ips = $_options['login_ips_access'] ?? [];
+		$custom_blocked_ips   = $_options['disable_ips_access'] ?? [];
+
+		$_options_default           = Helper::filterSettingOptions( 'login_security', false );
+		$allowlist_ips_login_access = $_options_default['allowlist_ips_login_access'] ?? [];
+		$blocked_ips_login_access   = $_options_default['blocked_ips_login_access'] ?? [];
+
+		$this->allowlist_ips = ! empty( $allowlist_ips_login_access ) ? array_filter( array_merge( (array) $allowlist_ips_login_access, (array) $custom_allowlist_ips ) ) : array_filter( (array) $custom_allowlist_ips );
+		$this->blocked_ips   = ! empty( $blocked_ips_login_access ) ? array_filter( array_merge( (array) $blocked_ips_login_access, (array) $custom_blocked_ips ) ) : array_filter( (array) $custom_blocked_ips );
+
+		return ! empty( $this->allowlist_ips ) || ! empty( $this->blocked_ips );
+	}
+
+	// --------------------------------------------------
+
+	/**
+	 * @param $ip
+	 * @param $range
+	 *
+	 * @return bool
+	 */
 	private function _ipInRange( $ip, $range ): bool {
 		if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 			return false;
@@ -121,6 +138,12 @@ final class LoginRestricted {
 
 	// --------------------------------------------------
 
+	/**
+	 * @param $ip1
+	 * @param $ip2
+	 *
+	 * @return int
+	 */
 	private function _compareIPs( $ip1, $ip2 ): int {
 		$ip1Long = (int) ip2long( $ip1 );
 		$ip2Long = (int) ip2long( $ip2 );
@@ -138,11 +161,18 @@ final class LoginRestricted {
 
 	// --------------------------------------------------
 
+	/**
+	 * @param $ip
+	 * @param $subnet
+	 * @param $maskLength
+	 *
+	 * @return bool
+	 */
 	private function _ipCIDRCheck( $ip, $subnet, $maskLength ): bool {
 		$ip     = ip2long( $ip );
 		$subnet = ip2long( $subnet );
 		$mask   = - 1 << ( 32 - $maskLength );
-		$subnet &= $mask; // Align the subnet to the mask
+		$subnet &= $mask;
 
 		return ( $ip & $mask ) === $subnet;
 	}

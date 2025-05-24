@@ -153,7 +153,7 @@ final class Addons {
 		$version = Helper::version();
 
 		Asset::enqueueStyle( 'login-css', ADDONS_URL . 'assets/css/login.css', [], $version );
-		Asset::enqueueScript( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true, [ 'module', 'async' ] );
+		Asset::enqueueScript( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true, [ 'module', 'defer' ] );
 
 		$default_logo = '';
 		$default_bg   = '';

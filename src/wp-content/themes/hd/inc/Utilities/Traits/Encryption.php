@@ -49,14 +49,14 @@ trait Encryption {
 
 		self::loadKeys();
 
-		$ivLength = openssl_cipher_iv_length( self::$method );
+		$ivLength = \openssl_cipher_iv_length( self::$method );
 		if ( $ivLength === false ) {
 			throw new \RuntimeException( "Invalid cipher method: " . self::$method );
 		}
 
 		$iv        = random_bytes( $ivLength );
 		$key       = substr( hash( 'sha256', self::$secretKey ), 0, 16 );
-		$encrypted = openssl_encrypt( $data, self::$method, $key, 0, $iv );
+		$encrypted = \openssl_encrypt( $data, self::$method, $key, 0, $iv );
 
 		if ( $encrypted === false ) {
 			throw new \RuntimeException( "Encryption failed." );
@@ -84,7 +84,7 @@ trait Encryption {
 			throw new \RuntimeException( "Invalid base64 encoded data." );
 		}
 
-		$ivLength = openssl_cipher_iv_length( self::$method );
+		$ivLength = \openssl_cipher_iv_length( self::$method );
 		if ( $ivLength === false ) {
 			throw new \RuntimeException( "Invalid cipher method: " . self::$method );
 		}
@@ -93,7 +93,7 @@ trait Encryption {
 		$encrypted = substr( $data, $ivLength );
 
 		$key       = substr( hash( 'sha256', self::$secretKey ), 0, 16 );
-		$decrypted = openssl_decrypt( $encrypted, self::$method, $key, 0, $iv );
+		$decrypted = \openssl_decrypt( $encrypted, self::$method, $key, 0, $iv );
 
 		if ( $decrypted === false ) {
 			throw new \RuntimeException( "Decryption failed." );

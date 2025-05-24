@@ -29,18 +29,16 @@ final class Theme {
 		// FE: init -> wp_loaded -> wp -> template_redirect -> template_include -> v.v...
 		// BE: init -> wp_loaded -> admin_menu -> admin_init -> v.v...
 
-		add_action( 'after_setup_theme', [ $this, 'setup_theme' ], 10 );
+		add_action( 'after_setup_theme', [ $this, 'setupTheme' ], 10 );
 		add_action( 'after_setup_theme', [ $this, 'setup' ], 11 );
-
-		add_action( 'after_switch_theme', [ $this, 'switch_theme' ], 10 );
-		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ], 10 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueueAssets' ], 10 );
 
 		/** Widgets */
-		add_action( 'widgets_init', [ $this, 'unregister_widgets' ], 11 );
-		add_action( 'widgets_init', [ $this, 'register_widgets' ], 11 );
+		add_action( 'widgets_init', [ $this, 'unregisterWidgets' ], 11 );
+		add_action( 'widgets_init', [ $this, 'registerWidgets' ], 11 );
 
 		/** Dynamic Template Hook */
-		add_filter( 'template_include', [ $this, 'dynamic_template_include' ], 20 );
+		add_filter( 'template_include', [ $this, 'dynamicTemplateInclude' ], 20 );
 	}
 
 	// --------------------------------------------------
@@ -51,7 +49,7 @@ final class Theme {
 	 * Note that this function is hooked into the after_setup_theme hook, which runs before the init hook.
 	 * The init hook is too late for some features, such as indicating support for post-thumbnails.
 	 */
-	public function setup_theme(): void {
+	public function setupTheme(): void {
 		load_theme_textdomain( TEXT_DOMAIN, get_template_directory() . '/languages' );
 
 		/** Add theme support for various features. */
@@ -107,58 +105,12 @@ final class Theme {
 
 	// --------------------------------------------------
 
-	public function switch_theme(): void {
-		// -------------------------------------------------------------
-		// permalink structure
-		// -------------------------------------------------------------
-
-		if ( ! \HD_Helper::getOption( '_permalink_structure_updated' ) ) {
-			\HD_Helper::updateOption( '_permalink_structure_updated', true );
-			global $wp_rewrite;
-
-			$wp_rewrite->set_permalink_structure( '/%postname%/' );
-			$wp_rewrite->flush_rules();
-		}
-
-		// -------------------------------------------------------------
-		// images sizes
-		// -------------------------------------------------------------
-
-		/**
-		 * thumbnail (540x0)
-		 * medium (768x0)
-		 * large (1024x0)
-		 *
-		 * small-thumbnail (150x150)
-		 * widescreen (1920x9999)
-		 * post-thumbnail (1280x9999)
-		 */
-		if ( ! \HD_Helper::getOption( '_image_sizes_updated' ) ) {
-			\HD_Helper::updateOption( '_image_sizes_updated', true );
-
-			/** Default thumb */
-			\HD_Helper::updateOption( 'thumbnail_size_w', 540 );
-			\HD_Helper::updateOption( 'thumbnail_size_h', 0 );
-			\HD_Helper::updateOption( 'thumbnail_crop', 0 );
-
-			/** Medium thumb */
-			\HD_Helper::updateOption( 'medium_size_w', 768 );
-			\HD_Helper::updateOption( 'medium_size_h', 0 );
-
-			/** Large thumb */
-			\HD_Helper::updateOption( 'large_size_w', 1024 );
-			\HD_Helper::updateOption( 'large_size_h', 0 );
-		}
-	}
-
-	// --------------------------------------------------
-
 	/**
 	 * Enqueue scripts and styles
 	 *
 	 * @return void
 	 */
-	public function wp_enqueue_scripts(): void {
+	public function enqueueAssets(): void {
 		$version = \HD_Helper::version();
 
 		/** Inline Js */
@@ -200,7 +152,7 @@ final class Theme {
 	 *
 	 * @return mixed
 	 */
-	public function dynamic_template_include( $template ): mixed {
+	public function dynamicTemplateInclude( $template ): mixed {
 		static $enqueued_hooks = [];
 
 		$template_slug = basename( $template, '.php' );
@@ -226,7 +178,7 @@ final class Theme {
 	 *
 	 * @return void
 	 */
-	public function unregister_widgets(): void {
+	public function unregisterWidgets(): void {
 		unregister_widget( 'WP_Widget_Search' );
 		unregister_widget( 'WP_Widget_Recent_Posts' );
 
@@ -245,7 +197,7 @@ final class Theme {
 	 *
 	 * @return void
 	 */
-	public function register_widgets(): void {
+	public function registerWidgets(): void {
 		$widgets_dir = INC_PATH . 'Utilities/Widgets';
 		$FQN         = '\\HD\\Utilities\\Widgets\\';
 
