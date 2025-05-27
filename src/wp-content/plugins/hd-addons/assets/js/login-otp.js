@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+  var _a;
   const loginform = document.getElementById("loginform");
   if (loginform) {
     loginform.classList.add("otp-loginform");
@@ -11,8 +12,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const rememberBox = document.getElementById("rememberme");
     if (rememberBox) {
       rememberBox.checked = false;
-      rememberBox.closest("p").remove();
+      (_a = rememberBox.closest("p")) == null ? void 0 : _a.remove();
     }
+  }
+  const form = document.querySelector("#loginform"), inputEl = document.querySelector('input.authcode[inputmode="numeric"]'), expectedLength = Number(inputEl == null ? void 0 : inputEl.dataset.digits) || 0;
+  if (inputEl) {
+    inputEl.addEventListener(
+      "input",
+      function() {
+        let value = this.value.replace(/[^0-9 ]/g, "").trimStart();
+        this.value = value;
+        if (expectedLength && value.replace(/ /g, "").length === expectedLength) {
+          if (void 0 !== form.requestSubmit) {
+            form.requestSubmit();
+            form.submit.disabled = "disabled";
+          }
+        }
+      }
+    );
   }
 });
 //# sourceMappingURL=login-otp.js.map

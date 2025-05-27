@@ -19,7 +19,7 @@ class LoginOtpVerification {
 	/** Behaviour constants */
 	public const TTL = 5 * MINUTE_IN_SECONDS; // 5 minutes
 	public const TTL_PENDING = 5 * MINUTE_IN_SECONDS; // 5 minutes
-	public const TTL_COOKIE_EXPIRES = 2 * HOUR_IN_SECONDS; // 2 hours
+	public const TTL_COOKIE_EXPIRES = DAY_IN_SECONDS; // 1 day
 	public const MAX_ATTEMPTS = 5;
 	public const LOGIN_ACTION = '_otp_validate';
 
@@ -32,6 +32,8 @@ class LoginOtpVerification {
 
 		add_action( 'login_enqueue_scripts', [ $this, 'enqueueAssets' ], 32 );
 		add_action( 'wp_login', [ $this, 'initOtp' ], 10, 2 ); // Fires after the user has successfully logged in.
+		add_action( 'wp_logout', [ $this, 'cleanupOtpOnLogout' ] );
+		add_action( 'clear_auth_cookie', [$this, 'cleanupOtpOnLogout'], 10, 0 );
 		add_filter( 'login_message', [ $this, 'otpFailMessage' ] );
 		add_action( 'login_form_' . self::LOGIN_ACTION, [ $this, 'validateOtpLogin' ] );
 	}
@@ -78,12 +80,28 @@ class LoginOtpVerification {
 
 		// Load the OTP form.
 		$this->_loadForm( [
-				'action'   => esc_url( add_query_arg( 'action', self::LOGIN_ACTION, wp_login_url() ) ),
-				'template' => 'recovery-login.php',
-				'uid'      => $user->ID,
-				'error'    => '',
-			]
-		);
+			'action'   => esc_url( add_query_arg( 'action', self::LOGIN_ACTION, wp_login_url() ) ),
+			'template' => 'recovery-login.php',
+			'uid'      => $user->ID,
+			'error'    => '',
+		] );
+	}
+
+	// ------------------------------------------
+
+	/**
+	 * @param int $user_id
+	 *
+	 * @return void
+	 */
+	public function cleanupOtpOnLogout( int $user_id = 0 ): void {
+        if ( ! $user_id ) {
+	        $user_id = get_current_user_id();
+        }
+
+		if ( $user_id ) {
+			$this->_clearOtpData( $user_id );
+		}
 	}
 
 	// ------------------------------------------
@@ -204,11 +222,9 @@ class LoginOtpVerification {
 
 		$interim_login = 'success';
 		login_header( '', '<p class="message">' . __( 'You have logged in successfully.', ADDONS_TEXTDOMAIN ) . '</p>' );
-		?>
-        </div>
-		<?php do_action( 'login_footer' ); ?>
-        </body></html>
-		<?php
+        echo '</div>';
+		do_action( 'login_footer' );
+        echo '</body></html>';
 		exit;
 	}
 
@@ -389,6 +405,8 @@ class LoginOtpVerification {
 
 		delete_user_meta( $user_id, '_otp_ttl_pending' );
 		delete_user_meta( $user_id, '_otp_dnc_token' );
+
+		setcookie( '_otp_dnc_cookie', '', -1 );
 	}
 
 	// ------------------------------------------

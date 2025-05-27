@@ -13,7 +13,28 @@ document.addEventListener('DOMContentLoaded', function () {
         const rememberBox = document.getElementById("rememberme");
         if (rememberBox) {
             rememberBox.checked = false;
-            rememberBox.closest("p").remove();
+            rememberBox.closest("p")?.remove();
         }
+    }
+
+    // Enforce numeric-only input for numeric inputmode elements.
+    const form = document.querySelector('#loginform'),
+        inputEl = document.querySelector('input.authcode[inputmode="numeric"]'),
+        expectedLength = Number(inputEl?.dataset.digits) || 0;
+
+    if (inputEl) {
+        inputEl.addEventListener('input', function () {
+                let value = this.value.replace(/[^0-9 ]/g, '').trimStart();
+                this.value = value;
+
+                // Auto-submit if it's the expected length.
+                if (expectedLength && value.replace(/ /g, '').length === expectedLength) {
+                    if (undefined !== form.requestSubmit) {
+                        form.requestSubmit();
+                        form.submit.disabled = "disabled";
+                    }
+                }
+            }
+        );
     }
 });
