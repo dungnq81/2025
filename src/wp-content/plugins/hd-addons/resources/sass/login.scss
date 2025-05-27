@@ -38,9 +38,9 @@ body.login {
             width: auto;
             max-width: 100%;
             background-position: center center;
-            height: 70px;
+           /* height: 70px;*/
             background-size: contain;
-            margin-bottom: 20px;
+            /*margin-bottom: 20px;*/
 
             &:focus {
                 box-shadow: none;
@@ -56,14 +56,31 @@ body.login {
     :where(.privacy-policy-link) {
         display: none;
     }
-}
 
-.otp-loginform {
-    input[type="submit"] {
-        width: 100%;
+    /* login form */
+    .otp-loginform {
+        input[type="submit"] {
+            width: 100%;
+        }
+
+        #rememberme {
+            display: none !important;
+        }
     }
 
-    #rememberme {
-        display: none !important;
+    /* OTP form */
+    .otp-prompt {
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .input.authcode {
+        letter-spacing: 0.3em;
+        text-transform: lowercase;
+        margin-right: 0;
+
+        &::placeholder {
+            opacity: 0.5;
+        }
     }
 }

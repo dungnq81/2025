@@ -26,14 +26,16 @@ body.login form.shake + #nav {
 #login {
   position: relative;
   z-index: 99;
+  /* login form */
+  /* OTP form */
 }
 #login h1 a {
   width: auto;
   max-width: 100%;
   background-position: center center;
-  height: 70px;
+  /* height: 70px;*/
   background-size: contain;
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
 }
 #login h1 a:focus {
   box-shadow: none;
@@ -45,10 +47,21 @@ body.login form.shake + #nav {
 #login :where(.privacy-policy-link) {
   display: none;
 }
-
-.otp-loginform input[type=submit] {
+#login .otp-loginform input[type=submit] {
   width: 100%;
 }
-.otp-loginform #rememberme {
+#login .otp-loginform #rememberme {
   display: none !important;
+}
+#login .otp-prompt {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+#login .input.authcode {
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+  margin-right: 0;
+}
+#login .input.authcode::placeholder {
+  opacity: 0.5;
 }

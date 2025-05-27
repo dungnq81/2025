@@ -18,16 +18,11 @@ final class Addons {
 	// -------------------------------------------------------------
 
 	public function __construct() {
-		add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ], 999 );
+		add_action( 'plugins_loaded', [ $this, 'pluginsLoaded' ], 999 );
 
-		// Admin / login assets
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ], 39, 1 );
-		add_action( 'login_enqueue_scripts', [ $this, 'login_enqueue_script' ], 31 );
-		add_filter( 'login_headertext', [ $this, 'login_headertext' ] );
-		add_filter( 'login_headerurl', [ $this, 'login_headerurl' ] );
-
-		// Script attribute helper
-		add_action( 'script_loader_tag', [ $this, 'script_loader_tag' ], 11, 3 );
+		// Admin assets / Script attribute
+		add_action( 'admin_enqueue_scripts', [ $this, 'adminEnqueueAssets' ], 39, 1 );
+		add_action( 'script_loader_tag', [ $this, 'scriptLoaderTag' ], 11, 3 );
 	}
 
 	// -------------------------------------------------------------
@@ -37,7 +32,7 @@ final class Addons {
 	 *
 	 * @return void
 	 */
-	public function plugins_loaded(): void {
+	public function pluginsLoaded(): void {
 		// Classic Editor
 		if ( Helper::checkPluginActive( 'classic-editor/classic-editor.php' ) ) {
 			remove_action( 'admin_init', [ \Classic_Editor::class, 'register_settings' ] );
@@ -83,7 +78,7 @@ final class Addons {
 	 *
 	 * @return string
 	 */
-	public function script_loader_tag( string $tag, string $handle, string $src ): string {
+	public function scriptLoaderTag( string $tag, string $handle, string $src ): string {
 		$reg = wp_scripts()->registered[ $handle ] ?? null;
 		if ( ! $reg || empty( $reg->extra['addon'] ) ) {
 			return $tag;
@@ -115,7 +110,7 @@ final class Addons {
 	 *
 	 * @return void
 	 */
-	public function admin_enqueue_scripts( $hook ): void {
+	public function adminEnqueueAssets( $hook ): void {
 		$version = Helper::version();
 
 		// addon page settings
@@ -142,70 +137,5 @@ final class Addons {
 			'codemirror_html' => wp_enqueue_code_editor( [ 'type' => 'text/html' ] ),
 		];
 		Asset::localize( 'addon-js', 'codemirror_settings', $l10n );
-	}
-
-	// -------------------------------------------------------------
-
-	/**
-	 * @return void
-	 */
-	public function login_enqueue_script(): void {
-		$version = Helper::version();
-
-		Asset::enqueueStyle( 'login-css', ADDONS_URL . 'assets/css/login.css', [], $version );
-		Asset::enqueueScript( 'login-js', ADDONS_URL . 'assets/js/login.js', [ 'jquery' ], $version, true, [ 'module', 'defer' ] );
-
-		$default_logo = '';
-		$default_bg   = '';
-
-		//$default_logo = ADDONS_URL . 'assets/img/logo.png';
-		//$default_bg   = ADDONS_URL . 'assets/img/login-bg.jpg';
-
-		// scripts / styles
-		$logo     = esc_url_raw( Helper::getThemeMod( 'login_page_logo_setting' ) ?: $default_logo );
-		$bg_img   = esc_url_raw( Helper::getThemeMod( 'login_page_bgimage_setting' ) ?: $default_bg );
-		$bg_color = sanitize_hex_color( Helper::getThemeMod( 'login_page_bgcolor_setting' ) );
-
-		$css = new CSS();
-
-		if ( $bg_img ) {
-			$css->set_selector( 'body.login' )
-			    ->add_property( 'background-image', "url({$bg_img})" );
-		}
-
-		if ( $bg_color ) {
-			$css->set_selector( 'body.login' )
-			    ->add_property( 'background-color', $bg_color )
-			    ->set_selector( 'body.login:before' )
-			    ->add_property( 'background', 'none' )
-			    ->add_property( 'opacity', 1 );
-		}
-
-		if ( $logo ) {
-			$css->set_selector( 'body.login #login h1 a' )
-			    ->add_property( 'background-image', "url({$logo})" );
-		}
-
-		if ( $inline = $css->css_output() ) {
-			Asset::inlineStyle( 'login-css', $inline );
-		}
-	}
-
-	// -------------------------------------------------------------
-
-	/**
-	 * @return mixed|string|null
-	 */
-	public function login_headertext(): mixed {
-		return Helper::getThemeMod( 'login_page_headertext_setting' ) ?: get_bloginfo( 'name' );
-	}
-
-	// -------------------------------------------------------------
-
-	/**
-	 * @return mixed|string|null
-	 */
-	public function login_headerurl(): mixed {
-		return Helper::getThemeMod( 'login_page_headerurl_setting' ) ?: site_url( '/' );
 	}
 }

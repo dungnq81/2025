@@ -12,20 +12,20 @@ use Random\RandomException;
  * @author Gaudev
  */
 class LoginOtpVerification {
-
 	/** Template constants for transient keys */
-	public const TRANSIENT_OTP = '_otp_%d';      // Stores hashed OTP
-	public const TRANSIENT_ATTEMPTS = '_otp_try_%d';  // Stores failed-attempt counter
+	public const TRANSIENT_OTP = '_otp_%d';
+	public const TRANSIENT_ATTEMPTS = '_otp_try_%d';
 
 	/** Behaviour constants */
-	public const TTL = 5 * MINUTE_IN_SECONDS;    // OTP lifetime: 5 minutes
-	public const MAX_ATTEMPTS = 5;                        // Maximum wrong tries
-	public const LOGIN_ACTION = '_otp_validate';               // Hook slug used for ?action
+	public const TTL = 5 * MINUTE_IN_SECONDS; // 5 minutes
+	public const TTL_PENDING = 5 * MINUTE_IN_SECONDS; // 5 minutes
+	public const TTL_COOKIE_EXPIRES = 2 * HOUR_IN_SECONDS; // 2 hours
+	public const MAX_ATTEMPTS = 5;
+	public const LOGIN_ACTION = '_otp_validate';
 
 	// ------------------------------------------
 
 	public function __construct() {
-		// Bail if the option is not enabled.
 		if ( ! $this->_isEnabled() ) {
 			return;
 		}
@@ -33,6 +33,7 @@ class LoginOtpVerification {
 		add_action( 'login_enqueue_scripts', [ $this, 'enqueueAssets' ], 32 );
 		add_action( 'wp_login', [ $this, 'initOtp' ], 10, 2 ); // Fires after the user has successfully logged in.
 		add_filter( 'login_message', [ $this, 'otpFailMessage' ] );
+		add_action( 'login_form_' . self::LOGIN_ACTION, [ $this, 'validateOtpLogin' ] );
 	}
 
 	// ------------------------------------------
@@ -60,46 +61,95 @@ class LoginOtpVerification {
 			return;
 		}
 
+		// Valid OTP cookie.
+		if ( true === $this->_checkOtpCookie( $user_login, $user ) ) {
+			return;
+		}
+
 		// Remove the auth cookie.
 		wp_clear_auth_cookie();
 
-		// 6-digit, keep leading zeros.
-		$otp = str_pad( random_int( 0, 999999 ), 6, '0', STR_PAD_LEFT );
-
-		// Store a hashed version of the code for 5 minutes, initialize a failed-attempt counter.
-		set_transient( sprintf( self::TRANSIENT_OTP, $user->ID ), wp_hash( $otp ), self::TTL );
-		set_transient( sprintf( self::TRANSIENT_ATTEMPTS, $user->ID ), 0, self::TTL );
-
-		$sent = wp_mail(
-			$user->user_email,
-			__( 'Your One-Time OTP', ADDONS_TEXTDOMAIN ),
-			sprintf(
-				__( "Hello %s,\n\nYour OTP is: %s\nThis code will expire in 5 minutes.\n\nIf you didn't request this login, please ignore this email.", ADDONS_TEXTDOMAIN ),
-				$user_login,
-				$otp
-			)
-		);
-
-		// If the email fails, abort the OTP process.
-		if ( ! $sent ) {
+		$result = $this->_maybeSendOtpEmail( $user );
+		if ( $result === false ) {
 			$this->_clearOtpData( $user->ID );
 			wp_safe_redirect( add_query_arg( '_error', 'email', wp_login_url() ) );
 			exit;
 		}
 
-		// OTP token
-		$this->_setOtpCookie( $user->ID );
-
-		$user_cookie_part = $user->ID . '|' . bin2hex( random_bytes( 18 ) );
-		update_user_meta( $user->ID, '_otp_login_nonce', wp_hash( $user_cookie_part ) );
-
 		// Load the OTP form.
-		$this->loadForm( [
+		$this->_loadForm( [
 				'action'   => esc_url( add_query_arg( 'action', self::LOGIN_ACTION, wp_login_url() ) ),
-				'template' => 'otp-login.php',
+				'template' => 'recovery-login.php',
+				'uid'      => $user->ID,
 				'error'    => '',
 			]
 		);
+	}
+
+	// ------------------------------------------
+
+	/**
+	 * @throws RandomException
+	 */
+	public function validateOtpLogin(): void {
+		if ( empty( $_POST['authcode'] ) ||
+		     empty( $_POST['uid'] ) ||
+		     empty( $_POST['_csrf_token'] ) ||
+		     ! wp_verify_nonce( wp_unslash( $_POST['_csrf_token'] ), 'otp_csrf_token' )
+		) {
+			return;
+		}
+
+		$user_id = (int) $_POST['uid'];
+
+		// OTP hash and failed attempts
+		$stored_hash = get_transient( sprintf( self::TRANSIENT_OTP, $user_id ) );
+		$attempts    = (int) get_transient( sprintf( self::TRANSIENT_ATTEMPTS, $user_id ) );
+
+		// expired transient
+		if ( false === $stored_hash ) {
+			$this->_loadForm( [
+				'action'   => esc_url( add_query_arg( 'action', self::LOGIN_ACTION, wp_login_url() ) ),
+				'template' => 'recovery-login.php',
+				'uid'      => $user_id,
+				'error'    => __( 'Verification code expired – please request a new code.', ADDONS_TEXTDOMAIN ),
+			] );
+		}
+
+		$entered  = preg_replace( '/\D/', '', wp_unslash( $_POST['authcode'] ) );
+		$is_match = hash_equals( $stored_hash, wp_hash( $entered ) );
+
+		if ( ! $is_match ) {
+
+			// Increase the number of failed attempts and save it
+			$attempts ++;
+			set_transient( sprintf( self::TRANSIENT_ATTEMPTS, $user_id ), $attempts, self::TTL );
+
+			// Too many attempts?
+			if ( $attempts >= self::MAX_ATTEMPTS ) {
+				$this->_clearOtpData( $user_id );
+				wp_safe_redirect( add_query_arg( '_error', 'max_attempts', wp_login_url() ) );
+				exit;
+			}
+
+			$this->_loadForm( [
+				'action'   => esc_url( add_query_arg( 'action', self::LOGIN_ACTION, wp_login_url() ) ),
+				'template' => 'recovery-login.php',
+				'uid'      => $user_id,
+				'error'    => sprintf( __( 'Invalid code. You have %1$d of %2$d attempts left.', ADDONS_TEXTDOMAIN ), self::MAX_ATTEMPTS - $attempts, self::MAX_ATTEMPTS
+				),
+			] );
+		}
+
+		// Log in the user.
+		$this->_loginUser( $user_id );
+
+		// Interim login.
+		$this->_interimCheck();
+
+		// Get the redirect url.
+		$redirect_url = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : get_admin_url();
+		wp_safe_redirect( esc_url_raw( wp_unslash( $redirect_url ) ) );
 	}
 
 	// ------------------------------------------
@@ -118,7 +168,89 @@ class LoginOtpVerification {
 			return '<div id="login_error" class="notice notice-error"><p><strong>Error:</strong> Unable to send OTP e-mail.</p></div>';
 		}
 
+		if ( 'max_attempts' === $_GET['_error'] ) {
+			return '<div id="login_error" class="notice notice-error"><p><strong>Error:</strong> Too many attempts.</p></div>';
+		}
+
 		return $message;
+	}
+
+	// ------------------------------------------
+
+	/**
+	 * @param $user_id
+	 *
+	 * @return void
+	 * @throws RandomException
+	 */
+	private function _loginUser( $user_id ): void {
+		// Set the auth cookie.
+		wp_set_auth_cookie( wp_unslash( $user_id ), (int) wp_unslash( $_POST['rememberme'] ) );
+
+		// Clear and setup OTP cookie
+		$this->_clearOtpData( $user_id );
+		$this->_setOtpCookie( $user_id );
+	}
+
+	// ------------------------------------------
+
+	private function _interimCheck(): void {
+		global $interim_login;
+
+		$interim_login = ( isset( $_REQUEST['interim-login'] ) ) ? filter_var( $_REQUEST['interim-login'], FILTER_VALIDATE_BOOLEAN ) : false;
+		if ( false === $interim_login ) {
+			return;
+		}
+
+		$interim_login = 'success';
+		login_header( '', '<p class="message">' . __( 'You have logged in successfully.', ADDONS_TEXTDOMAIN ) . '</p>' );
+		?>
+        </div>
+		<?php do_action( 'login_footer' ); ?>
+        </body></html>
+		<?php
+		exit;
+	}
+
+	// ------------------------------------------
+
+	/**
+	 * Send an OTP e-mail if the cool-down has passed.
+	 *
+	 * @param \WP_User $user
+	 *
+	 * @return bool|null
+	 * @throws RandomException
+	 */
+	private function _maybeSendOtpEmail( \WP_User $user ): ?bool {
+		// Cool-down check (5 minutes)
+		$last_sent = (int) get_user_meta( $user->ID, '_otp_ttl_pending', true );
+		if ( $last_sent && ( current_time( 'timestamp' ) - $last_sent ) < self::TTL_PENDING ) {
+			return null;
+		}
+
+		// build OPT & send email
+		$otp  = str_pad( random_int( 0, 999999 ), 6, '0', STR_PAD_LEFT );
+		$sent = wp_mail(
+			$user->user_email,
+			__( 'Your One-Time OTP', ADDONS_TEXTDOMAIN ),
+			sprintf(
+				__( "Hello %s,\n\nYour OTP is: %s\nThis code will expire in 5 minutes.\n\nIf you didn't request this login, please ignore this email.", ADDONS_TEXTDOMAIN ),
+				$user->user_login,
+				$otp
+			)
+		);
+
+		if ( ! $sent ) {
+			return false;
+		}
+
+		// Success → store cool-down and transients
+		update_user_meta( $user->ID, '_otp_ttl_pending', current_time( 'timestamp' ) );
+		set_transient( sprintf( self::TRANSIENT_OTP, $user->ID ), wp_hash( $otp ), self::TTL );
+		set_transient( sprintf( self::TRANSIENT_ATTEMPTS, $user->ID ), 0, self::TTL );
+
+		return true;
 	}
 
 	// ------------------------------------------
@@ -130,7 +262,7 @@ class LoginOtpVerification {
 	 *
 	 * @return void
 	 */
-	public function loadForm( $args ): void {
+	private function _loadForm( $args ): void {
 		if ( empty( $args['template'] ) ) {
 			return;
 		}
@@ -210,7 +342,7 @@ class LoginOtpVerification {
 			'_otp_dnc_cookie',
 			$user_id . '|' . $token,
 			[
-				'expires'  => time() + DAY_IN_SECONDS,
+				'expires'  => time() + self::TTL_COOKIE_EXPIRES,
 				'path'     => $difference . $slug,
 				'domain'   => $domain,
 				'secure'   => true,
@@ -254,6 +386,9 @@ class LoginOtpVerification {
 	private function _clearOtpData( $user_id ): void {
 		delete_transient( sprintf( self::TRANSIENT_OTP, $user_id ) );
 		delete_transient( sprintf( self::TRANSIENT_ATTEMPTS, $user_id ) );
+
+		delete_user_meta( $user_id, '_otp_ttl_pending' );
+		delete_user_meta( $user_id, '_otp_dnc_token' );
 	}
 
 	// ------------------------------------------
