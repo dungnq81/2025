@@ -145,6 +145,7 @@ class LoginOtpVerification {
 				'action'   => esc_url( add_query_arg( 'action', self::ACTION_VALIDATE, wp_login_url() ) ),
 				'template' => 'recovery-login.php',
 				'uid'      => $userId,
+				'send_at'  => (int) get_user_meta( $userId, self::META_LASTSEND, true ),
 				'error'    => __( 'Verification code expired – please request a new code.', ADDONS_TEXTDOMAIN ),
 			] );
 		}
@@ -167,6 +168,7 @@ class LoginOtpVerification {
 				'action'   => esc_url( add_query_arg( 'action', self::ACTION_VALIDATE, wp_login_url() ) ),
 				'template' => 'recovery-login.php',
 				'uid'      => $userId,
+				'send_at'  => (int) get_user_meta( $userId, self::META_LASTSEND, true ),
 				'error'    => sprintf(
 					__( 'Invalid code. You have %1$d of %2$d attempts left.', ADDONS_TEXTDOMAIN ),
 					self::MAX_ATTEMPTS - $attempts,
