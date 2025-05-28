@@ -188,9 +188,9 @@ class LoginOtpVerification {
 	 *
 	 * @param string $message
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
-	public function otpFailMessage( string $message ): mixed {
+	public function otpFailMessage( string $message ): string {
 		if ( empty( $_GET['_error'] ) ) {
 			return $message;
 		}
@@ -212,7 +212,7 @@ class LoginOtpVerification {
 	 * @return void
 	 * @throws RandomException
 	 */
-	private function _loginUser( int $userId ): void {
+	private function _loginUser( int $userId = 0 ): void {
 		wp_set_auth_cookie( wp_unslash( $userId ), (bool) ( $_POST['rememberme'] ?? 0 ) );
 
 		$this->_clearOtpData( $userId );
@@ -327,7 +327,7 @@ class LoginOtpVerification {
 	 * @return void
 	 * @throws RandomException
 	 */
-	private function _setOtpCookie( int $userId ): void {
+	private function _setOtpCookie( int $userId = 0 ): void {
 		$token = bin2hex( random_bytes( 22 ) );
 		update_user_meta( $userId, self::META_TOKEN, $token );
 
@@ -362,15 +362,15 @@ class LoginOtpVerification {
 	}
 
 	/**
-	 * @param $user_id
+	 * @param int $userId
 	 *
 	 * @return void
 	 */
-	private function _clearOtpData( $user_id ): void {
-		delete_transient( sprintf( self::KEY_OTP, $user_id ) );
-		delete_transient( sprintf( self::KEY_ATTEMPT, $user_id ) );
-		delete_user_meta( $user_id, self::META_LASTSEND );
-		delete_user_meta( $user_id, self::META_TOKEN );
+	private function _clearOtpData( int $userId = 0 ): void {
+		delete_transient( sprintf( self::KEY_OTP, $userId ) );
+		delete_transient( sprintf( self::KEY_ATTEMPT, $userId ) );
+		delete_user_meta( $userId, self::META_LASTSEND );
+		delete_user_meta( $userId, self::META_TOKEN );
 
 		setcookie( '_otp_dnc_cookie', '', time() - 3600, '/' );
 	}
