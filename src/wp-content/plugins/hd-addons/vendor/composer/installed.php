@@ -3,7 +3,7 @@
         'name' => 'plugins/hd-addons',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
+        'reference' => '5ff9be0789c0aea04b8f2e4eaf9f9d056a0c8a87',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'plugins/hd-addons' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '41dc4e744690c8d74916a79d03ba0d8da5cbfe79',
+            'reference' => '5ff9be0789c0aea04b8f2e4eaf9f9d056a0c8a87',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '0cc529f6cf08a858fcb7a2c5617780fcdc20d1fe',
+            'reference' => 'af51c1a7b91dee6d4b920498946bf1de6a4efe86',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -58,9 +58,9 @@
             'dev_requirement' => true,
         ),
         'symfony/deprecation-contracts' => array(
-            'pretty_version' => 'v3.5.1',
-            'version' => '3.5.1.0',
-            'reference' => '74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6',
+            'pretty_version' => 'v3.6.0',
+            'version' => '3.6.0.0',
+            'reference' => '63afe740e99a13ba87ec199bb07bbdee937a5b62',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
             'aliases' => array(),

@@ -28,6 +28,7 @@ final class LoginSecurity {
 		( new LoginIllegalUsers() );
 		( new LoginAttempts() );
 		( new LoginOtpVerification() );
+		( new LoginUrl() );
 	}
 
 	// -------------------------------------------------------------

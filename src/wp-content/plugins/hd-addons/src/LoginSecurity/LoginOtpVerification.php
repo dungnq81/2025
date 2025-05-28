@@ -99,7 +99,7 @@ class LoginOtpVerification {
 			'action'   => esc_url( add_query_arg( 'action', self::ACTION_VALIDATE, wp_login_url() ) ),
 			'template' => 'recovery-login.php',
 			'uid'      => $user->ID,
-			'send_at' => (int) get_user_meta( $user->ID, self::META_LASTSEND, true ),
+			'send_at'  => (int) get_user_meta( $user->ID, self::META_LASTSEND, true ),
 			'error'    => '',
 		] );
 	}
@@ -107,14 +107,14 @@ class LoginOtpVerification {
 	/**
 	 * Remove all OTP artifacts when a user logs out (or cookie cleared)
 	 *
-	 * @param int $user_id
+	 * @param int $userId
 	 *
 	 * @return void
 	 */
-	public function cleanupOtpOnLogout( int $user_id = 0 ): void {
-		$user_id = $user_id ?: get_current_user_id();
-		if ( $user_id ) {
-			$this->_clearOtpData( $user_id );
+	public function cleanupOtpOnLogout( int $userId = 0 ): void {
+		$userId = $userId ?: get_current_user_id();
+		if ( $userId ) {
+			$this->_clearOtpData( $userId );
 		}
 	}
 

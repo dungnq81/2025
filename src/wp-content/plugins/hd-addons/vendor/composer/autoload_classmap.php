@@ -29,6 +29,7 @@ return array(
     'Addons\\LoginSecurity\\LoginOtpVerification' => $baseDir . '/src/LoginSecurity/LoginOtpVerification.php',
     'Addons\\LoginSecurity\\LoginRestricted' => $baseDir . '/src/LoginSecurity/LoginRestricted.php',
     'Addons\\LoginSecurity\\LoginSecurity' => $baseDir . '/src/LoginSecurity/LoginSecurity.php',
+    'Addons\\LoginSecurity\\LoginUrl' => $baseDir . '/src/LoginSecurity/LoginUrl.php',
     'Addons\\Optimizer\\Font' => $baseDir . '/src/Optimizer/Font.php',
     'Addons\\Optimizer\\LazyLoad\\Abstract_LazyLoad' => $baseDir . '/src/Optimizer/LazyLoad/Abstract_LazyLoad.php',
     'Addons\\Optimizer\\LazyLoad\\LazyLoad' => $baseDir . '/src/Optimizer/LazyLoad/LazyLoad.php',

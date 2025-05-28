@@ -83,6 +83,7 @@ class ComposerStaticInit439191ca78e657f2a36e9ce64cd8b583
         'Addons\\LoginSecurity\\LoginOtpVerification' => __DIR__ . '/../..' . '/src/LoginSecurity/LoginOtpVerification.php',
         'Addons\\LoginSecurity\\LoginRestricted' => __DIR__ . '/../..' . '/src/LoginSecurity/LoginRestricted.php',
         'Addons\\LoginSecurity\\LoginSecurity' => __DIR__ . '/../..' . '/src/LoginSecurity/LoginSecurity.php',
+        'Addons\\LoginSecurity\\LoginUrl' => __DIR__ . '/../..' . '/src/LoginSecurity/LoginUrl.php',
         'Addons\\Optimizer\\Font' => __DIR__ . '/../..' . '/src/Optimizer/Font.php',
         'Addons\\Optimizer\\LazyLoad\\Abstract_LazyLoad' => __DIR__ . '/../..' . '/src/Optimizer/LazyLoad/Abstract_LazyLoad.php',
         'Addons\\Optimizer\\LazyLoad\\LazyLoad' => __DIR__ . '/../..' . '/src/Optimizer/LazyLoad/LazyLoad.php',
