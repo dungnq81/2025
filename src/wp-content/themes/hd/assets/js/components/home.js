@@ -1,3 +1,1 @@
-document.addEventListener("DOMContentLoaded", () => {
-});
-//# sourceMappingURL=home.js.map
+document.addEventListener("DOMContentLoaded",(()=>{}));

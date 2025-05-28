@@ -1,1 +1,0 @@
-{"version":3,"file":"tabs.js","sources":["../../../resources/scripts/components/tabs.js"],"sourcesContent":["import { nanoid } from 'nanoid';\r\n\r\ndocument.addEventListener('DOMContentLoaded', () => {\r\n\r\n});\r\n"],"names":[],"mappings":"AAEA,SAAS,iBAAiB,oBAAoB,MAAM;AAEpD,CAAC;"}

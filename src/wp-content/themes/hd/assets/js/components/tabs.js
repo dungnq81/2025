@@ -1,3 +1,1 @@
-document.addEventListener("DOMContentLoaded", () => {
-});
-//# sourceMappingURL=tabs.js.map
+document.addEventListener("DOMContentLoaded",(()=>{}));
