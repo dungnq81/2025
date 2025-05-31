@@ -42,8 +42,8 @@ final class Helper {
 	/**
 	 * Throttled error logging with a 1‑minute throttle per unique message.
 	 *
-	 * @param string      $message
-	 * @param int         $type
+	 * @param string $message
+	 * @param int $type
 	 * @param string|null $dest
 	 * @param string|null $headers
 	 *

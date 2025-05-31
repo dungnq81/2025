@@ -25,7 +25,7 @@ final class Theme {
 	// --------------------------------------------------
 
 	private function init(): void {
-		// wp-config.php -> muplugins_loaded -> plugins_loaded -> after_setup_theme -> init (rest_api_init, widgets_init, v.v...)
+		// wp-config.php -> muplugins_loaded -> plugins_loaded -> setup_theme -> after_setup_theme -> init (rest_api_init, widgets_init, v.v...)
 		// FE: init -> wp_loaded -> wp -> template_redirect -> template_include -> v.v...
 		// BE: init -> wp_loaded -> admin_menu -> admin_init -> v.v...
 

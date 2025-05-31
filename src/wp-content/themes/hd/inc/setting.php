@@ -461,7 +461,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 				'icon' => \HD_Helper::svg( 'youtube' ),
 				'url'  => '',
 			],
-			'x'   => [
+			'x'         => [
 				'name' => __( 'X (Twitter)', TEXT_DOMAIN ),
 				'icon' => \HD_Helper::svg( 'x' ),
 				'url'  => '',

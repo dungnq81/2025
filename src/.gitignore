@@ -13,3 +13,4 @@ wp-content/uploads/*
 wp-content/wflogs/
 wp-content/cache/*
 !wp-content/cache/.gitkeep
+wp-content/plugins/sg-security/

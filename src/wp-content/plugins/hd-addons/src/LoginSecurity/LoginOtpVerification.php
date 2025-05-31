@@ -169,11 +169,7 @@ class LoginOtpVerification {
 				'template' => 'recovery-login.php',
 				'uid'      => $userId,
 				'send_at'  => (int) get_user_meta( $userId, self::META_LASTSEND, true ),
-				'error'    => sprintf(
-					__( 'Invalid code. You have %1$d of %2$d attempts left.', ADDONS_TEXTDOMAIN ),
-					self::MAX_ATTEMPTS - $attempts,
-					self::MAX_ATTEMPTS
-				),
+				'error'    => sprintf( __( 'Invalid code. You have %1$d of %2$d attempts left.', ADDONS_TEXTDOMAIN ), self::MAX_ATTEMPTS - $attempts, self::MAX_ATTEMPTS ),
 			] );
 		}
 
@@ -198,8 +194,8 @@ class LoginOtpVerification {
 		}
 
 		return match ( $_GET['_error'] ) {
-			'email' => '<div id="login_error" class="notice notice-error"><p><strong>Error:</strong> Unable to send OTP e-mail.</p></div>',
-			'max_attempts' => '<div id="login_error" class="notice notice-error"><p><strong>Error:</strong> Too many attempts.</p></div>',
+			'email' => '<div id="login_error" class="notice notice-error"><p><strong>Error</strong>: Unable to send OTP e-mail.</p></div>',
+			'max_attempts' => '<div id="login_error" class="notice notice-error"><p><strong>Error</strong>: Too many attempts.</p></div>',
 			default => $message,
 		};
 	}
@@ -338,8 +334,8 @@ class LoginOtpVerification {
 			$userId . '|' . $token,
 			[
 				'expires'  => time() + self::COOKIE_LIFETIME,
-				'path'     => defined( 'COOKIEPATH' ) ? COOKIEPATH : '/',
-				'domain'   => defined( 'COOKIE_DOMAIN' ) && COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
+				'path'     => COOKIEPATH,
+				'domain'   => COOKIE_DOMAIN,
 				'secure'   => is_ssl(),
 				'httponly' => true,
 				'samesite' => 'Lax',
@@ -373,8 +369,6 @@ class LoginOtpVerification {
 		delete_transient( sprintf( self::KEY_ATTEMPT, $userId ) );
 		delete_user_meta( $userId, self::META_LASTSEND );
 		delete_user_meta( $userId, self::META_TOKEN );
-
-		setcookie( '_otp_dnc_cookie', '', time() - 3600, '/' );
 	}
 
 	/**
@@ -399,6 +393,6 @@ class LoginOtpVerification {
 			'administrator',
 		];
 
-		return apply_filters( 'loginotp_security_user_roles', $roles );
+		return apply_filters( 'loginotp_user_roles', $roles );
 	}
 }
