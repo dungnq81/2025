@@ -130,23 +130,23 @@ final class GlobalSetting {
 		/** ---------------------------------------- */
 
 		/** Aspect Ratio */
-        if ( isset( $data['aspect-ratio-hidden'] ) ) {
-	        $aspect_ratio_options  = [];
-	        $aspect_ratio_settings = Helper::filterSettingOptions( 'aspect_ratio', [] );
+		if ( isset( $data['aspect-ratio-hidden'] ) ) {
+			$aspect_ratio_options  = [];
+			$aspect_ratio_settings = Helper::filterSettingOptions( 'aspect_ratio', [] );
 
-	        foreach ( $aspect_ratio_settings['post_type_term'] ?? [] as $ar ) {
-		        if ( isset( $data[ $ar . '-width' ], $data[ $ar . '-height' ] ) ) {
-			        $aspect_ratio_options[ 'ar-' . $ar . '-width' ]  = sanitize_text_field( $data[ $ar . '-width' ] );
-			        $aspect_ratio_options[ 'ar-' . $ar . '-height' ] = sanitize_text_field( $data[ $ar . '-height' ] );
-		        }
-	        }
+			foreach ( $aspect_ratio_settings['post_type_term'] ?? [] as $ar ) {
+				if ( isset( $data[ $ar . '-width' ], $data[ $ar . '-height' ] ) ) {
+					$aspect_ratio_options[ 'ar-' . $ar . '-width' ]  = sanitize_text_field( $data[ $ar . '-width' ] );
+					$aspect_ratio_options[ 'ar-' . $ar . '-height' ] = sanitize_text_field( $data[ $ar . '-height' ] );
+				}
+			}
 
-	        if ( $aspect_ratio_options ) {
-		        Helper::updateOption( 'aspect_ratio__options', $aspect_ratio_options );
-	        } else {
-		        Helper::removeOption( 'aspect_ratio__options' );
-	        }
-        }
+			if ( $aspect_ratio_options ) {
+				Helper::updateOption( 'aspect_ratio__options', $aspect_ratio_options );
+			} else {
+				Helper::removeOption( 'aspect_ratio__options' );
+			}
+		}
 
 		/** ---------------------------------------- */
 
@@ -175,28 +175,28 @@ final class GlobalSetting {
 
 		/** ---------------------------------------- */
 
-        /** Optimizer */
+		/** Optimizer */
 		if ( isset( $data['optimizer-hidden'] ) ) {
 
 			$optimizer_options = [];
-			$dns_prefetch      = ! empty( $data['dns_prefetch'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['dns_prefetch'] ) : [];
-			$font_preload      = ! empty( $data['font_preload'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['font_preload'] ) : [];
-			$lazyload_exclude  = ! empty( $data['lazyload_exclude'] ) ? \Addons\Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['lazyload_exclude'] ) : [];
+			$dns_prefetch      = ! empty( $data['dns_prefetch'] ) ? Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['dns_prefetch'] ) : [];
+			$font_preload      = ! empty( $data['font_preload'] ) ? Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['font_preload'] ) : [];
+			$lazyload_exclude  = ! empty( $data['lazyload_exclude'] ) ? Helper::explodeMulti( [ ',', ' ', PHP_EOL ], $data['lazyload_exclude'] ) : [];
 
 			$dns_prefetch     = array_map( 'sanitize_url', $dns_prefetch );
 			$font_preload     = array_map( 'sanitize_url', $font_preload );
 			$lazyload_exclude = array_map( 'esc_textarea', $lazyload_exclude );
 
 			$arrs = [
-				'minify_html'       => ! empty( $data['minify_html'] ) ? sanitize_text_field( $data['minify_html'] ) : '',
-				'dns_prefetch'      => $dns_prefetch,
+				'minify_html'      => ! empty( $data['minify_html'] ) ? sanitize_text_field( $data['minify_html'] ) : '',
+				'dns_prefetch'     => $dns_prefetch,
 				//'font_optimize'     => ! empty( $data['font_optimize'] ) ? sanitize_text_field( $data['font_optimize'] ) : 0,
 				//'font_combined_css' => ! empty( $data['font_combined_css'] ) ? sanitize_text_field( $data['font_combined_css'] ) : 0,
-				'font_preload'      => $font_preload,
-				'lazyload'          => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
+				'font_preload'     => $font_preload,
+				'lazyload'         => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
 				//'lazyload_mobile'   => ! empty( $data['lazyload_mobile'] ) ? sanitize_text_field( $data['lazyload_mobile'] ) : 0,
-				'lazyload_mobile'   => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
-				'lazyload_exclude'  => $lazyload_exclude,
+				'lazyload_mobile'  => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
+				'lazyload_exclude' => $lazyload_exclude,
 			];
 
 			foreach ( $arrs as $key => $value ) {
@@ -214,7 +214,7 @@ final class GlobalSetting {
 
 		/** ---------------------------------------- */
 
-        /** Security */
+		/** Security */
 		if ( isset( $data['security-hidden'] ) ) {
 			$security_options = [];
 			$arrs             = [
@@ -246,27 +246,23 @@ final class GlobalSetting {
 
 		/** Login Security */
 		if ( isset( $data['login-security-hidden'] ) ) {
-			$login_security_options = [];
-			$arrs                   = [
-				'custom_login_uri',
-				'login_ips_access',
-				'disable_ips_access',
-				'limit_login_attempts',
-				'illegal_users',
-                'login_otp_verification',
+			$_options               = Helper::getOption( 'login_security__options' );
+			$login_security_options = [
+				'custom_login_uri'       => $_options['custom_login_uri'] ?? '',
+				'login_otp_verification' => $_options['login_otp_verification'] ?? '',
+				'login_ips_access'       => $_options['login_ips_access'] ?? [],
+				'disable_ips_access'     => $_options['disable_ips_access'] ?? [],
+				'limit_login_attempts'   => $_options['limit_login_attempts'] ?? 0,
+				'illegal_users'          => $_options['illegal_users'] ?? '',
 			];
 
-			foreach ( $arrs as $value ) {
-				if ( ! empty( $data[ $value ] ) ) {
-					$login_security_options[ $value ] = sanitize_text_field( $data[ $value ] );
+			foreach ( $login_security_options as $key => $value ) {
+				if ( ! empty( $data[ $key ] ) ) {
+					$login_security_options[ $key ] = sanitize_text_field( $data[ $key ] );
 				}
 			}
 
-			if ( $login_security_options ) {
-				Helper::updateOption( 'login_security__options', $login_security_options );
-			} else {
-				Helper::removeOption( 'login_security__options' );
-			}
+			Helper::updateOption( 'login_security__options', $login_security_options );
 		}
 
 		/** ---------------------------------------- */
@@ -294,18 +290,18 @@ final class GlobalSetting {
 
 		/** ---------------------------------------- */
 
-        /** Contact Link */
+		/** Contact Link */
 		if ( isset( $data['contact-link-hidden'] ) ) {
 			$contact_link_options = [];
 			$contact_links        = Helper::filterSettingOptions( 'contact_links', [] );
 
 			foreach ( $contact_links as $i => $link ) {
-                $color = $i . '-color';
+				$color = $i . '-color';
 				$value = $i . '-value';
 
-                if ( isset( $data[ $color ] ) ) {
-	                $contact_link_options[ $i ]['color'] = sanitize_text_field( $data[ $color ] );
-                }
+				if ( isset( $data[ $color ] ) ) {
+					$contact_link_options[ $i ]['color'] = sanitize_text_field( $data[ $color ] );
+				}
 
 				if ( isset( $data[ $value ] ) ) {
 					$contact_link_options[ $i ]['value'] = sanitize_text_field( $data[ $value ] );
@@ -493,9 +489,9 @@ final class GlobalSetting {
 		/** ---------------------------------------- */
 
 		/** Custom CSS */
-        if ( isset( $data['html_custom_css'] ) ) {
-            Helper::updateCustomPostOption( $data['html_custom_css'], 'addon_css', 'text/css', false );
-        }
+		if ( isset( $data['html_custom_css'] ) ) {
+			Helper::updateCustomPostOption( $data['html_custom_css'], 'addon_css', 'text/css', false );
+		}
 
 		/** ---------------------------------------- */
 

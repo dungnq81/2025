@@ -5,11 +5,11 @@
 
 $login_security_options = \Addons\Helper::getOption( 'login_security__options' );
 $custom_login_uri       = $login_security_options['custom_login_uri'] ?? '';
+$login_otp_verification = $login_security_options['login_otp_verification'] ?? '';
 $login_ips_access       = $login_security_options['login_ips_access'] ?? [];
 $disable_ips_access     = $login_security_options['disable_ips_access'] ?? [];
 $limit_login_attempts   = $login_security_options['limit_login_attempts'] ?? 0;
 $illegal_users          = $login_security_options['illegal_users'] ?? '';
-$login_otp_verification = $login_security_options['login_otp_verification'] ?? '';
 
 $_options_default    = \Addons\Helper::filterSettingOptions( 'login_security', false );
 $privileged_user_ids = $_options_default['privileged_user_ids'] ?? [];
@@ -24,6 +24,7 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
 <div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
     <input type="hidden" name="login-security-hidden" value="1">
 
+    <?php if ( $privileged ) : ?>
     <div class="cell section section-text">
         <label class="heading" for="custom_login_uri"><?php _e( 'Custom Login URL', ADDONS_TEXTDOMAIN ); ?></label>
         <div class="option">
@@ -37,7 +38,9 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
         </div>
         <div class="desc">Attackers frequently target <b>/wp-admin</b> or <b>/wp-login.php</b> as the default login URL for WordPress. Changing it can help prevent these attacks and provide a more memorable login URL.</div>
     </div>
+    <?php endif; ?>
 
+	<?php if ( $privileged ) : ?>
     <div class="cell section section-checkbox">
         <label class="heading" for="login_otp_verification"><?php _e( 'Email OTP Login Verification', ADDONS_TEXTDOMAIN ); ?></label>
         <div class="option">
@@ -48,7 +51,9 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
         </div>
         <div class="desc">Adds an OTP email verification step after successful login for admin users.</div>
     </div>
+    <?php endif; ?>
 
+	<?php if ( $privileged ) : ?>
     <div class="cell section section-select">
         <label class="heading" for="login_ips_access"><?php _e( 'Allowlist IPs Login Access', ADDONS_TEXTDOMAIN ); ?></label>
         <div class="option">
@@ -71,7 +76,9 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
             <b>Ex:</b> 192.168.0.1, 192.168.0.1-100, 192.168.0.1/4
         </div>
     </div>
+	<?php endif; ?>
 
+	<?php if ( $privileged ) : ?>
     <div class="cell section section-select">
         <label class="heading" for="disable_ips_access"><?php _e( 'Blocked IPs Access', ADDONS_TEXTDOMAIN ); ?></label>
         <div class="option">
@@ -94,6 +101,7 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
             <b>Ex:</b> 192.168.0.1, 192.168.0.1-100, 192.168.0.1/4
         </div>
     </div>
+    <?php endif; ?>
 
     <div class="cell section section-checkbox">
         <label class="heading" for="illegal_users"><?php _e( 'Disable Common Usernames', ADDONS_TEXTDOMAIN ); ?></label>
