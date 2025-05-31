@@ -440,6 +440,9 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 
 			// Blocked IPs Access
 			'blocked_ips_login_access'   => [],
+
+			// IDs of users allowed changing custom-login, OTP settings, …
+			'privileged_user_ids'        => [ 1 ],
 		],
 
 		//

@@ -11,6 +11,15 @@ $limit_login_attempts   = $login_security_options['limit_login_attempts'] ?? 0;
 $illegal_users          = $login_security_options['illegal_users'] ?? '';
 $login_otp_verification = $login_security_options['login_otp_verification'] ?? '';
 
+$_options_default    = \Addons\Helper::filterSettingOptions( 'login_security', false );
+$privileged_user_ids = $_options_default['privileged_user_ids'] ?? [];
+$user_id             = get_current_user_id();
+
+$privileged = false;
+if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
+	$privileged = true;
+}
+
 ?>
 <div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
     <input type="hidden" name="login-security-hidden" value="1">
@@ -20,7 +29,7 @@ $login_otp_verification = $login_security_options['login_otp_verification'] ?? '
         <div class="option">
             <div class="controls control-prefix" style="height: unset;">
                 <div class="prefix">
-                    <span class="input-txt" title="<?= esc_attr( esc_url( network_site_url( '/' ) ) ) ?>"><?= esc_url( network_site_url( '/' ) ) ?></span>
+                    <span class="input-txt" title="<?= esc_attr( site_url( '/' ) ) ?>"><?= site_url( '/' ) ?></span>
                 </div>
 				<?php $custom_login_uri = $custom_login_uri ?: 'wp-login.php'; ?>
                 <input value="<?php echo esc_attr( $custom_login_uri ); ?>" class="input" type="text" id="custom_login_uri" name="custom_login_uri" placeholder="<?= esc_attr( $custom_login_uri ) ?>">

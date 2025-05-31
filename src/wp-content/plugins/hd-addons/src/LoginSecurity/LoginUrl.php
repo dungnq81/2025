@@ -26,7 +26,8 @@ class LoginUrl {
 
 		add_action( 'plugins_loaded', [ $this, 'handleRequest' ], 1000 );
 		add_action( 'wp_authenticate_user', [ $this, 'maybeBlockCustomLogin' ], 10, 1 );
-		add_filter( 'wp_logout', [ $this, 'wpLogout' ] );
+		add_filter( 'wp_logout', [ $this, 'logout' ] );
+		add_filter( 'logout_redirect', [ $this, 'logoutRedirect' ], 10, 3 );
 	}
 
 	/* ---------- PUBLIC -------------------------------------------------- */
@@ -38,14 +39,27 @@ class LoginUrl {
 	 *
 	 * @return void
 	 */
-	public function wpLogout( int $user_id ): void {
+	public function logout( int $user_id ): void {
 		if ( $this->_isValidCookie( 'login' ) ) {
+			$this->_removeCookie( 'login' );
+
 			return;
 		}
 
 		// Redirect to the homepage.
 		wp_redirect( home_url( '/' ) );
 		exit;
+	}
+
+	/**
+	 * @param $redirect_to
+	 * @param $requested_redirect_to
+	 * @param $user
+	 *
+	 * @return string
+	 */
+	public function logoutRedirect( $redirect_to, $requested_redirect_to, $user ): string {
+		return add_query_arg( self::CLU_TOKEN, rawurlencode( $this->_queryToken() ), $redirect_to );
 	}
 
 	/**
@@ -101,8 +115,10 @@ class LoginUrl {
 		parse_str( $referer_parts['query'], $referer_query );
 		$token = ! empty( $referer_query[ self::CLU_TOKEN ] ) ? esc_attr( $referer_query[ self::CLU_TOKEN ] ) : '';
 
-		$gmtdate = gmdate( 'Y-m-d' );
-		if ( ! empty( $token ) && hash_equals( $token, wp_hash( $gmtdate . '-' . $this->options['new_slug'] ) ) ) {
+		if (
+			! empty( $token ) &&
+			hash_equals( $token, rawurldecode( $this->_queryToken() ) )
+		) {
 			return $user;
 		}
 
@@ -215,14 +231,20 @@ class LoginUrl {
 		$this->_setPermissionsCookie( $type );
 
 		// Preserve existing query vars and add access token query arg.
-		$gmtdate                       = gmdate( 'Y-m-d' );
 		$query_vars                    = $_GET;
-		$query_vars[ self::CLU_TOKEN ] = wp_hash( $gmtdate . '-' . $this->options['new_slug'] );
+		$query_vars[ self::CLU_TOKEN ] = rawurlencode( $this->_queryToken() );
 
 		$url = add_query_arg( $query_vars, rtrim( self::_siteUrl( $path ), '/' ) );
 
 		wp_redirect( $url );
 		exit;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function _queryToken(): string {
+		return wp_hash( gmdate( 'Y-m-d' ) . '-' . $this->options['new_slug'] );
 	}
 
 	/**
@@ -251,6 +273,29 @@ class LoginUrl {
 	}
 
 	/**
+	 * @param string $type
+	 *
+	 * @return void
+	 */
+	private function _removeCookie( string $type = 'login' ): void {
+		$url_parts = wp_parse_url( self::_siteUrl() );
+		$home_path = trailingslashit( $url_parts['path'] );
+
+		setcookie(
+			self::CLU_TOKEN . '-' . $type . '-' . COOKIEHASH,
+			'',
+			[
+				'expires'  => time() - 3600,
+				'path'     => $home_path,
+				'domain'   => COOKIE_DOMAIN,
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			]
+		);
+	}
+
+	/**
 	 * Checks if the user has permissions to view a page.
 	 *
 	 * @param string $type
@@ -266,10 +311,9 @@ class LoginUrl {
 		}
 
 		// Check if the token value is set.
-		$gmtdate = gmdate( 'Y-m-d' );
 		if (
 			isset( $_REQUEST[ self::CLU_TOKEN ] ) &&
-			hash_equals( $_REQUEST[ self::CLU_TOKEN ], wp_hash( $gmtdate . '-' . $this->options['new_slug'] ) )
+			hash_equals( $_REQUEST[ self::CLU_TOKEN ], rawurldecode( $this->_queryToken() ) )
 		) {
 			// Add the permissions' cookie.
 			$this->_setPermissionsCookie( $type );
