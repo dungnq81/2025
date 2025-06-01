@@ -87,7 +87,7 @@ class LoginRestricted {
 		$custom_allowlist_ips = $_options['login_ips_access'] ?? [];
 		$custom_blocked_ips   = $_options['disable_ips_access'] ?? [];
 
-		$_options_default           = Helper::filterSettingOptions( 'login_security', false );
+		$_options_default           = Helper::filterSettingOptions( 'security', false );
 		$allowlist_ips_login_access = $_options_default['allowlist_ips_login_access'] ?? [];
 		$blocked_ips_login_access   = $_options_default['blocked_ips_login_access'] ?? [];
 

@@ -297,7 +297,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Customize table column information, table display content, etc.
 		//
-		'admin_list_table'                    => [
+		'admin_list_table'     => [
 			// Add ID to the admin category page.
 			'term_row_actions'                => [
 				'category',
@@ -329,7 +329,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Custom post-type and taxonomy.
 		//
-		'post_type_terms'                     => [
+		'post_type_terms'      => [
 			'post' => 'category',
 			//
 		],
@@ -337,7 +337,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Aspect Ratio.
 		//
-		'aspect_ratio'                        => [
+		'aspect_ratio'         => [
 			'post_type_term'       => [
 				'post',
 				//
@@ -355,7 +355,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// defer, delay script - default 5s.
 		//
-		'defer_script'                        => [
+		'defer_script'         => [
 			// defer.
 			'contact-form-7' => 'defer',
 
@@ -367,7 +367,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// defer style.
 		//
-		'defer_style'                         => [
+		'defer_style'          => [
 			'dashicons',
 			'contact-form-7',
 		],
@@ -375,7 +375,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Admin menu sidebar
 		//
-		'admin_menu'                          => [
+		'admin_menu'           => [
 			// hide admin menu
 			'admin_hide_menu'             => [
 				//'edit.php',
@@ -396,7 +396,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// ACF menu
 		//
-		'acf_menu'                            => [
+		'acf_menu'             => [
 			// ACF attributes in `menu` locations.
 			'acf_menu_items_locations' => [
 				'main-nav',
@@ -409,7 +409,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// LazyLoad
 		//
-		'lazyload_exclude'                    => [
+		'lazyload_exclude'     => [
 			'no-lazy',
 			'skip-lazy',
 		],
@@ -417,38 +417,34 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Custom Email list (mailto).
 		//
-		'custom_emails'                       => [
+		'custom_emails'        => [
 //			'contact'     => __( 'Contacts', TEXT_DOMAIN ),
 		],
 
 		//
-		// List of admin IDs allowed installing plugins.
+		// security
 		//
-		'allowed_users_ids_install_plugins'   => [ 1 ],
-
-		//
-		// List of user IDs that are not allowed to be deleted.
-		//
-		'disallowed_users_ids_delete_account' => [ 1 ],
-
-		//
-		// Login security
-		//
-		'login_security'                      => [
+		'security'             => [
 			// Allowlist IPs Login Access
-			'allowlist_ips_login_access' => [],
+			'allowlist_ips_login_access'          => [],
 
 			// Blocked IPs Access
-			'blocked_ips_login_access'   => [],
+			'blocked_ips_login_access'            => [],
 
-			// IDs of users allowed changing custom-login, OTP settings, v.v...
-			'privileged_user_ids'        => [ 1 ],
+			// IDs of users allowed changing custom-login, OTP settings, hide hd-addons v.v...
+			'privileged_user_ids'                 => [ 1 ],
+
+			// List of admin IDs allowed installing plugins.
+			'allowed_users_ids_install_plugins'   => [ 1 ],
+
+			// List of user IDs that are not allowed to be deleted.
+			'disallowed_users_ids_delete_account' => [ 1 ],
 		],
 
 		//
 		// Social Links.
 		//
-		'social_follows_links'                => [
+		'social_follows_links' => [
 			'facebook'  => [
 				'name' => __( 'Facebook', TEXT_DOMAIN ),
 				'icon' => \HD_Helper::svg( 'facebook' ),
@@ -504,7 +500,7 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		// Contact Links.
 		//
-		'contact_links'                       => [
+		'contact_links'        => [
 			'tiktok'       => [
 				'name'        => __( 'Tiktok', TEXT_DOMAIN ),
 				'icon'        => \HD_Helper::svg( 'tiktok' ),

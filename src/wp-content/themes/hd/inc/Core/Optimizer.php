@@ -195,11 +195,6 @@ final class Optimizer {
 		if ( ! is_admin() && ! \HD_Helper::isLogin() ) {
 			add_action( 'wp_print_footer_scripts', [ $this, 'printFooterScripts' ], 999 );
 		}
-
-		// Restrict mode
-		add_filter( 'user_has_cap', [ $this, 'restrictAdminPluginInstall' ], 10, 3 );
-		add_filter( 'user_has_cap', [ $this, 'preventDeletionAdminAccounts' ], 10, 3 );
-		add_action( 'delete_user', [ $this, 'preventDeletionUser' ], 10 );
 	}
 
 	// ------------------------------------------------------
@@ -236,89 +231,6 @@ final class Optimizer {
 
 		// Remove id li navigation
 		add_filter( 'nav_menu_item_id', '__return_null', 10, 3 );
-	}
-
-	// --------------------------------------------------
-
-	/**
-	 * @param $allcaps
-	 * @param $caps
-	 * @param $args
-	 *
-	 * @return mixed
-	 */
-	public function restrictAdminPluginInstall( $allcaps, $caps, $args ): mixed {
-		$allowed_users_ids_install_plugins = \HD_Helper::filterSettingOptions( 'allowed_users_ids_install_plugins', [] );
-
-		if ( ! is_array( $allowed_users_ids_install_plugins ) ) {
-			$allowed_users_ids_install_plugins = [];
-		}
-
-		$user_id = get_current_user_id();
-
-		if ( $user_id && in_array( $user_id, $allowed_users_ids_install_plugins, false ) ) {
-			return $allcaps;
-		}
-
-		if ( isset( $allcaps['activate_plugins'] ) ) {
-			unset( $allcaps['install_plugins'], $allcaps['delete_plugins'] );
-		}
-
-		if ( isset( $allcaps['install_themes'] ) ) {
-			unset( $allcaps['install_themes'] );
-		}
-
-		return $allcaps;
-	}
-
-	// --------------------------------------------------
-
-	/**
-	 * @param $allcaps
-	 * @param $cap
-	 * @param $args
-	 *
-	 * @return mixed
-	 */
-	public function preventDeletionAdminAccounts( $allcaps, $cap, $args ): mixed {
-		$disallowed_users_ids_delete_account = \HD_Helper::filterSettingOptions( 'disallowed_users_ids_delete_account', [] );
-
-		if ( ! is_array( $disallowed_users_ids_delete_account ) ) {
-			$disallowed_users_ids_delete_account = [];
-		}
-
-		if ( isset( $cap[0] ) && $cap[0] === 'delete_users' ) {
-			$user_id_to_delete = $args[2] ?? 0;
-
-			if ( $user_id_to_delete && in_array( $user_id_to_delete, $disallowed_users_ids_delete_account, true ) ) {
-				unset( $allcaps['delete_users'] );
-			}
-		}
-
-		return $allcaps;
-	}
-
-	// --------------------------------------------------
-
-	/**
-	 * @param $user_id
-	 *
-	 * @return void
-	 */
-	public function preventDeletionUser( $user_id ): void {
-		$disallowed_users_ids_delete_account = \HD_Helper::filterSettingOptions( 'disallowed_users_ids_delete_account', [] );
-
-		if ( ! is_array( $disallowed_users_ids_delete_account ) ) {
-			$disallowed_users_ids_delete_account = [];
-		}
-
-		if ( in_array( $user_id, $disallowed_users_ids_delete_account, false ) ) {
-			\HD_Helper::wpDie(
-				__( 'You cannot delete this admin account.', TEXT_DOMAIN ),
-				__( 'Error', TEXT_DOMAIN ),
-				[ 'response' => 403 ]
-			);
-		}
 	}
 
 	// ------------------------------------------------------

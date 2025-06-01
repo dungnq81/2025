@@ -11,7 +11,7 @@ $disable_ips_access     = $login_security_options['disable_ips_access'] ?? [];
 $limit_login_attempts   = $login_security_options['limit_login_attempts'] ?? 0;
 $illegal_users          = $login_security_options['illegal_users'] ?? '';
 
-$_options_default    = \Addons\Helper::filterSettingOptions( 'login_security', false );
+$_options_default    = \Addons\Helper::filterSettingOptions( 'security', false );
 $privileged_user_ids = $_options_default['privileged_user_ids'] ?? [];
 $user_id             = get_current_user_id();
 
