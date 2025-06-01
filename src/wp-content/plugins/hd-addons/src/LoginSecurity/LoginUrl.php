@@ -68,7 +68,7 @@ class LoginUrl {
 	 * @return void
 	 */
 	public function handleRequest(): void {
-		$path = self::_relativePath( $_SERVER['REQUEST_URI'], false );
+		$path = $this->_relativePath( $_SERVER['REQUEST_URI'], false );
 
 		if ( $path === $this->options['new_slug'] ) {
 			$this->_redirectToken( 'login', 'wp-login.php' );
@@ -102,7 +102,7 @@ class LoginUrl {
 
 		// Get referer parts by parsing its url.
 		$referer = str_replace(
-			[ self::_siteUrl(), '/' ],
+			[ $this->_siteUrl(), '/' ],
 			[ '', '' ],
 			$_SERVER['HTTP_REFERER']
 		);
@@ -150,7 +150,7 @@ class LoginUrl {
 		}
 
 		// Redirect to 404 page.
-		wp_redirect( self::_homeUrl() . $this->options['redirect'], 302 );
+		wp_redirect( $this->_homeUrl() . $this->options['redirect'], 302 );
 		exit;
 	}
 
@@ -234,7 +234,7 @@ class LoginUrl {
 		$query_vars                    = $_GET;
 		$query_vars[ self::CLU_TOKEN ] = rawurlencode( $this->_queryToken() );
 
-		$url = add_query_arg( $query_vars, rtrim( self::_siteUrl( $path ), '/' ) );
+		$url = add_query_arg( $query_vars, rtrim( $this->_siteUrl( $path ), '/' ) );
 
 		wp_redirect( $url );
 		exit;
@@ -253,7 +253,7 @@ class LoginUrl {
 	 * @param string $type
 	 */
 	private function _setPermissionsCookie( string $type = '' ): void {
-		$url_parts = wp_parse_url( self::_siteUrl() );
+		$url_parts = wp_parse_url( $this->_siteUrl() );
 		$home_path = trailingslashit( $url_parts['path'] );
 
 		if ( ! empty( $type ) ) {
@@ -278,7 +278,7 @@ class LoginUrl {
 	 * @return void
 	 */
 	private function _removeCookie( string $type = 'login' ): void {
-		$url_parts = wp_parse_url( self::_siteUrl() );
+		$url_parts = wp_parse_url( $this->_siteUrl() );
 		$home_path = trailingslashit( $url_parts['path'] );
 
 		setcookie(
@@ -332,8 +332,8 @@ class LoginUrl {
 	 *
 	 * @return string The URL path.
 	 */
-	private static function _relativePath( string $url, bool $queryString = false ): string {
-		$url_parts = wp_parse_url( self::_siteUrl() );
+	private function _relativePath( string $url, bool $queryString = false ): string {
+		$url_parts = wp_parse_url( $this->_siteUrl() );
 		$home_path = ! empty( $url_parts['path'] ) ? trailingslashit( $url_parts['path'] ) : '/';
 
 		$_temp_url = explode( '?', wp_make_link_relative( $url ) );
@@ -351,7 +351,7 @@ class LoginUrl {
 	 *
 	 * @return string
 	 */
-	private static function _siteUrl( string $path = '' ): string {
+	private function _siteUrl( string $path = '' ): string {
 		$url    = \Addons\Helper::getOption( 'siteurl' );
 		$scheme = is_ssl() ? 'https' : parse_url( $url, PHP_URL_SCHEME );
 		$url    = set_url_scheme( $url, $scheme );
@@ -368,7 +368,7 @@ class LoginUrl {
 	 *
 	 * @return string
 	 */
-	public static function _homeUrl( string $path = '' ): string {
+	public function _homeUrl( string $path = '' ): string {
 		$url    = \Addons\Helper::getOption( 'home' );
 		$scheme = is_ssl() ? 'https' : parse_url( $url, PHP_URL_SCHEME );
 		$url    = set_url_scheme( $url, $scheme );

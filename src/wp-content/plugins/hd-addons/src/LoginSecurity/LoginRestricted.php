@@ -7,22 +7,23 @@ use Addons\Helper;
 \defined( 'ABSPATH' ) || exit;
 
 class LoginRestricted {
+	/* ---------- CONFIG -------------------------------------------------- */
+
 	public ?array $allowlist_ips = [];
 	public ?array $blocked_ips = [];
 
-	// --------------------------------------------------
+	/* ---------- CONSTRUCT ----------------------------------------------- */
 
 	public function __construct() {
 		add_action( 'login_init', [ $this, 'restrictLoginToIps' ], PHP_INT_MIN );
 	}
 
-	// --------------------------------------------------
+	/* ---------- PUBLIC -------------------------------------------------- */
 
 	/**
 	 * @return bool
 	 */
 	public function restrictLoginToIps(): bool {
-		// Bail if the allowed ip list is empty.
 		if ( ! $this->_restricted() ) {
 			return true;
 		}
@@ -38,7 +39,7 @@ class LoginRestricted {
 			}
 
 			// Update the total blocked logins counter.
-			Helper::updateOption( '_security_total_blocked_logins', Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
+			Helper::updateOption( '_security_total_blocked_logins', (int) Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
 
 			Helper::errorLog( 'Restricted login page: access currently not permitted - ' . $user_ip );
 			Helper::wpDie(
@@ -57,7 +58,7 @@ class LoginRestricted {
 			foreach ( $this->blocked_ips as $blocked_ip ) {
 				if ( $this->_ipInRange( $user_ip, $blocked_ip ) ) {
 					// Update the total blocked logins counter.
-					Helper::updateOption( '_security_total_blocked_logins', Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
+					Helper::updateOption( '_security_total_blocked_logins', (int) Helper::getOption( '_security_total_blocked_logins', 0 ) + 1 );
 
 					Helper::errorLog( 'Restricted login page: access currently not permitted - ' . $user_ip );
 					Helper::wpDie(
@@ -76,7 +77,7 @@ class LoginRestricted {
 		return false;
 	}
 
-	// --------------------------------------------------
+	/* ---------- INTERNAL ------------------------------------------------ */
 
 	/**
 	 * @return bool
@@ -90,13 +91,11 @@ class LoginRestricted {
 		$allowlist_ips_login_access = $_options_default['allowlist_ips_login_access'] ?? [];
 		$blocked_ips_login_access   = $_options_default['blocked_ips_login_access'] ?? [];
 
-		$this->allowlist_ips = ! empty( $allowlist_ips_login_access ) ? array_filter( array_merge( (array) $allowlist_ips_login_access, (array) $custom_allowlist_ips ) ) : array_filter( (array) $custom_allowlist_ips );
-		$this->blocked_ips   = ! empty( $blocked_ips_login_access ) ? array_filter( array_merge( (array) $blocked_ips_login_access, (array) $custom_blocked_ips ) ) : array_filter( (array) $custom_blocked_ips );
+		$this->allowlist_ips = array_filter( array_merge( (array) $allowlist_ips_login_access, (array) $custom_allowlist_ips ) );
+		$this->blocked_ips   = array_filter( array_merge( (array) $blocked_ips_login_access, (array) $custom_blocked_ips ) );
 
 		return ! empty( $this->allowlist_ips ) || ! empty( $this->blocked_ips );
 	}
-
-	// --------------------------------------------------
 
 	/**
 	 * @param $ip
@@ -123,7 +122,9 @@ class LoginRestricted {
 			$startIP = "{$matches[1]}.{$matches[2]}.{$matches[3]}.{$matches[4]}";
 			$endIP   = "{$matches[1]}.{$matches[2]}.{$matches[3]}.{$matches[5]}";
 
-			return $this->_compareIPs( $startIP, $endIP ) < 0 && $this->_compareIPs( $startIP, $ip ) <= 0 && $this->_compareIPs( $ip, $endIP ) <= 0;
+			return $this->_compareIPs( $startIP, $endIP ) < 0 &&
+			       $this->_compareIPs( $startIP, $ip ) <= 0 &&
+			       $this->_compareIPs( $ip, $endIP ) <= 0;
 		}
 
 		// Check if it's a CIDR notation
@@ -135,8 +136,6 @@ class LoginRestricted {
 
 		return false;
 	}
-
-	// --------------------------------------------------
 
 	/**
 	 * @param $ip1
@@ -158,8 +157,6 @@ class LoginRestricted {
 
 		return 0;
 	}
-
-	// --------------------------------------------------
 
 	/**
 	 * @param $ip
