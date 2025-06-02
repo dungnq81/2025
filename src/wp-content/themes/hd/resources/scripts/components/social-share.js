@@ -1,4 +1,4 @@
-import { SocialShare } from '@loltgt/ensemble-social-share';
+import { SocialShare } from 'ensemble-social-share';
 
 const DEFAULT_OPTIONS = {
     layout: 'h',

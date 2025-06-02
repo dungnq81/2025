@@ -32,9 +32,9 @@
         "vite-plugin-static-copy": "^2.3.1"
     },
     "dependencies": {
-        "@loltgt/ensemble": "github:loltgt/ensemble",
-        "@loltgt/ensemble-social-share": "github:loltgt/ensemble-social-share",
         "current-device": "^0.10.2",
+        "ensemble": "github:loltgt/ensemble",
+        "ensemble-social-share": "github:loltgt/ensemble-social-share",
         "gsap": "^3.13.0",
         "jquery": "^3.7.1",
         "nanoid": "^5.1.5",
