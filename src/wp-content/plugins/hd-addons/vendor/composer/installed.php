@@ -3,7 +3,7 @@
         'name' => 'plugins/hd-addons',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '5ff9be0789c0aea04b8f2e4eaf9f9d056a0c8a87',
+        'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'plugins/hd-addons' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5ff9be0789c0aea04b8f2e4eaf9f9d056a0c8a87',
+            'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'af51c1a7b91dee6d4b920498946bf1de6a4efe86',
+            'reference' => 'c6007a53027047b08044448c57571988ac9b6e93',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(
@@ -76,9 +76,9 @@
             'dev_requirement' => false,
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.2.6',
-            'version' => '7.2.6.0',
-            'reference' => '0feafffb843860624ddfd13478f481f4c3cd8b23',
+            'pretty_version' => 'v7.3.0',
+            'version' => '7.3.0.0',
+            'reference' => 'cea40a48279d58dc3efee8112634cb90141156c2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),

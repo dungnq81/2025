@@ -1160,7 +1160,7 @@ trait Wp {
 				$html = sprintf( '<span class="custom-logo-link">%1$s</span>', $image );
 			} else {
 				$aria_current = self::isHomeOrFrontPage() && ! is_paged() ? ' aria-current="page"' : '';
-				$html = sprintf(
+				$html         = sprintf(
 					'<a href="%1$s" class="custom-logo-link" rel="home"%2$s>%3$s</a>',
 					self::home(),
 					$aria_current,
