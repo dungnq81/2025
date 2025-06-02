@@ -57,10 +57,9 @@ class LoginOtpVerification {
 	 * @return void
 	 */
 	public function enqueueAssets(): void {
-		\Addons\Asset::enqueueScript( 'login-otp-js', ADDONS_URL . 'assets/js/login-otp.js', [ 'login-js' ], null, true, [
-			'module',
-			'defer'
-		] );
+		if ( $this->_isEnabled() ) {
+			\Addons\Asset::enqueueScript( 'login-otp-js', ADDONS_URL . 'assets/js/login-otp.js', [ 'login-js' ], null, true, [ 'module', 'defer' ] );
+		}
 	}
 
 	/**

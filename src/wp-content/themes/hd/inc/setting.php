@@ -431,8 +431,11 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 			// Blocked IPs Access
 			'blocked_ips_login_access'            => [],
 
-			// IDs of users allowed changing custom-login, OTP settings, hide hd-addons v.v...
+			// IDs of users allowed changing custom-login, OTP settings, hide `hd-addons` v.v...
 			'privileged_user_ids'                 => [ 1 ],
+
+			// List of admin IDs allowed to show 'hd-addons' plugins.
+			'allowed_users_ids_show_plugins'   => [ 1 ],
 
 			// List of admin IDs allowed installing plugins.
 			'allowed_users_ids_install_plugins'   => [ 1 ],

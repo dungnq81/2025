@@ -246,20 +246,32 @@ final class GlobalSetting {
 
 		/** Login Security */
 		if ( isset( $data['login-security-hidden'] ) ) {
-			$_options               = Helper::getOption( 'login_security__options' );
-			$login_security_options = [
-				'custom_login_uri'       => $_options['custom_login_uri'] ?? '',
-				'login_otp_verification' => $_options['login_otp_verification'] ?? '',
-				'login_ips_access'       => $_options['login_ips_access'] ?? [],
-				'disable_ips_access'     => $_options['disable_ips_access'] ?? [],
-				'limit_login_attempts'   => $_options['limit_login_attempts'] ?? 0,
-				'illegal_users'          => $_options['illegal_users'] ?? '',
+			$login_security_options = [];
+			$arrs                   = [
+				'custom_login_uri',
+				'login_otp_verification',
+				'login_ips_access',
+				'disable_ips_access',
+				'illegal_users',
+				'limit_login_attempts',
 			];
 
-			foreach ( $login_security_options as $key => $value ) {
-				if ( ! empty( $data[ $key ] ) ) {
+			foreach ( $arrs as $key ) {
+				if ( isset( $data[ $key ] ) ) {
 					$login_security_options[ $key ] = sanitize_text_field( $data[ $key ] );
 				}
+			}
+
+			$_options_default    = \Addons\Helper::filterSettingOptions( 'security', false );
+			$privileged_user_ids = $_options_default['privileged_user_ids'] ?? [];
+			$user_id             = get_current_user_id();
+
+			if ( ! in_array( $user_id, $privileged_user_ids, true ) ) {
+				$_options                                         = Helper::getOption( 'login_security__options' );
+				$login_security_options['custom_login_uri']       = $_options['custom_login_uri'] ?? '';
+				$login_security_options['login_otp_verification'] = $_options['login_otp_verification'] ?? '';
+				$login_security_options['login_ips_access']       = $_options['login_ips_access'] ?? [];
+				$login_security_options['disable_ips_access']     = $_options['disable_ips_access'] ?? [];
 			}
 
 			Helper::updateOption( 'login_security__options', $login_security_options );
