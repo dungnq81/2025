@@ -1,0 +1,76 @@
+@use '../mixins/variables' as vars;
+@use '../mixins/functions' as func;
+@use '../mixins/mixins' as mixin;
+
+@use 'swiper/css/bundle';
+
+/** Custom CSS */
+
+:root {
+    --swiper-navigation-size: 30px;
+    --swiper-navigation-sides-offset: 10px;
+    --swiper-navigation-color: #000000;
+    --swiper-pagination-color: #000000;
+    --swiper-pagination-bottom: 15px;
+    --swiper-pagination-top: auto;
+
+    --Primary-01: #000000;
+}
+
+.swiper-container {
+    position: relative;
+    z-index: 1;
+}
+
+.swiper-marquee {
+    &.swiper-wrapper {
+        transition-timing-function: linear !important;
+        touch-action: manipulation;
+    }
+}
+
+.swiper-controls {
+    .swiper-button {
+        width: var(--swiper-navigation-size);
+
+        &::after {
+            display: none;
+        }
+
+        &::before {
+            color: var(--Primary-01);
+            width: 100%;
+            height: 100%;
+            border: 1px solid var(--Primary-01);
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            opacity: 0.3;
+            transition: 0.3s;
+            font-size: 17px;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &:hover {
+            &::before {
+                opacity: 1;
+                color: var(--Primary-01);
+                border-color: var(--Primary-01);
+            }
+        }
+    }
+}
+
+.swiper-container {
+    &:hover {
+        .swiper-controls {
+            .swiper-button {
+                &::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

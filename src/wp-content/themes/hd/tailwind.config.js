@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 export default {
-    content: ['./src/**/*.{html,js,php,scss,json}'],
+    content: ['./src/wp-content/themes/hd/**/*.{html,js,php,scss,json}'],
     theme: {
         extend: {},
     },

@@ -116,15 +116,18 @@ final class Theme {
 		/** Inline Js */
 		$recaptcha_options = \HD_Helper::getOption( 'recaptcha__options' );
 		$l10n              = [
-			'_ajaxUrl'      => admin_url( 'admin-ajax.php', 'relative' ),
-			'_baseUrl'      => \HD_Helper::siteURL( '/' ),
-			'_themeUrl'     => THEME_URL,
-			'_restApiUrl'   => RESTAPI_URL,
-			'_csrfToken'    => wp_create_nonce( 'wp_csrf_token' ),
-			'_restToken'    => wp_create_nonce( 'wp_rest' ),
-			'_reCaptcha_v2' => $recaptcha_options['recaptcha_v2_site_key'] ?? '',
-			'_reCaptcha_v3' => $recaptcha_options['recaptcha_v3_site_key'] ?? '',
-			'_lang'         => \HD_Helper::currentLanguage(),
+			'ajaxUrl'      => admin_url( 'admin-ajax.php', 'relative' ),
+			'baseUrl'      => \HD_Helper::siteURL( '/' ),
+			'themeUrl'     => THEME_URL,
+			'restApiUrl'   => RESTAPI_URL,
+			'csrfToken'    => wp_create_nonce( 'wp_csrf_token' ),
+			'restToken'    => wp_create_nonce( 'wp_rest' ),
+			'reCaptcha_v2' => $recaptcha_options['recaptcha_v2_site_key'] ?? '',
+			'reCaptcha_v3' => $recaptcha_options['recaptcha_v3_site_key'] ?? '',
+			'lg'           => \HD_Helper::currentLanguage(),
+			'lang'         => [
+				'added_to_cart' => __( 'Đã thêm vào giỏ hàng', TEXT_DOMAIN )
+			]
 		];
 		\HD_Asset::localize( 'jquery-core', 'hdConfig', $l10n );
 		\HD_Asset::inlineScript( 'jquery-core', 'Object.assign(window,{ $:jQuery,jQuery });', 'after' );
@@ -136,6 +139,10 @@ final class Theme {
 		/** JS */
 		\HD_Asset::enqueueScript( 'preload-js', ASSETS_URL . 'js/components/preload-polyfill.js', [], $version, false, [ 'module', 'async' ] );
 		\HD_Asset::enqueueScript( 'index-js', ASSETS_URL . 'js/index.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
+
+		/** Add-ons */
+		\HD_Asset::enqueueStyle( "swiper-css", ASSETS_URL . "css/components/swiper.css", [ "index-css" ], $version );
+		\HD_Asset::enqueueScript( 'swiper-js', ASSETS_URL . 'js/components/swiper.js', [ 'jquery-core' ], $version, true, [ 'module', 'defer' ] );
 
 		/** Comments */
 		if ( is_singular() && comments_open() && \HD_Helper::getOption( 'thread_comments' ) ) {

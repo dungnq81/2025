@@ -71,7 +71,7 @@ final class AspectRatio {
 			is_array( $ar_aspect_ratio_default ) &&
 			! in_array( $ratio_x . '-' . $ratio_y, $ar_aspect_ratio_default, false )
 		) {
-			$css = new \Addons\Css();
+			$css = new \Addons\CSS();
 			$css->set_selector( '.' . $ratio_class )
 			    ->add_property( 'aspect-ratio', $ratio_x . '/' . $ratio_y );
 

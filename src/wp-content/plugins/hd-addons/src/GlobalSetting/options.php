@@ -9,7 +9,7 @@ $global_setting_options = \Addons\Helper::getOption( 'global_setting__options' )
 $current_slug =	$current_slug ?? 'global_setting';
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-2 md-up-3 lg-up-4">
+<div class="container flex flex-x gap sm-up-2 md-up-3 lg-up-4">
 	<?php
 	foreach ( $menu_options as $slug => $value ) :
 		$title       = ! empty( $value['title'] ) ? __( $value['title'], ADDONS_TEXTDOMAIN ) : '';

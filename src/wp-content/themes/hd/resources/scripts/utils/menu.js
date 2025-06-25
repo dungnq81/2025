@@ -11,7 +11,7 @@ export function initMenu(containerSelector, menuSelector) {
 
         if (!more) {
             more = document.createElement('li');
-            more.classList.add('menu-item', 'more');
+            more.classList.add('more');
             more.innerHTML = '<a href="#"></a><ul class="sub-menu dropdown"></ul>';
             menu.appendChild(more);
         }
@@ -20,7 +20,7 @@ export function initMenu(containerSelector, menuSelector) {
         dropdown.innerHTML = '';
         more.style.display = 'none';
 
-        let items = [ ...menu.children ].filter((li) => li !== more);
+        let items = [...menu.children].filter((li) => li !== more);
         items.forEach((li) => (li.style.display = 'block'));
 
         if (menu.scrollWidth <= container.clientWidth) {
@@ -68,14 +68,18 @@ export function initMenu(containerSelector, menuSelector) {
     }
 
     let resizeTimeout;
-    window.addEventListener('resize', function() {
+
+    function init() {
         setOverflowHidden();
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             adjustMenu();
             reinitializeFoundationDropdown();
         }, 100);
-    });
+    }
 
-    adjustMenu();
+    init();
+    window.addEventListener('resize', function () {
+        init();
+    });
 }

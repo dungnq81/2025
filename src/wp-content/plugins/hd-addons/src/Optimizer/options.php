@@ -18,7 +18,7 @@ $lazyload_exclude = $optimizer_options['lazyload_exclude'] ?? [];
 $lazyload_exclude = implode( PHP_EOL, $lazyload_exclude );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 md-up-2">
+<div class="container flex flex-x gap sm-up-1 md-up-2">
     <input type="hidden" name="optimizer-hidden" value="1">
     <div class="cell section section-checkbox">
         <label class="heading !block" for="minify_html"><?php _e( 'Minify HTML', ADDONS_TEXTDOMAIN ); ?></label>

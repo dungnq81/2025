@@ -1,4 +1,4 @@
-// viewport-fix.js
+// viewport-fix.js (IIFE)
 
 (() => {
     function setViewportProperty() {

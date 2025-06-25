@@ -11,7 +11,7 @@ $rss_feed_off      = $security_options['rss_feed_off'] ?? '';
 $remove_readme     = $security_options['remove_readme'] ?? false;
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 md-up-2">
+<div class="container flex flex-x gap sm-up-1 md-up-2">
     <input type="hidden" name="security-hidden" value="1">
     <div class="cell section section-checkbox">
         <label class="heading" for="comments_off"><?php _e( 'Disable Comments', ADDONS_TEXTDOMAIN ); ?></label>

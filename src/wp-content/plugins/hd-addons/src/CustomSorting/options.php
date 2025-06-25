@@ -7,7 +7,7 @@ $order_post_type        = $custom_sorting_options['order_post_type'] ?? [];
 $order_taxonomy         = $custom_sorting_options['order_taxonomy'] ?? [];
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="custom-sorting-hidden" value="1">
     <div class="cell section section-checkbox">
         <span class="heading !fw-700"><?php _e( 'Check to Sort Post Types', ADDONS_TEXTDOMAIN ); ?></span>

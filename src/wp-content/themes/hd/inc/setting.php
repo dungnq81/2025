@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Theme Settings
  *
@@ -18,6 +17,7 @@ function register_nav_menu_callback(): void {
 	register_nav_menus(
 		[
 			'main-nav'   => __( 'Primary Menu', TEXT_DOMAIN ),
+			//'second-nav' => __( 'Second Menu', TEXT_DOMAIN ),
 			'mobile-nav' => __( 'Handheld Menu', TEXT_DOMAIN ),
 			'policy-nav' => __( 'Term Menu', TEXT_DOMAIN ),
 		]
@@ -48,6 +48,23 @@ function register_sidebar_callback(): void {
 //			'after_title'   => '</span>',
 //		]
 //	);
+
+	//----------------------------------------------------------
+	// Product Attributes
+	//----------------------------------------------------------
+
+	register_sidebar(
+		[
+			'container'     => false,
+			'id'            => 'product-attributes-sidebar',
+			'name'          => __( 'Product Attributes', TEXT_DOMAIN ),
+			'description'   => __( 'Widgets added here will appear in product archives sidebar.', TEXT_DOMAIN ),
+			'before_widget' => '<div class="%2$s">',
+			'after_widget'  => '</div>',
+			'before_title'  => '<span>',
+			'after_title'   => '</span>',
+		]
+	);
 
 	//----------------------------------------------------------
 	// Other...
@@ -302,7 +319,6 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 			'term_row_actions'                => [
 				'category',
 				'post_tag',
-				//
 			],
 
 			// Add ID to the admin post-page.
@@ -316,13 +332,11 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 			'term_thumb_columns'              => [
 				'category',
 				//'post_tag',
-				//
 			],
 
 			// Exclude thumb post_type columns.
 			'post_type_exclude_thumb_columns' => [
 				'page',
-				//
 			],
 		],
 
@@ -331,7 +345,6 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		//
 		'post_type_terms'      => [
 			'post' => 'category',
-			//
 		],
 
 		//
@@ -340,7 +353,6 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 		'aspect_ratio'         => [
 			'post_type_term'       => [
 				'post',
-				//
 			],
 			'aspect_ratio_default' => [
 				'1-1',
@@ -403,7 +415,9 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 			],
 
 			// ACF attributes `mega-menu` locations.
-			'acf_mega_menu_locations'  => [],
+			'acf_mega_menu_locations'  => [
+				'main-nav',
+			],
 		],
 
 		//
@@ -431,11 +445,11 @@ function hd_theme_settings_filter_callback( array $arr ): array {
 			// Blocked IPs Access
 			'blocked_ips_login_access'            => [],
 
-			// IDs of users allowed changing custom-login, OTP settings, hide `hd-addons` v.v...
-			'privileged_user_ids'                 => [ 1 ],
+			// IDs of users allowed changing custom-login, OTP settings v.v...
+			'privileged_user_ids'                 => [ 1, 2 ],
 
 			// List of admin IDs allowed to show 'hd-addons' plugins.
-			'allowed_users_ids_show_plugins'   => [ 1 ],
+			'allowed_users_ids_show_plugins'      => [ 1, 2 ],
 
 			// List of admin IDs allowed installing plugins.
 			'allowed_users_ids_install_plugins'   => [ 1 ],

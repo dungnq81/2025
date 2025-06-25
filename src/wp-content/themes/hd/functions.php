@@ -5,7 +5,7 @@
  * @author Gaudev
  */
 
-const THEME_VERSION = '1.0.5';
+const THEME_VERSION = '1.6.0';
 const TEXT_DOMAIN   = 'hd';
 const AUTHOR        = 'Gaudev';
 

@@ -23,5 +23,8 @@ Config::define( 'DISALLOW_FILE_MODS', false );
 
 /** DISABLED_PLUGINS */
 Config::define( 'DISABLED_PLUGINS', [
-	//'wp-rocket/wp-rocket.php'
+	//'wp-rocket/wp-rocket.php',
+	//'flying-press/flying-press.php',
+	//'litespeed-cache/litespeed-cache.php',
+	//'wp-asset-clean-up-pro/wpacu.php',
 ] );

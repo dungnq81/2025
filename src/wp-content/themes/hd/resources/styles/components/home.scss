@@ -1,5 +1,0 @@
-@use '../mixins' as mixin;
-
-.test-home {
-    @include mixin.clamp-fs(15px, 60px, 375px, 1920px, 0)
-}

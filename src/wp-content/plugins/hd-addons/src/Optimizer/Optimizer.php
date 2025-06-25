@@ -5,6 +5,7 @@ namespace Addons\Optimizer;
 \defined( 'ABSPATH' ) || exit;
 
 final class Optimizer {
+	private mixed $buffer_level = null;
 	private mixed $options;
 
 	/** Maximum HTML size (bytes) we attempt to minify. */
@@ -49,7 +50,8 @@ final class Optimizer {
 	 * @return void
 	 */
 	public function startBuffer(): void {
-		if ( ob_get_level() === 0 && ! headers_sent() ) {
+		if ( ! headers_sent() ) {
+			$this->buffer_level = ob_get_level();
 			ob_start( [ $this, 'processOutput' ] );
 		}
 	}
@@ -61,7 +63,7 @@ final class Optimizer {
 	 */
 	public function endBuffer(): void {
 		// Flush all buffers we opened (keep nesting order)
-		while ( ob_get_level() > 0 ) {
+		if ( isset( $this->buffer_level ) && ob_get_level() > $this->buffer_level ) {
 			ob_end_flush();
 		}
 	}

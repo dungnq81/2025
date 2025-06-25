@@ -11,15 +11,11 @@
 
 \defined( 'ABSPATH' ) || die;
 
-if ( post_password_required() ) {
-	return;
-}
-
-if ( ! post_type_supports( get_post_type(), 'comments' ) ) {
-	return;
-}
-
-if ( ! have_comments() && ! comments_open() ) {
+if (
+	post_password_required() ||
+	! post_type_supports( get_post_type(), 'comments' ) ||
+	( ! have_comments() && ! comments_open() )
+) {
 	return;
 }
 
@@ -31,14 +27,14 @@ if ( ! have_comments() && ! comments_open() ) {
 			<?php
 			$comments_number = get_comments_number();
 			if ( '1' === $comments_number ) {
-				printf( esc_html_x( 'One Response', 'comments title', TEXT_DOMAIN ) );
+				printf( esc_html_x( '1 bình luận', 'comments title', TEXT_DOMAIN ) );
 			} else {
 				printf(
-				    /* translators: %s: Number of comments. */
+				/* translators: %s: Number of comments. */
 					esc_html(
 						_nx(
-							'%s Response',
-							'%s Responses',
+							'%s Bình luận',
+							'%s Bình luận',
 							$comments_number,
 							'comments title',
 							TEXT_DOMAIN
@@ -54,14 +50,12 @@ if ( ! have_comments() && ! comments_open() ) {
 
         <ol class="comment-list">
 			<?php
-			echo wp_list_comments(
-				[
-					'style'       => 'ol',
-					'short_ping'  => true,
-					'avatar_size' => 42,
-					'echo'        => false,
-				]
-			);
+			echo wp_list_comments( [
+				'style'       => 'ol',
+				'short_ping'  => true,
+				'avatar_size' => 42,
+				'echo'        => false,
+			] );
 			?>
         </ol>
 
@@ -70,12 +64,10 @@ if ( ! have_comments() && ! comments_open() ) {
 	<?php endif; ?>
 
 	<?php
-	comment_form(
-		[
-			'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
-			'title_reply_after'  => '</h2>',
-		]
-	);
+	comment_form( [
+		'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
+		'title_reply_after'  => '</h2>',
+	] );
 	?>
 
 </section>

@@ -69,7 +69,7 @@ trait Base {
 	 */
 	public static function errorLog( string $message, int $type = 0, ?string $dest = null, ?string $headers = null ): void {
 		$key = 'hd_err_' . md5( $message );
-		if ( false === get_transient( $key ) ) {
+		if ( empty( get_transient( $key ) ) ) {
 			set_transient( $key, 1, MINUTE_IN_SECONDS );
 			// Intentionally calling error_log for throttled logging.
 			error_log( $message, $type, $dest, $headers );

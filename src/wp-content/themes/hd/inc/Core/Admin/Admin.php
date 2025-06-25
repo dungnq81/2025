@@ -28,7 +28,8 @@ final class Admin {
 
 		/** Show a clear cache message */
 		add_action( 'admin_notices', static function () {
-			if ( $message = get_transient( '_clear_cache_message' ) ) {
+			$message = get_transient( '_clear_cache_message' );
+			if ( ! empty( $message ) ) {
 				\HD_Helper::messageSuccess( $message, false );
 
 				if ( ! isset( $_GET['clear_cache'] ) ) {
@@ -154,7 +155,7 @@ final class Admin {
 	 */
 	public function adminInit(): void {
 		// editor-style for Classic Editor
-		add_editor_style( ASSETS_URL . 'css/editor-style-css.css' );
+		add_editor_style( ASSETS_URL . 'css/editor-style.css' );
 
 		$admin_list_table = \HD_Helper::filterSettingOptions( 'admin_list_table', [] );
 

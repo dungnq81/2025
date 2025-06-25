@@ -23,16 +23,15 @@ final class ACF {
 		}
 
 		add_filter( 'acf/format_value/type=textarea', [ \HD_Helper::class, 'removeInlineJsCss' ], 11 );
-		add_filter( 'acf/fields/wysiwyg/toolbars', [ $this, 'wysiwyg_toolbars' ], 98, 1 );
+		add_filter( 'acf/fields/wysiwyg/toolbars', [ $this, 'wysiwygToolbars' ], 98, 1 );
 
-		add_filter( 'teeny_mce_buttons', [ $this, 'teeny_mce_buttons' ], 99, 2 );
+		add_filter( 'teeny_mce_buttons', [ $this, 'teenyMceButtons' ], 99, 2 );
+		add_filter( 'wp_nav_menu_objects', [ $this, 'navMenuObjects' ], 1000, 2 );
 
 		// auto required fields
 		$fields_dir = __DIR__ . DIRECTORY_SEPARATOR . 'fields';
 		\HD_Helper::createDirectory( $fields_dir );
 		\HD_Helper::FQNLoad( $fields_dir, true );
-
-		add_filter( 'wp_nav_menu_objects', [ $this, 'wp_nav_menu_objects' ], 1000, 2 );
 	}
 
 	// -------------------------------------------------------------
@@ -42,7 +41,7 @@ final class ACF {
 	 *
 	 * @return mixed
 	 */
-	public function wysiwyg_toolbars( $toolbars ): mixed {
+	public function wysiwygToolbars( $toolbars ): mixed {
 		// Add a new toolbar called "Minimal" - this toolbar has only 1 row of buttons
 		//		$toolbars['Minimal']    = [];
 		//		$toolbars['Minimal'][1] = [
@@ -78,7 +77,7 @@ final class ACF {
 	 *
 	 * @return string[]
 	 */
-	public function teeny_mce_buttons( $teeny_mce_buttons, $editor_id ): array {
+	public function teenyMceButtons( $teeny_mce_buttons, $editor_id ): array {
 		return [
 			'formatselect',
 			'bold',
@@ -105,7 +104,7 @@ final class ACF {
 	 *
 	 * @return mixed
 	 */
-	public function wp_nav_menu_objects( $items, $args ): mixed {
+	public function navMenuObjects( $items, $args ): mixed {
 		foreach ( $items as &$item ) {
 			$title = $item?->title;
 			$ACF   = \HD_Helper::getFields( $item, true );

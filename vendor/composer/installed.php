@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
+        'reference' => 'c93ac7facb579dd244e744424ce73f01aa9faec4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
+            'reference' => 'c93ac7facb579dd244e744424ce73f01aa9faec4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -128,9 +128,9 @@
             'dev_requirement' => false,
         ),
         'justinrainbow/json-schema' => array(
-            'pretty_version' => '6.4.1',
-            'version' => '6.4.1.0',
-            'reference' => '35d262c94959571e8736db1e5c9bc36ab94ae900',
+            'pretty_version' => '6.4.2',
+            'version' => '6.4.2.0',
+            'reference' => 'ce1fd2d47799bb60668643bc6220f6278a4c1d02',
             'type' => 'library',
             'install_path' => __DIR__ . '/../justinrainbow/json-schema',
             'aliases' => array(),
@@ -223,7 +223,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'c6007a53027047b08044448c57571988ac9b6e93',
+            'reference' => 'b79895bbbfcb549006a8ee8efae7f77edffe5329',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(

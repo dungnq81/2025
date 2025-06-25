@@ -127,8 +127,8 @@ final class Shortcode {
 		);
 
 		$title             = $atts['title'] ?: '';
-		$title_for         = __( 'Search', TEXT_DOMAIN );
-		$placeholder_title = $atts['placeholder'] ?: __( 'Search...', TEXT_DOMAIN );
+		$title_for         = __( 'Tìm kiếm', TEXT_DOMAIN );
+		$placeholder_title = $atts['placeholder'] ?: __( 'Tìm kiếm...', TEXT_DOMAIN );
 		$id                = $atts['id'] ? \HD_Helper::escAttr( $atts['id'] ) : \HD_Helper::escAttr( $id );
 		$class             = $atts['class'] ? ' ' . \HD_Helper::escAttr( $atts['class'] ) : '';
 
@@ -167,10 +167,10 @@ final class Shortcode {
 			'dropdown_search'
 		);
 
-		$title             = $atts['title'] ?: __( 'Search', TEXT_DOMAIN );
-		$title_for         = __( 'Search for', TEXT_DOMAIN );
-		$placeholder_title = \HD_Helper::escAttr( __( 'Search...', TEXT_DOMAIN ) );
-		$close_title       = __( 'Close', TEXT_DOMAIN );
+		$title             = $atts['title'] ?: __( 'Tìm kiếm', TEXT_DOMAIN );
+		$title_for         = __( 'Tìm kiếm cho', TEXT_DOMAIN );
+		$placeholder_title = \HD_Helper::escAttr( __( 'Tìm kiếm...', TEXT_DOMAIN ) );
+		$close_title       = __( 'Đóng', TEXT_DOMAIN );
 		$class             = $atts['class'] ? ' ' . \HD_Helper::escAttr( $atts['class'] ) : '';
 		$id                = $atts['id'] ? \HD_Helper::escAttr( $atts['id'] ) : \HD_Helper::escAttr( $id );
 
@@ -228,7 +228,6 @@ final class Shortcode {
 			</span>
         </button>
 		<?php
-
 		return '<div class="off-canvas-content' . $class . '" data-off-canvas-content>' . ob_get_clean() . '</div>';
 	}
 
@@ -237,9 +236,9 @@ final class Shortcode {
 	/**
 	 * @param array $atts
 	 *
-	 * @return string
+	 * @return bool|string
 	 */
-	public function horizontalMenu( array $atts = [] ): string {
+	public function horizontalMenu( array $atts = [] ): bool|string {
 		static $horizontal_menu_counter = 0;
 		$id = 'menu-' . substr( md5( __METHOD__ . ++ $horizontal_menu_counter ), 0, 10 );
 
@@ -259,12 +258,11 @@ final class Shortcode {
 			'horizontal_menu'
 		);
 
-		$location    = $atts['location'] ? \HD_Helper::escAttr( $atts['location'] ) : 'main-nav';
-		$class       = $atts['class'] ? \HD_Helper::escAttr( $atts['class'] ) : '';
-		$extra_class = $atts['extra_class'] ? \HD_Helper::escAttr( $atts['extra_class'] ) : '';
-		$depth       = $atts['depth'] ? absint( $atts['depth'] ) : 1;
-		$id          = $atts['id'] ?: \HD_Helper::escAttr( $id );
-
+		$location         = $atts['location'] ? \HD_Helper::escAttr( $atts['location'] ) : 'main-nav';
+		$class            = $atts['class'] ? \HD_Helper::escAttr( $atts['class'] ) : '';
+		$extra_class      = $atts['extra_class'] ? \HD_Helper::escAttr( $atts['extra_class'] ) : '';
+		$depth            = $atts['depth'] ? absint( $atts['depth'] ) : 1;
+		$id               = $atts['id'] ?: \HD_Helper::escAttr( $id );
 		$li_class         = ! empty( $atts['li_class'] ) ? \HD_Helper::escAttr( $atts['li_class'] ) : '';
 		$li_depth_class   = ! empty( $atts['li_depth_class'] ) ? \HD_Helper::escAttr( $atts['li_depth_class'] ) : '';
 		$link_class       = ! empty( $atts['link_class'] ) ? \HD_Helper::escAttr( $atts['link_class'] ) : '';
@@ -288,9 +286,9 @@ final class Shortcode {
 	/**
 	 * @param array $atts
 	 *
-	 * @return string
+	 * @return bool|string
 	 */
-	public function verticalMenu( array $atts = [] ): string {
+	public function verticalMenu( array $atts = [] ): bool|string {
 		static $vertical_menu_counter = 0;
 		$id = 'menu-' . substr( md5( __METHOD__ . ++ $vertical_menu_counter ), 0, 10 );
 
@@ -310,12 +308,11 @@ final class Shortcode {
 			'vertical_menu'
 		);
 
-		$location    = $atts['location'] ? \HD_Helper::escAttr( $atts['location'] ) : 'mobile-nav';
-		$class       = $atts['class'] ? \HD_Helper::escAttr( $atts['class'] ) : '';
-		$extra_class = $atts['extra_class'] ? \HD_Helper::escAttr( $atts['extra_class'] ) : '';
-		$depth       = $atts['depth'] ? absint( $atts['depth'] ) : 1;
-		$id          = $atts['id'] ?: \HD_Helper::escAttr( $id );
-
+		$location         = $atts['location'] ? \HD_Helper::escAttr( $atts['location'] ) : 'mobile-nav';
+		$class            = $atts['class'] ? \HD_Helper::escAttr( $atts['class'] ) : '';
+		$extra_class      = $atts['extra_class'] ? \HD_Helper::escAttr( $atts['extra_class'] ) : '';
+		$depth            = $atts['depth'] ? absint( $atts['depth'] ) : 1;
+		$id               = $atts['id'] ?: \HD_Helper::escAttr( $id );
 		$li_class         = ! empty( $atts['li_class'] ) ? \HD_Helper::escAttr( $atts['li_class'] ) : '';
 		$li_depth_class   = ! empty( $atts['li_depth_class'] ) ? \HD_Helper::escAttr( $atts['li_depth_class'] ) : '';
 		$link_class       = ! empty( $atts['link_class'] ) ? \HD_Helper::escAttr( $atts['link_class'] ) : '';
@@ -348,12 +345,10 @@ final class Shortcode {
 			'taxonomy'         => 'category',
 			'include_children' => false,
 			'posts_per_page'   => 12,
-
-			'limit_time'    => '',
-			'wrapper_tag'   => '',
-			'wrapper_class' => '',
-
-			'show' => [
+			'limit_time'       => '',
+			'wrapper_tag'      => '',
+			'wrapper_class'    => '',
+			'show'             => [
 				'title_tag'      => 'p',
 				'thumbnail'      => true,
 				'thumbnail_size' => 'medium',

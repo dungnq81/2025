@@ -105,7 +105,7 @@ class RecentPostsWidget extends AbstractWidget {
 
 			?>
             <nav class="<?= $uniqid ?>" aria-label="<?php echo $aria_label; ?>">
-                <ul>
+                <ul class="recent-post">
 					<?php
 					$ratio_class = \HD_Helper::aspectRatioClass();
 
@@ -114,7 +114,7 @@ class RecentPostsWidget extends AbstractWidget {
 						$post_title     = ( ! empty( $post_title ) ) ? $post_title : __( '(no title)', TEXT_DOMAIN );
 
                         $attr_post_title = \HD_Helper::escAttr( $post_title );
-						$post_thumbnail = \HD_Helper::postImageHTML( $recent_post, 'medium', [ 'alt' => $attr_post_title ], true );
+						$post_thumbnail = \HD_Helper::postImageHTML( $recent_post->ID, 'medium', [ 'alt' => $attr_post_title ], true );
 
 						$aria_current = '';
 						if ( get_queried_object_id() === $recent_post->ID ) {

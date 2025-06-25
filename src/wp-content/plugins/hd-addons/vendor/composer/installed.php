@@ -3,7 +3,7 @@
         'name' => 'plugins/hd-addons',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
+        'reference' => 'c93ac7facb579dd244e744424ce73f01aa9faec4',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'matthiasmullie/minify' => array(
-            'pretty_version' => '1.3.73',
-            'version' => '1.3.73.0',
-            'reference' => 'cb7a9297b4ab070909cefade30ee95054d4ae87a',
+            'pretty_version' => '1.3.74',
+            'version' => '1.3.74.0',
+            'reference' => 'a2593286a4135d03c6a6a9e9aeded5d41e931ce4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(),
@@ -40,7 +40,7 @@
         'plugins/hd-addons' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4788239a85542635bb1adc1668696b86fee12ea3',
+            'reference' => 'c93ac7facb579dd244e744424ce73f01aa9faec4',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'c6007a53027047b08044448c57571988ac9b6e93',
+            'reference' => 'b79895bbbfcb549006a8ee8efae7f77edffe5329',
             'type' => 'metapackage',
             'install_path' => null,
             'aliases' => array(

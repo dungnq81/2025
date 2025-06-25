@@ -1,4 +1,0 @@
-@import "tailwindcss" prefix(tw);
-@import "./_variables.css";
-
-@config "../../../tailwind.config.js";

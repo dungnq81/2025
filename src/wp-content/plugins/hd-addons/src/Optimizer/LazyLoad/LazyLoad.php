@@ -45,7 +45,7 @@ final class LazyLoad {
 	public function __construct() {
 		$optimizer_options = \Addons\Helper::getOption( 'optimizer__options' );
 		$lazyload          = $optimizer_options['lazyload'] ?? 0;
-		$lazyload_mobile   = $optimizer_options['lazyload_mobile'] ?? 0;
+		$lazyload_mobile   = $lazyload;
 
 		if ( empty( $lazyload ) ) {
 			return;

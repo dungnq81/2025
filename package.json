@@ -1,7 +1,7 @@
 {
     "name": "hd2025",
     "private": true,
-    "version": "1.0.5",
+    "version": "1.6.0",
     "type": "module",
     "scripts": {
         "watch:plugin": "cross-env NODE_ENV=development vite build --watch --config src/wp-content/plugins/hd-addons/vite.config.js",
@@ -9,25 +9,26 @@
         "watch:theme": "cross-env NODE_ENV=development vite build --watch --config src/wp-content/themes/hd/vite.config.js",
         "build:theme": "cross-env NODE_ENV=production vite build --config src/wp-content/themes/hd/vite.config.js",
         "watch": "concurrently \"pnpm watch:plugin\" \"pnpm watch:theme\"",
-        "build": "concurrently \"pnpm build:plugin\" \"pnpm build:theme\""
+        "build": "concurrently \"pnpm build:plugin\" \"pnpm build:theme\"",
+        "lint": "eslint \"src/wp-content/themes/hd/resources/scripts/**/*.{js,ts}\" && stylelint \"src/wp-content/themes/hd/resources/styles/**/*.{css,scss}\""
     },
     "browserslist": [
         "extends @wordpress/browserslist-config"
     ],
     "devDependencies": {
-        "@tailwindcss/vite": "^4.1.8",
+        "@tailwindcss/vite": "^4.1.10",
         "@vheemstra/vite-plugin-imagemin": "^2.0.0",
-        "@wordpress/browserslist-config": "^6.24.0",
+        "@wordpress/browserslist-config": "^6.25.0",
         "autoprefixer": "^10.4.21",
-        "concurrently": "^9.1.2",
+        "concurrently": "^9.2.0",
         "cross-env": "^7.0.3",
         "imagemin-gifsicle": "^7.0.0",
         "imagemin-mozjpeg": "^10.0.0",
         "imagemin-pngquant": "^10.0.0",
         "imagemin-svgo": "^11.0.1",
-        "postcss": "^8.5.4",
-        "sass": "^1.89.1",
-        "terser": "^5.40.0",
+        "postcss": "^8.5.6",
+        "sass": "^1.89.2",
+        "terser": "^5.43.1",
         "vite": "^6.3.5",
         "vite-plugin-static-copy": "^2.3.1"
     },
@@ -40,9 +41,9 @@
         "nanoid": "^5.1.5",
         "select2": "4.1.0-rc.0",
         "simplebar": "^6.3.1",
-        "sweetalert2": "^11.22.0",
+        "sweetalert2": "^11.22.1",
         "swiper": "^11.2.8",
-        "tailwindcss": "^4.1.8",
+        "tailwindcss": "^4.1.10",
         "vanilla-lazyload": "^19.1.3"
     }
 }

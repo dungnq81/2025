@@ -5,7 +5,7 @@
 $css = \Addons\Helper::getCustomPostContent( 'addon_css', false );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1">
+<div class="container flex flex-x gap sm-up-1">
 	<div class="cell section section-textarea">
 		<label class="heading" for="html_custom_css"><?php _e( 'Custom CSS', ADDONS_TEXTDOMAIN ) ?></label>
 		<div class="option">

@@ -15,23 +15,16 @@ trait Encryption {
 	 * @return void
 	 */
 	private static function loadKeys(): void {
-		if ( is_null( self::$method ) || is_null( self::$secretKey ) ) {
-			$keyFile = INC_PATH . 'encryption-key.php';
+		$keyFile = INC_PATH . 'encryption-key.php';
 
-			if ( ! is_file( $keyFile ) ) {
-				throw new \RuntimeException( "Key file not found: $keyFile" );
-			}
-
+		if ( is_file( $keyFile ) ) {
 			// Include the key file and validate its content
-			$keys = include $keyFile;
-			if ( ! isset( $cipher_method, $secret_key ) ) {
-				throw new \RuntimeException( "Invalid key file format: $keyFile" );
-			}
-
-			// Assign values or use defaults
-			self::$method    = $cipher_method ?? 'AES-128-CBC';
-			self::$secretKey = $secret_key ?? 'd24eebeca3db6407c18d4de572fff114';
+			include $keyFile;
 		}
+
+		// Assign values or use defaults
+		self::$method    = $cipher_method ?? 'AES-128-CBC';
+		self::$secretKey = $secret_key ?? 'd24eebeca3db6407c18d4de572fff114';
 	}
 
 	// -------------------------------------------------------------

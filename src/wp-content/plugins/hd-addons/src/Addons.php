@@ -20,7 +20,7 @@ final class Addons {
 	public function __construct() {
 		add_action( 'plugins_loaded', [ $this, 'pluginsLoaded' ], 999 );
 
-		// Admin assets / Script attribute
+		// Admin Assets / Script attribute
 		add_action( 'admin_enqueue_scripts', [ $this, 'adminEnqueueAssets' ], 39, 1 );
 		add_action( 'script_loader_tag', [ $this, 'scriptLoaderTag' ], 11, 3 );
 	}
@@ -64,6 +64,7 @@ final class Addons {
 		Helper::isRankMathActive() && class_exists( RankMath::class ) && new RankMath();
 		Helper::isAcfActive() && class_exists( ACF::class ) && new ACF();
 		Helper::isCf7Active() && class_exists( CF7::class ) && new CF7();
+
 		class_exists( Faker::class ) && new Faker();
 	}
 

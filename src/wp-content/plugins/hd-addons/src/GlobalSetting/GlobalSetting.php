@@ -195,7 +195,7 @@ final class GlobalSetting {
 				'font_preload'     => $font_preload,
 				'lazyload'         => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
 				//'lazyload_mobile'   => ! empty( $data['lazyload_mobile'] ) ? sanitize_text_field( $data['lazyload_mobile'] ) : 0,
-				'lazyload_mobile'  => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
+				//'lazyload_mobile'  => ! empty( $data['lazyload'] ) ? sanitize_text_field( $data['lazyload'] ) : 0,
 				'lazyload_exclude' => $lazyload_exclude,
 			];
 

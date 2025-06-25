@@ -55,7 +55,7 @@ final class Customizer {
 		$wp_customize->add_section(
 			'login_page_section',
 			[
-				'title'    => __( 'Login page', TEXT_DOMAIN ),
+				'title'    => __( 'Trang đăng nhập', TEXT_DOMAIN ),
 				'panel'    => 'addon_menu_panel',
 				'priority' => 999,
 			]
@@ -71,7 +71,7 @@ final class Customizer {
 				$wp_customize,
 				'login_page_bgcolor_control',
 				[
-					'label'    => __( 'Background color', TEXT_DOMAIN ),
+					'label'    => __( 'Màu nền', TEXT_DOMAIN ),
 					'section'  => 'login_page_section',
 					'settings' => 'login_page_bgcolor_setting',
 					'priority' => 8,
@@ -89,7 +89,7 @@ final class Customizer {
 				$wp_customize,
 				'login_page_bgimage_control',
 				[
-					'label'    => __( 'Background image', TEXT_DOMAIN ),
+					'label'    => __( 'Ảnh nền', TEXT_DOMAIN ),
 					'section'  => 'login_page_section',
 					'settings' => 'login_page_bgimage_setting',
 					'priority' => 9,
@@ -123,12 +123,12 @@ final class Customizer {
 		$wp_customize->add_control(
 			'login_page_headertext_control',
 			[
-				'label'       => __( 'Header text', TEXT_DOMAIN ),
+				'label'       => __( 'Văn bản tiêu đề', TEXT_DOMAIN ),
 				'section'     => 'login_page_section',
 				'settings'    => 'login_page_headertext_setting',
 				'type'        => 'text',
 				'priority'    => 11,
-				'description' => __( 'Changing the alt text', TEXT_DOMAIN ),
+				'description' => __( 'Thay đổi văn bản thay thế (alt)', TEXT_DOMAIN ),
 			]
 		);
 
@@ -140,12 +140,12 @@ final class Customizer {
 		$wp_customize->add_control(
 			'login_page_headerurl_control',
 			[
-				'label'       => __( 'Header url', TEXT_DOMAIN ),
+				'label'       => __( 'URL của tiêu đề', TEXT_DOMAIN ),
 				'section'     => 'login_page_section',
 				'settings'    => 'login_page_headerurl_setting',
 				'type'        => 'url',
 				'priority'    => 12,
-				'description' => __( 'Changing the logo link', TEXT_DOMAIN ),
+				'description' => __( 'Thay đổi đường dẫn của logo', TEXT_DOMAIN ),
 			]
 		);
 

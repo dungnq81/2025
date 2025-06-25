@@ -1,6 +1,6 @@
-// lighthouse.js
+// lighthouse.js (IIFE)
 
-(async function detectLighthouse() {
+(async () => {
     const DETECTION_CLASS = 'is-lighthouse';
 
     const indicators = {
@@ -15,29 +15,27 @@
         navigator.webdriver === true
     );
 
-    // BE
+    if (indicators.ua) {
+        document.documentElement.classList.add(DETECTION_CLASS);
+        return;
+    }
+
+    // ajax
     if (typeof window.hdConfig !== 'undefined') {
         try {
-            const res = await fetch(window.hdConfig._restApiUrl + 'global/lighthouse', {
+            const res = await fetch(window.hdConfig.restApiUrl + 'global/lighthouse', {
                 method: 'GET',
                 credentials: 'same-origin',
                 headers: {
-                    'X-WP-Nonce': window.hdConfig._restToken
+                    'X-WP-Nonce': window.hdConfig.restToken
                 }
             });
             const json = await res.json();
             indicators.backend = json.success && json.detected;
         } catch (err) {}
-    }
 
-    // Apply detection
-    const applyDetection = () => {
-        const anyDetected = Object.values(indicators).some(Boolean);
-        if (anyDetected) {
+        if (indicators.backend) {
             document.documentElement.classList.add(DETECTION_CLASS);
         }
-    };
-
-    // Apply detection
-    applyDetection();
+    }
 })();

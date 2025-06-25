@@ -6,7 +6,7 @@ $contact_link_options = \Addons\Helper::getOption( 'contact_link__options' );
 $contact_links        = \Addons\Helper::filterSettingOptions( 'contact_links', [] );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 md-up-2">
+<div class="container flex flex-x gap sm-up-1 md-up-2">
     <input type="hidden" name="contact-link-hidden" value="1">
 	<?php
 	if ( empty( $contact_links ) ) {

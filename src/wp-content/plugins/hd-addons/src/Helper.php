@@ -51,7 +51,7 @@ final class Helper {
 	 */
 	public static function errorLog( string $message, int $type = 0, ?string $dest = null, ?string $headers = null ): void {
 		$key = 'hd_err_' . md5( $message );
-		if ( false === get_transient( $key ) ) {
+		if ( empty( get_transient( $key ) ) ) {
 			set_transient( $key, 1, MINUTE_IN_SECONDS );
 			// Intentionally calling error_log for throttled logging.
 			error_log( $message, $type, $dest, $headers );
@@ -572,7 +572,7 @@ final class Helper {
 		$cache_key = $site_id ? "hd_site_option_{$site_id}_{$option}" : "hd_option_{$option}";
 
 		$cached_value = get_transient( $cache_key );
-		if ( $cached_value !== false ) {
+		if ( ! empty( $cached_value ) ) {
 			return $cached_value;
 		}
 
@@ -624,7 +624,7 @@ final class Helper {
 		$cache_key      = "hd_theme_mod_{$mod_name_lower}";
 
 		$cached_value = get_transient( $cache_key );
-		if ( $cached_value !== false ) {
+		if ( ! empty( $cached_value ) ) {
 			return $cached_value;
 		}
 
@@ -653,7 +653,7 @@ final class Helper {
 		$cache_key   = "hd_custom_post_{$post_type}";
 		$cached_data = get_transient( $cache_key );
 
-		if ( $cached_data !== false ) {
+		if ( ! empty( $cached_data ) ) {
 			return $cached_data;
 		}
 

@@ -6,7 +6,7 @@ $emails_options       = \Addons\Helper::getOption( 'custom_email_to__options' );
 $filter_custom_emails = \Addons\Helper::filterSettingOptions( 'custom_emails', [] );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="custom-email-to-hidden" value="1"
     <?php
     if ( empty( $filter_custom_emails ) ) {

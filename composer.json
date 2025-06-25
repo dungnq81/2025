@@ -11,7 +11,8 @@
         "php": ">=8.2",
         "vlucas/phpdotenv": "^v5.6.1",
         "oscarotero/env": "^v2.1.1",
-        "roots/wp-config": "^1.0.0"
+        "roots/wp-config": "^1.0.0",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "wp-cli/wp-cli-bundle": "^v2.11.0",

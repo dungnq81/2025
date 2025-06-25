@@ -38,17 +38,17 @@ base_slug:
     title: 'Remove Base Slug'
     description: 'Remove the default base slug from URLs for categories, tags, or custom taxonomies.'
 
-custom_email_to:
-    title: 'Custom Email To'
-    description: 'Set a custom email address for receiving notifications, form submissions, or other email-related functionalities on your site.'
+#custom_email_to:
+#    title: 'Custom Email To'
+#    description: 'Set a custom email address for receiving notifications, form submissions, or other email-related functionalities on your site.'
 
 custom_sorting:
     title: 'Custom Sorting'
     description: 'Enable drag-and-drop functionality for sorting custom post types, taxonomies.'
 
-recaptcha:
-    title: 'reCAPTCHA'
-    description: 'Enter your Google reCAPTCHA site key and secret key to protect your site from spam and abuse.'
+#recaptcha:
+#    title: 'reCAPTCHA'
+#    description: 'Enter your Google reCAPTCHA site key and secret key to protect your site from spam and abuse.'
 
 woocommerce:
     title: 'WooCommerce'

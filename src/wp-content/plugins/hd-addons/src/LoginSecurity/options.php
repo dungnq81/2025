@@ -21,7 +21,7 @@ if ( in_array( $user_id, $privileged_user_ids, true  ) ) {
 }
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="login-security-hidden" value="1">
 
     <?php if ( $privileged ) : ?>

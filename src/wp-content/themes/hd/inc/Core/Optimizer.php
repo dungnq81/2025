@@ -50,7 +50,10 @@ final class Optimizer {
 		// -------------------------------------------------------------
 
 		/**
-		 * thumbnail (540x0)
+		 * small-100 (100x0)
+		 * small-150 (150x0)
+		 *
+		 * thumbnail (480x0)
 		 * medium (768x0)
 		 * large (1024x0)
 		 *
@@ -62,7 +65,7 @@ final class Optimizer {
 			\HD_Helper::updateOption( '_image_sizes_updated', true );
 
 			/** Default thumb */
-			\HD_Helper::updateOption( 'thumbnail_size_w', 540 );
+			\HD_Helper::updateOption( 'thumbnail_size_w', 480 );
 			\HD_Helper::updateOption( 'thumbnail_size_h', 0 );
 			\HD_Helper::updateOption( 'thumbnail_crop', 0 );
 
@@ -76,6 +79,8 @@ final class Optimizer {
 		}
 
 		/** Custom images sizes */
+		add_image_size( 'small-100', 100, 0, false );
+		add_image_size( 'small-150', 150, 0, false );
 		add_image_size( 'small-thumbnail', 150, 150, true );
 		add_image_size( 'widescreen', 1920, 9999, false );
 		add_image_size( 'post-thumbnail', 1200, 9999, false );
@@ -83,9 +88,6 @@ final class Optimizer {
 		/** Disable unwanted images sizes */
 		add_filter( 'intermediate_image_sizes_advanced', static function ( $sizes ) {
 			unset( $sizes['medium_large'], $sizes['1536x1536'], $sizes['2048x2048'] );
-
-			// disable 2x medium-large size
-			// disable 2x large size
 
 			return $sizes;
 		} );
@@ -104,10 +106,6 @@ final class Optimizer {
 		add_filter( 'post_thumbnail_html', static function ( $html ) {
 			return preg_replace( '/(<img[^>]+)(style=\"[^\"]+\")([^>]+)(>)/', '${1}${3}${4}', $html );
 		}, 10, 1 );
-
-		//		add_filter( 'image_send_to_editor', function ( $html ) {
-		//			return preg_replace( '/(<img[^>]+)(style=\"[^\"]+\")([^>]+)(>)/', '${1}${3}${4}', $html );
-		//		}, 10, 1 );
 
 		add_filter( 'the_content', static function ( $html ) {
 			return preg_replace( '/(<img[^>]+)(style=\"[^\"]+\")([^>]+)(>)/', '${1}${3}${4}', $html );

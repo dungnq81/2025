@@ -1,0 +1,31 @@
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: #ffffff;
+}
+
+@property --percentage {
+    syntax: '<length-percentage>';
+    inherits: false;
+    initial-value: 0%;
+}
+
+@property --gradient-color {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: #dd1940;
+}
+
+:root {
+    --gradient-color: #dd1940;
+    --black: #121212;
+    --angle: 0deg;
+    --color: #ffffff;
+    --gray: #d0d0c8;
+}

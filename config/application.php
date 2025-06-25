@@ -107,7 +107,7 @@ Config::define( 'WP_CACHE_KEY_SALT', env( 'WP_CACHE_KEY_SALT' ) );
  */
 
 Config::define( 'DISALLOW_FILE_EDIT', true ); // Disable the plugin and theme file editor in the admin and
-Config::define( 'DISALLOW_FILE_MODS', true ); // disable plugin and theme updates and installation from the admin
+Config::define( 'DISALLOW_FILE_MODS', false ); // disable plugin and theme updates and installation from the admin
 Config::define( 'WP_DEBUG', false ); // Debugging Settings
 
 ini_set( 'display_errors', '0' );
@@ -125,7 +125,7 @@ Config::define( 'AUTOSAVE_INTERVAL', env( 'AUTOSAVE_INTERVAL' ) ?? 180 );
 
 Config::define( 'AUTOMATIC_UPDATER_DISABLED', env( 'AUTOMATIC_UPDATER_DISABLED' ) ?? false );
 Config::define( 'WP_AUTO_UPDATE_CORE', env( 'WP_AUTO_UPDATE_CORE' ) ?? true );
-Config::define( 'DISABLE_WP_CRON', env( 'DISABLE_WP_CRON' ) ?? false );
+#Config::define( 'DISABLE_WP_CRON', env( 'DISABLE_WP_CRON' ) ?? false );
 
 /** Force SSL for admin */
 Config::define( 'FORCE_SSL_ADMIN', env( 'FORCE_SSL_ADMIN' ) ?? false );

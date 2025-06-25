@@ -8,7 +8,7 @@ $html_body_top    = \Addons\Helper::getCustomPostContent( 'html_body_top', true 
 $html_body_bottom = \Addons\Helper::getCustomPostContent( 'html_body_bottom', true );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="custom-js-hidden" value="1">
 	<div class="cell section section-textarea">
 		<label class="heading" for="html_header"><?php _e( 'Header scripts', ADDONS_TEXTDOMAIN ) ?></label>

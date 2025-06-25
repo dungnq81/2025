@@ -33,7 +33,6 @@ final class API extends AbstractAPI {
 
 	private function init(): void {
 		add_action( 'init', [ $this, 'initRestClasses' ] );
-		add_action( 'init', [ $this, 'handleCors' ] );
 
 		add_action( 'rest_api_init', [ $this, 'registerRestRoutes' ] );
 		add_action( 'rest_api_init', [ $this, 'disableDefaultPostTypes' ] );
@@ -67,25 +66,6 @@ final class API extends AbstractAPI {
 			if ( class_exists( $class_name ) ) {
 				$this->endpointClasses[] = new $class_name();
 			}
-		}
-	}
-
-	/** ---------------------------------------- */
-
-	/**
-	 * Handle CORS settings.
-	 *
-	 * @return void
-	 */
-	public function handleCors(): void {
-		header( "Access-Control-Allow-Origin: *" );
-		header( "Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE" );
-		header( "Access-Control-Allow-Credentials: true" );
-		header( "Access-Control-Allow-Headers: Origin, X-Requested-With, X-WP-Nonce, Content-Type, Accept, Authorization" );
-
-		if ( 'OPTIONS' === $_SERVER['REQUEST_METHOD'] ) {
-			status_header( 200 );
-			exit();
 		}
 	}
 

@@ -38,8 +38,13 @@ if ( ! empty( $args['title'] ) ) {
 	$title = $args['title'];
 }
 
+//$bg = \HD_Helper::attachmentImageSrc( $breadcrumb_bg );
+//$bg_css = ! empty( $bg ) ? ' style="background-image: url(' . $bg . ');"' : '';
+
+$bg_css = '';
+
 ?>
-<section class="section section-breadcrumb<?= $breadcrumb_class ?>">
+<section class="section section-breadcrumb<?= $breadcrumb_class ?>"<?= $bg_css ?>>
 	<?php echo $breadcrumb_bg ? \HD_Helper::pictureHTML( 'breadcrumb-bg', $breadcrumb_bg ) : ''; ?>
     <div class="container">
 		<?php echo $title ? '<p class="breadcrumb-title">' . $title . '</p>' : ''; ?>

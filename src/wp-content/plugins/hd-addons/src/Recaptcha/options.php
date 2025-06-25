@@ -15,7 +15,7 @@ $recaptcha_global        = $recaptcha_options['recaptcha_global'] ?? false;
 $recaptcha_allowlist_ips = $recaptcha_options['recaptcha_allowlist_ips'] ?? [];
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="recaptcha-hidden" value="1">
     <div class="cell section section-text">
         <label class="heading" for="recaptcha_v2_site_key"><?php _e( 'reCAPTCHA v2 Site Key', ADDONS_TEXTDOMAIN ); ?></label>

@@ -45,7 +45,7 @@ trait Wp {
 
 		$cache_key     = 'hd_block_cache_' . md5( $slug . serialize( $args ) );
 		$cached_output = get_transient( $cache_key );
-		if ( $cached_output !== false ) {
+		if ( ! empty( $cached_output ) ) {
 			if ( mb_strlen( $cached_output, 'UTF-8' ) <= 10240 ) { // 10kb
 				echo $cached_output;
 
@@ -131,7 +131,6 @@ trait Wp {
 				continue;
 			}
 
-			// Extra check for PHP files
 			// Check if the file is a malicious PHP script
 			if ( self::_isMaliciousFile( $file_path ) ) {
 				self::errorLog( "Skipped potentially malicious file: $file_path" );
@@ -148,7 +147,7 @@ trait Wp {
 				}
 			}
 
-			// Initialize the class or register as widget if $init_class is true
+			// Initialize the class or register as widget if `$init_class` is true
 			if ( $init_class && class_exists( $filenameFQN ) ) {
 				try {
 					if ( $is_widget ) {
@@ -379,7 +378,7 @@ trait Wp {
 	/**
 	 * @param array $args
 	 *
-	 * @return bool|false|string|void
+	 * @return bool|string|void
 	 */
 	public static function verticalNav( array $args = [] ) {
 		$args = wp_parse_args(
@@ -411,7 +410,7 @@ trait Wp {
 	 *
 	 * @param array $args
 	 *
-	 * @return bool|false|string|void
+	 * @return bool|string|void
 	 */
 	public static function horizontalNav( array $args = [] ) {
 		$args = wp_parse_args(
@@ -474,7 +473,6 @@ trait Wp {
 	 * @return object|array|null Attachment details as an object or array, or null if not found.
 	 */
 	public static function getAttachment( mixed $attachment_id, bool $return_object = true ): object|array|null {
-		// Fetch the attachment post object
 		$attachment = get_post( $attachment_id );
 
 		// Check if the attachment exists
@@ -605,7 +603,7 @@ trait Wp {
 		$cache_key = $site_id ? "hd_site_option_{$site_id}_{$option}" : "hd_option_{$option}";
 
 		$cached_value = get_transient( $cache_key );
-		if ( $cached_value !== false ) {
+		if ( ! empty( $cached_value ) ) {
 			return $cached_value;
 		}
 
@@ -687,7 +685,7 @@ trait Wp {
 		$mod_name_lower = strtolower( $mod_name );
 		$cache_key      = "hd_theme_mod_{$mod_name_lower}";
 		$cached_value   = get_transient( $cache_key );
-		if ( $cached_value !== false ) {
+		if ( ! empty( $cached_value ) ) {
 			return $cached_value;
 		}
 
@@ -727,16 +725,17 @@ trait Wp {
 	/**
 	 * @param mixed $term_id
 	 * @param string $taxonomy
+	 * @param string $output
 	 *
 	 * @return array|false|\WP_Error|\WP_Term|null
 	 */
-	public static function getTerm( mixed $term_id, string $taxonomy = 'category' ): \WP_Term|\WP_Error|false|array|null {
+	public static function getTerm( mixed $term_id, string $taxonomy = 'category', string $output = OBJECT ): \WP_Term|\WP_Error|false|array|null {
 		// Check if the term ID is numeric and retrieve the term by ID
 		if ( is_numeric( $term_id ) ) {
-			$term = get_term( (int) $term_id, $taxonomy );
+			$term = get_term( (int) $term_id, $taxonomy, $output );
 		} else {
 			// If term_id is not numeric, attempt to retrieve the term by slug or name
-			$term = get_term_by( 'slug', $term_id, $taxonomy ) ?: get_term_by( 'name', $term_id, $taxonomy );
+			$term = get_term_by( 'slug', $term_id, $taxonomy, $output ) ?: get_term_by( 'name', $term_id, $taxonomy, $output );
 		}
 
 		return $term;
@@ -831,8 +830,7 @@ trait Wp {
 		}
 
 		$posts_per_page = max( $posts_per_page, - 1 );
-
-		$_args = [
+		$_args          = [
 			'post_type'              => $post_type,
 			'post_status'            => 'publish',
 			'posts_per_page'         => $posts_per_page,
@@ -1087,17 +1085,22 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $blog_id
+	 * @param mixed $blog_id
 	 *
 	 * @return string
 	 *
 	 * Modified from the native get_custom_logo() function
 	 */
-	public static function customSiteLogo( ?int $blog_id = 0 ): string {
+	public static function customSiteLogo( mixed $blog_id = 0 ): string {
+		if ( ! $blog_id ) {
+			$blog_id = 0;
+		}
+
+		$blog_id       = (int) $blog_id;
 		$html          = '';
 		$switched_blog = false;
 
-		if ( $blog_id !== null && is_multisite() && get_current_blog_id() !== $blog_id ) {
+		if ( is_multisite() && get_current_blog_id() !== $blog_id ) {
 			switch_to_blog( $blog_id );
 			$switched_blog = true;
 		}
@@ -1219,7 +1222,7 @@ trait Wp {
 		$cache_key   = 'hd_site_title_or_logo';
 		$cached_html = get_transient( $cache_key );
 
-		if ( $cached_html !== false ) {
+		if ( ! empty( $cached_html ) ) {
 			if ( ! $echo ) {
 				return $cached_html;
 			}
@@ -1228,8 +1231,7 @@ trait Wp {
 			return;
 		}
 
-		$logo_title = self::getThemeMod( 'logo_title_setting' );
-		$logo_title = $logo_title ? '<span class="logo-txt">' . $logo_title . '</span>' : '';
+		$logo_title = '';
 		$logo_class = ! empty( $class ) ? ' class="' . $class . '"' : '';
 
 		if ( function_exists( 'the_custom_logo' ) && has_custom_logo() ) {
@@ -1253,6 +1255,8 @@ trait Wp {
 			}
 		}
 
+		$html = '<div class="site-logo">' . $html . '</div>';
+
 		set_transient( $cache_key, $html, $cache_in_hours * HOUR_IN_SECONDS );
 		if ( ! $echo ) {
 			return $html;
@@ -1274,7 +1278,7 @@ trait Wp {
 		$cache_key   = 'hd_site_logo_' . $theme;
 		$cached_html = get_transient( $cache_key );
 
-		if ( $cached_html !== false ) {
+		if ( ! empty( $cached_html ) ) {
 			return $cached_html;
 		}
 
@@ -1387,14 +1391,18 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $term
+	 * @param mixed $term
 	 * @param string|null $class
 	 * @param string|null $default_tag
 	 *
 	 * @return string|null
 	 */
-	public static function termExcerpt( ?int $term = 0, ?string $class = 'excerpt', ?string $default_tag = 'div' ): ?string {
-		$description = term_description( $term );
+	public static function termExcerpt( mixed $term = 0, ?string $class = 'excerpt', ?string $default_tag = 'div' ): ?string {
+		if ( ! $term ) {
+			$term = 0;
+		}
+
+		$description = term_description( (int) $term );
 		if ( ! self::stripSpace( $description ) ) {
 			return null;
 		}
@@ -1634,7 +1642,7 @@ trait Wp {
 			/* translators: 1: SVG icon. 2: posted in a label, only visible to screen readers. 3: list of tags. */
 				'<div class="hashtag-links links">%1$s<span class="sr-only">%2$s</span>%3$s</div>',
 				'<i data-fa="#"></i>',
-				__( 'Tags', TEXT_DOMAIN ),
+				__( 'Từ khóa', TEXT_DOMAIN ),
 				$hashtag_list
 			);
 
@@ -1645,26 +1653,50 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $post_id
+	 * @param int|\WP_Post|null $post_id
 	 * @param string $size
 	 *
 	 * @return string|false
 	 */
-	public static function postImageSrc( ?int $post_id, string $size = 'thumbnail' ): string|false {
+	public static function postImageSrc( int|\WP_Post|null $post_id = null, string $size = 'thumbnail' ): string|false {
+		if ( ! $post_id ) {
+			$post_id = null;
+		}
+
 		return get_the_post_thumbnail_url( $post_id, $size );
 	}
 
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $post_id
+	 * @param mixed $attachment_id
+	 * @param string $size
+	 *
+	 * @return string|false
+	 */
+	public static function attachmentImageSrc( mixed $attachment_id, string $size = 'thumbnail' ): string|false {
+		if ( ! $attachment_id ) {
+			return false;
+		}
+
+		return wp_get_attachment_image_url( (int) $attachment_id, $size, false );
+	}
+
+	// -------------------------------------------------------------
+
+	/**
+	 * @param int|\WP_Post|null $post_id
 	 * @param string $size
 	 * @param string|array $attr
 	 * @param bool $filter
 	 *
 	 * @return string
 	 */
-	public static function postImageHTML( ?int $post_id, string $size = 'post-thumbnail', string|array $attr = '', bool $filter = false ): string {
+	public static function postImageHTML( int|\WP_Post|null $post_id = null, string $size = 'post-thumbnail', string|array $attr = '', bool $filter = true ): string {
+		if ( ! $post_id ) {
+			$post_id = null;
+		}
+
 		$html = get_the_post_thumbnail( $post_id, $size, $attr );
 
 		return $filter ? apply_filters( 'hd_post_image_html_filter', $html, $post_id, $size, $attr ) : $html;
@@ -1673,28 +1705,20 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 *
-	 * @param int|null $attachment_id
-	 * @param string $size
-	 *
-	 * @return string|false
-	 */
-	public static function attachmentImageSrc( ?int $attachment_id, string $size = 'thumbnail' ): string|false {
-		return wp_get_attachment_image_url( $attachment_id, $size, false );
-	}
-
-	// -------------------------------------------------------------
-
-	/**
-	 * @param int|null $attachment_id
+	 * @param mixed $attachment_id
 	 * @param string $size
 	 * @param string|array $attr
 	 * @param bool $filter
 	 *
 	 * @return string
 	 */
-	public static function attachmentImageHTML( ?int $attachment_id, string $size = 'thumbnail', string|array $attr = '', bool $filter = false ): string {
-		$html = wp_get_attachment_image( $attachment_id, $size, false, $attr );
+	public static function attachmentImageHTML( mixed $attachment_id, string $size = 'thumbnail', string|array $attr = '', bool $filter = true ): string {
+		if ( ! $attachment_id ) {
+			return '';
+		}
+
+		$attachment_id = (int) $attachment_id;
+		$html          = wp_get_attachment_image( $attachment_id, $size, false, $attr );
 
 		return $filter ? apply_filters( 'hd_attachment_image_html_filter', $html, $attachment_id, $size, $attr ) : $html;
 	}
@@ -1702,14 +1726,20 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $attachment_id
+	 * @param mixed $attachment_id
 	 * @param string $size
 	 * @param string|array $attr
 	 * @param bool $filter
 	 *
 	 * @return string
 	 */
-	public static function iconImageHTML( ?int $attachment_id, string $size = 'thumbnail', string|array $attr = '', bool $filter = false ): string {
+	public static function iconImageHTML( mixed $attachment_id, string $size = 'thumbnail', string|array $attr = '', bool $filter = false ): string {
+		if ( ! $attachment_id ) {
+			return '';
+		}
+
+		$attachment_id = (int) $attachment_id;
+
 		$html  = '';
 		$image = wp_get_attachment_image_src( $attachment_id, $size, true );
 
@@ -1775,7 +1805,7 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param string $class
+	 * @param string|null $class
 	 * @param mixed $attachment_id
 	 * @param mixed $attachment_mobile_id
 	 * @param bool $widescreen
@@ -1783,18 +1813,20 @@ trait Wp {
 	 *
 	 * @return string
 	 */
-	public static function pictureHTML( string $class = 'img', mixed $attachment_id = false, mixed $attachment_mobile_id = false, bool $widescreen = true, bool $filter = true ): string {
-		$html = '';
-		if ( $attachment_id ) {
-			$html .= '<picture class="' . $class . '">';
-			if ( $widescreen ) {
-				$html .= '<source srcset="' . self::attachmentImageSrc( $attachment_id, 'widescreen' ) . '" media="(min-width: 1024px)">';
-			}
-
-			$html .= '<source srcset="' . self::attachmentImageSrc( $attachment_id, 'large' ) . '" media="(min-width: 768px)">';
-			$html .= self::iconImageHTML( $attachment_mobile_id ?: $attachment_id, 'medium', [ 'class' => 'lazy' ], false );
-			$html .= '</picture>';
+	public static function pictureHTML( ?string $class = null, mixed $attachment_id = 0, mixed $attachment_mobile_id = false, bool $widescreen = true, bool $filter = true ): string {
+		if ( ! $attachment_id ) {
+			return '';
 		}
+
+		$html = $class ? '<picture class="' . $class . '">' : '<picture>';
+
+		if ( $widescreen ) {
+			$html .= '<source srcset="' . self::attachmentImageSrc( $attachment_id, 'widescreen' ) . '" media="(min-width: 1024px)">';
+		}
+
+		$html .= '<source srcset="' . self::attachmentImageSrc( $attachment_id, 'large' ) . '" media="(min-width: 768px)">';
+		$html .= self::iconImageHTML( $attachment_mobile_id ?: $attachment_id, 'medium', [ 'class' => 'lazy' ], false );
+		$html .= '</picture>';
 
 		return $filter ? apply_filters( 'hd_picture_html_filter', $html, $class, $attachment_id, $attachment_mobile_id ) : $html;
 	}
@@ -1888,7 +1920,7 @@ trait Wp {
 		$breadcrumbs = [];
 
 		// Home
-		$breadcrumbs[] = '<li><a class="home" href="' . self::home() . '">' . __( 'Home', TEXT_DOMAIN ) . '</a></li>';
+		$breadcrumbs[] = '<li><a class="home" href="' . self::home() . '">' . __( 'Trang chủ', TEXT_DOMAIN ) . '</a></li>';
 
 		// WooCommerce Shop Page
 		if ( self::isWoocommerceActive() && \is_shop() ) {
@@ -1938,13 +1970,13 @@ trait Wp {
 				}
 			}
 
-			$breadcrumbs[] = $before . get_the_title() . $after;
+			//$breadcrumbs[] = $before . get_the_title() . $after;
 		} // Search page
 		elseif ( is_search() ) {
-			$breadcrumbs[] = $before . sprintf( __( 'Search Results for: %s', TEXT_DOMAIN ), get_search_query() ) . $after;
+			$breadcrumbs[] = $before . sprintf( __( 'Kết quả tìm kiếm cho: %s', TEXT_DOMAIN ), get_search_query() ) . $after;
 		} // Tag Archive
 		elseif ( is_tag() ) {
-			$breadcrumbs[] = $before . sprintf( __( 'Tag Archives: %s', TEXT_DOMAIN ), single_tag_title( '', false ) ) . $after;
+			$breadcrumbs[] = $before . sprintf( __( 'Lưu trữ: %s', TEXT_DOMAIN ), single_tag_title( '', false ) ) . $after;
 		} // Author
 		elseif ( is_author() ) {
 			global $author;
@@ -1976,12 +2008,12 @@ trait Wp {
 
 		} // 404 Page
 		elseif ( is_404() ) {
-			$breadcrumbs[] = $before . __( 'Not Found', TEXT_DOMAIN ) . $after;
+			$breadcrumbs[] = $before . __( 'Không tìm thấy', TEXT_DOMAIN ) . $after;
 		}
 
 		// If there is pagination
 		if ( get_query_var( 'paged' ) ) {
-			$breadcrumbs[] = $before . ' (' . __( 'page', TEXT_DOMAIN ) . ' ' . get_query_var( 'paged' ) . ')' . $after;
+			$breadcrumbs[] = $before . ' (' . __( 'trang', TEXT_DOMAIN ) . ' ' . get_query_var( 'paged' ) . ')' . $after;
 		}
 
 		// Display Breadcrumbs.
@@ -2057,16 +2089,16 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|false $user_id
+	 * @param mixed $user_id
 	 *
 	 * @return string
 	 */
-	public static function getUserLink( int|false $user_id = false ): string {
+	public static function getUserLink( mixed $user_id = null ): string {
 		if ( ! $user_id ) {
-			$user_id = (int) get_the_author_meta( 'ID' );
+			$user_id = get_the_author_meta( 'ID' );
 		}
 
-		return esc_url( get_author_posts_url( $user_id ) );
+		return esc_url( get_author_posts_url( (int) $user_id ) );
 	}
 
 	// -------------------------------------------------------------
@@ -2079,7 +2111,7 @@ trait Wp {
 	 */
 	public static function getAspectRatioOption( string $post_type = '', ?string $option = '' ): array|string {
 		$post_type = $post_type ?: 'post';
-		$option    = $option ?? 'aspect_ratio__options';
+		$option    = ! empty( $option ) ? $option : 'aspect_ratio__options';
 
 		$aspect_ratio_options = self::getOption( $option );
 		$width                = $aspect_ratio_options[ 'ar-' . $post_type . '-width' ] ?? '';
@@ -2269,20 +2301,20 @@ trait Wp {
 	// -------------------------------------------------------------
 
 	/**
-	 * @param int|null $term_id
+	 * @param mixed $term_id
 	 * @param string $taxonomy
 	 * @param bool $hide_empty
 	 *
 	 * @return int[]|string|string[]|\WP_Error|\WP_Term[]|null
 	 */
-	public static function childTerms( ?int $term_id, string $taxonomy, bool $hide_empty = true ): array|\WP_Error|string|null {
+	public static function childTerms( mixed $term_id, string $taxonomy, bool $hide_empty = true ): array|\WP_Error|string|null {
 		if ( ! $term_id || ! taxonomy_exists( $taxonomy ) ) {
 			return null;
 		}
 
 		$child_terms = get_terms( [
 			'taxonomy'   => $taxonomy,
-			'parent'     => $term_id,
+			'parent'     => (int) $term_id,
 			'hide_empty' => $hide_empty,
 		] );
 
@@ -2298,7 +2330,7 @@ trait Wp {
 	/**
 	 * @param string|null $taxonomy
 	 * @param bool $hide_empty
-	 * @param int|null $parent
+	 * @param mixed $parent
 	 * @param mixed|null $selected_request
 	 * @param int|null $disabled_parent
 	 * @param bool $only_parent
@@ -2308,7 +2340,7 @@ trait Wp {
 	public static function hierarchyTerms(
 		?string $taxonomy,
 		bool $hide_empty = true,
-		?int $parent = null,
+		mixed $parent = null,
 		mixed $selected_request = null,
 		?int $disabled_parent = null,
 		bool $only_parent = false
@@ -2324,8 +2356,8 @@ trait Wp {
 			'parent'       => 0,
 		];
 
-		if ( ! is_null( $parent ) && $parent >= 0 ) {
-			$args['parent'] = $parent;
+		if ( ! is_null( $parent ) ) {
+			$args['parent'] = (int) $parent;
 		}
 
 		$terms = get_terms( $args );

@@ -6,7 +6,7 @@ $social_options       = \Addons\Helper::getOption( 'social_link__options' );
 $social_follows_links = \Addons\Helper::filterSettingOptions( 'social_follows_links', [] );
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1 lg-up-2">
+<div class="container flex flex-x gap sm-up-1 lg-up-2">
     <input type="hidden" name="social-link-hidden" value="1">
 	<?php
 	if ( empty( $social_follows_links ) ) {

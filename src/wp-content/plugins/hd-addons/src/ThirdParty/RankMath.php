@@ -16,7 +16,7 @@ final class RankMath {
 		add_filter( 'rank_math/frontend/breadcrumb/args', [ $this, 'breadcrumb_args' ] );
 		add_filter( 'rank_math/frontend/show_keywords', '__return_true' );
 
-		// Remove admin bar
+		// Remove admin-bar
 		add_action( 'wp_before_admin_bar_render', static function () {
 			if ( is_admin_bar_showing() ) {
 				global $wp_admin_bar;

@@ -5,6 +5,7 @@ node_modules/
 .idea/
 .vscode/
 .vagrant/
+.docker/
 
 # Unit test reports
 TEST*.xml

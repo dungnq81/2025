@@ -15,7 +15,7 @@ class LoginUrl {
 	/* ---------- CONFIG -------------------------------------------------- */
 
 	private const CLU_TOKEN = 'token';
-	private array $options = [];
+	private array $options  = [];
 
 	/* ---------- CONSTRUCT ----------------------------------------------- */
 
@@ -84,7 +84,7 @@ class LoginUrl {
 	}
 
 	/**
-	 * Block administrators from logging-in through third party login forms when Custom Login URL is enabled.
+	 * Block administrators from logging-in through third-party login forms when `Custom Login URL` is enabled.
 	 *
 	 * @param \WP_User $user
 	 *
@@ -333,7 +333,7 @@ class LoginUrl {
 	 * @return string The URL path.
 	 */
 	private function _relativePath( string $url, bool $queryString = false ): string {
-		$url_parts = wp_parse_url( $this->_siteUrl() );
+		$url_parts = wp_parse_url( $this->_homeUrl() );
 		$home_path = ! empty( $url_parts['path'] ) ? trailingslashit( $url_parts['path'] ) : '/';
 
 		$_temp_url = explode( '?', wp_make_link_relative( $url ) );
@@ -343,7 +343,7 @@ class LoginUrl {
 			$path .= '?' . $_temp_url[1];
 		}
 
-		return $path ? ltrim( str_replace( $home_path, '', $path ), '/' ) : '';
+		return $path ? trim( str_replace( $home_path, '', $path ), '/' ) : '';
 	}
 
 	/**

@@ -10,8 +10,8 @@
 declare(strict_types=1);
 
 /**
- * This is needed for cookie based authentication to encrypt the cookie.
- * Needs to be a 32-bytes long string of random bytes. See FAQ 2.10.
+ * This is needed for cookie-based authentication to encrypt the cookie.
+ * Needs to be a 32-byte long string of random bytes. See FAQ 2.10.
  */
 $cfg['blowfish_secret'] = 'JOFw435365IScA&Q!cDugr!lSfuAz*OW'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
@@ -74,16 +74,16 @@ $cfg['UploadDir'] = '';
 $cfg['SaveDir'] = '';
 
 /**
- * Whether to display icons or text or both icons and text in table row
+ * Whether to display icons or text or both icons and text in a table row
  * action segment. Value can be either of 'icons', 'text' or 'both'.
- * default = 'both'
+ * Default = 'both'
  */
 //$cfg['RowActionType'] = 'icons';
 
 /**
  * Defines whether a user should be displayed a "show all (records)"
  * button in browse mode or not.
- * default = false
+ * Default = false
  */
 //$cfg['ShowAll'] = true;
 
@@ -117,28 +117,28 @@ $cfg['SaveDir'] = '';
 
 /**
  * How many columns should be used for table display of a database?
- * (a value larger than 1 results in some information being hidden)
+ * (a value larger than 1 result in some information being hidden)
  * default = 1
  */
 //$cfg['PropertiesNumColumns'] = 2;
 
 /**
- * Set to true if you want DB-based query history.If false, this utilizes
- * JS-routines to display query history (lost by window close)
+ * Set to true if you want DB-based query history. If false, this uses
+ * JS routines to display query history (lost by window close)
  *
  * This requires configuration storage enabled, see above.
- * default = false
+ * Default = false
  */
 //$cfg['QueryHistoryDB'] = true;
 
 /**
  * When using DB-based query history, how many entries should be kept?
- * default = 25
+ * Default = 25
  */
 //$cfg['QueryHistoryMax'] = 100;
 
 /**
- * Whether or not to query the user before sending the error report to
+ * Whether to query the user before sending the error report to
  * the phpMyAdmin team when a JavaScript error occurs
  *
  * Available options
@@ -149,7 +149,7 @@ $cfg['SaveDir'] = '';
 
 /**
  * 'URLQueryEncryption' defines whether phpMyAdmin will encrypt sensitive data from the URL query string.
- * 'URLQueryEncryptionSecretKey' is a 32 bytes long secret key used to encrypt/decrypt the URL query string.
+ * 'URLQueryEncryptionSecretKey' is a 32-byte long secret key used to encrypt/decrypt the URL query string.
  */
 //$cfg['URLQueryEncryption'] = true;
 //$cfg['URLQueryEncryptionSecretKey'] = '';

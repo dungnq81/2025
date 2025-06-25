@@ -248,8 +248,13 @@ final class Helper {
 	 * @return bool
 	 */
 	public static function lightHouse(): bool {
-		$ua       = $_SERVER['HTTP_USER_AGENT'] ?? '';
-		$patterns = [ 'Lighthouse', 'HeadlessChrome', 'Chrome-Lighthouse' ];
+		$ua       = strtolower( $_SERVER['HTTP_USER_AGENT'] ?? '' );
+		$patterns = [
+			'lighthouse',
+			'headlesschrome',
+			'chrome-lighthouse',
+			'pagespeed',
+		];
 
 		foreach ( $patterns as $pattern ) {
 			if ( stripos( $ua, $pattern ) !== false ) {

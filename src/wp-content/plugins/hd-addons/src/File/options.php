@@ -16,7 +16,7 @@ $svg_options = [
 ];
 
 ?>
-<div class="container flex flex-x flex-gap sm-up-1">
+<div class="container flex flex-x gap sm-up-1">
     <input type="hidden" name="file-hidden" value="1">
     <div class="cell section section-text">
         <label class="heading" for="upload_size_limit"><?php _e( 'Maximum upload file size', ADDONS_TEXTDOMAIN ); ?></label>
